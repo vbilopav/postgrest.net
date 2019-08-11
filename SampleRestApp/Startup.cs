@@ -26,7 +26,7 @@ namespace SampleRestApp
         {
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddPostgRest(services, new PostRestOptions {ConnectionString = "PostgreSqlConnection"});
+                .AddPostgRest(services, new PostRestOptions {Connection = "PostgreSqlConnection"});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

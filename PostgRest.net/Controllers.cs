@@ -12,6 +12,11 @@ namespace PostgRest.net
         [HttpGet]
         public ContentResult Get()
         {
+            if (!ControllerData.Data.TryGetValue(this.GetType().Name, out var info))
+            {
+                return new ContentResult { StatusCode = 400 };
+            }
+
             return new ContentResult { Content = this.GetType().Name};
         }
     }

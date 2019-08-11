@@ -11,12 +11,12 @@ namespace PostgRest.net
         public static IServiceCollection AddPostgRest(this IServiceCollection services, PostRestOptions options = default)
         {
             options = options ?? new PostRestOptions();
-            if (options.ConnectionString != null)
+            if (options.Connection != null)
             {
                 services.AddScoped<NpgsqlConnection, NpgsqlConnection>(provider =>
                 {
                     var config = provider.GetRequiredService<IConfiguration>();
-                    var connStr = config.GetPgCloudConnectionString(options.ConnectionString) ?? options.ConnectionString;
+                    var connStr = config.GetPgCloudConnectionString(options.Connection) ?? options.Connection;
                     return new NpgsqlConnection(connStr);
                 });
             }
