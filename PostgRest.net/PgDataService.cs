@@ -15,22 +15,22 @@ namespace PostgRest.net
 
     public class PgDataService : IPgDataService
     {
-        private readonly NpgsqlConnection _connection;
-        private readonly ILoggerFactory _loggerFactory;
+        private readonly NpgsqlConnection connection;
+        private readonly ILoggerFactory loggerFactory;
         private static readonly IEnumerable<string> InfoLevels = new[] { "INFO", "NOTICE", "LOG" };
         private static readonly IEnumerable<string> ErrorLevels = new[] { "ERROR", "PANIC" };
 
         public PgDataService(NpgsqlConnection connection, ILoggerFactory loggerFactory)
         {
-            _connection = connection;
-            _loggerFactory = loggerFactory;
+            this.connection = connection;
+            this.loggerFactory = loggerFactory;
         }
 
         public async Task<string> GetString(string command, Action<NpgsqlParameterCollection> parameters = null)
         {
             HandleLogging(command);
-            await _connection.OpenAsync();
-            using (var cmd = new NpgsqlCommand(command, _connection))
+            await connection.OpenAsync();
+            using (var cmd = new NpgsqlCommand(command, connection))
             {
                 parameters?.Invoke(cmd.Parameters);
                 return await GetStringContentFromCommand(cmd);
@@ -40,8 +40,8 @@ namespace PostgRest.net
         public async Task<string> GetString(string command, Func<NpgsqlParameterCollection, Task> parameters = null)
         {
             HandleLogging(command);
-            await _connection.OpenAsync();
-            using (var cmd = new NpgsqlCommand(command, _connection))
+            await connection.OpenAsync();
+            using (var cmd = new NpgsqlCommand(command, connection))
             {
                 if (parameters != null)
                 {
@@ -65,8 +65,8 @@ namespace PostgRest.net
 
         private void HandleLogging(string command)
         {
-            var logger = _loggerFactory.CreateLogger(command);
-            _connection.Notice += (sender, args) =>
+            var logger = loggerFactory.CreateLogger(command);
+            connection.Notice += (sender, args) =>
             {
                 var severity = args.Notice.Severity;
                 if (InfoLevels.Contains(severity))

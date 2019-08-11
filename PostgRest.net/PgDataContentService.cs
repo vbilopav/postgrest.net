@@ -17,14 +17,14 @@ namespace PostgRest.net
 
     public class PgDataContentService : IPgDataContentService
     {
-        private readonly IPgDataService _data;
-        private readonly ILogger<PgDataContentService> _logger;
+        private readonly IPgDataService data;
+        private readonly ILogger<PgDataContentService> logger;
         private const string DefaultValue = "{}";
 
         public PgDataContentService(IPgDataService data, ILogger<PgDataContentService> logger)
         {
-            _data = data;
-            _logger = logger;
+            this.data = data;
+            this.logger = logger;
         }
 
         public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters = null)
@@ -34,13 +34,13 @@ namespace PostgRest.net
                 return new ContentResult
                 {
                     StatusCode = 200,
-                    Content = await _data.GetString(command, parameters) ?? DefaultValue,
+                    Content = await data.GetString(command, parameters) ?? DefaultValue,
                     ContentType = "application/json"
                 };
             }
             catch (PostgresException e)
             {
-                _logger.LogError(e, FormatPostgresExceptionMessage(e));
+                logger.LogError(e, FormatPostgresExceptionMessage(e));
                 return BadRequestContent(e);
             }
         }
@@ -52,13 +52,13 @@ namespace PostgRest.net
                 return new ContentResult
                 {
                     StatusCode = 200,
-                    Content = await _data.GetString(command, parameters) ?? DefaultValue,
+                    Content = await data.GetString(command, parameters) ?? DefaultValue,
                     ContentType = "application/json"
                 };
             }
             catch (PostgresException e)
             {
-                _logger.LogError(e, FormatPostgresExceptionMessage(e));
+                logger.LogError(e, FormatPostgresExceptionMessage(e));
                 return BadRequestContent(e);
             }
         }
