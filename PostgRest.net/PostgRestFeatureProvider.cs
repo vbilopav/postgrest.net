@@ -15,28 +15,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace PostgRest.net
 {
-    internal class PgFuncParam
-    {
-        public string ParamName { get; set; }
-        public string ParamType { get; set; }
-        public int Position { get; set; }
-    }
-
-    internal class ControllerInfo
-    {
-        public string RoutineName { get; set; }
-        public string RouteName { get; set; }
-        public string Verb { get; set; }
-        public Type RouteType { get; set; }
-        public string ReturnType { get; set; }
-        public IEnumerable<PgFuncParam> Parameters { get; set; }
-    }
-
-    internal static class ControllerData
-    {
-        public static ConcurrentDictionary<string, ControllerInfo> Data { get; } = new ConcurrentDictionary<string, ControllerInfo>();
-    }
-
     public class PostgRestFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
         private const string Command =
@@ -59,14 +37,14 @@ namespace PostgRest.net
 
         private readonly ILogger<PostgRestFeatureProvider> logger;
         private readonly IServiceCollection services;
-        private readonly PostRestOptions options;
+        private readonly PostgRestOptions options;
         private readonly ModuleBuilder moduleBuilder;
         private readonly Type typeGet;
         private readonly Type typePost;
         private readonly Type typePut;
         private readonly Type typeDelete;
 
-        public PostgRestFeatureProvider(IServiceCollection services, PostRestOptions options)
+        public PostgRestFeatureProvider(IServiceCollection services, PostgRestOptions options)
         {
             this.services = services;
             this.options = options;
@@ -81,7 +59,9 @@ namespace PostgRest.net
             this.typeDelete = typeof(PgDeleteController);
 
             using (var builder = this.services.BuildServiceProvider())
+            {
                 logger = builder.GetService<ILogger<PostgRestFeatureProvider>>();
+            }
         }
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
@@ -111,17 +91,16 @@ namespace PostgRest.net
                 return;
             }
 
-            var (routeName, verb, routeType) = GetRouteNameAndType(name);
+            var (routeName, routeType) = GetRouteNameAndType(name);
             if (routeName == null)
             {
                 return;
             }
 
-            feature.Controllers.Add(GetControllerTypeInfo(new ControllerInfo
+            feature.Controllers.Add(GetControllerTypeInfoAndAddToControllerData(new ControllerInfo
             {
                 RoutineName = name,
                 RouteName = routeName,
-                Verb = verb,
                 RouteType = routeType,
                 ReturnType = reader["return_type"] as string,
                 Parameters = JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string).ToList()
@@ -137,7 +116,7 @@ namespace PostgRest.net
             feature.Controllers.Remove(typeDelete.GetTypeInfo());
         }
 
-        private TypeInfo GetControllerTypeInfo(ControllerInfo info)
+        private TypeInfo GetControllerTypeInfoAndAddToControllerData(ControllerInfo info)
         {
             var controllerTypeBuilder = moduleBuilder.DefineType($"{info.RouteType.Name}Proxy{info.RoutineName.GetHashCode()}", TypeAttributes.Public, typeGet);
             var routeAttributeBuilder = new CustomAttributeBuilder(typeof(RouteAttribute).GetConstructor(
@@ -150,7 +129,7 @@ namespace PostgRest.net
             return result;
         }
 
-        private (string, string, Type) GetRouteNameAndType(string name)
+        private (string, Type) GetRouteNameAndType(string name)
         {
             var prefix = options.Prefix ?? "";
             string LogString(string route, string verb) =>
@@ -164,7 +143,7 @@ namespace PostgRest.net
                     string.Format(options.RouteNamePattern,
                         options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("get"), "GET"));
                 logger.LogInformation(LogString(routeName, "GET"));
-                return (routeName, "GET", typeGet);
+                return (routeName, typeGet);
             }
             if (candidateLower.StartsWith("post"))
             {
@@ -172,7 +151,7 @@ namespace PostgRest.net
                     string.Format(options.RouteNamePattern,
                     options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("post"), "POST"));
                 logger.LogInformation(LogString(routeName, "POST"));
-                return (routeName, "POST", typePost);
+                return (routeName, typePost);
             }
             if (candidateLower.StartsWith("put"))
             {
@@ -180,7 +159,7 @@ namespace PostgRest.net
                     string.Format(options.RouteNamePattern,
                     options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("put"), "PUT"));
                 logger.LogInformation(LogString(routeName, "PUT"));
-                return (routeName, "PUT", typePut);
+                return (routeName, typePut);
             }
             if (candidateLower.StartsWith("delete"))
             {
@@ -188,9 +167,9 @@ namespace PostgRest.net
                     string.Format(options.RouteNamePattern,
                     options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("delete"), "DELETE"));
                 logger.LogInformation(LogString(routeName, "DELETE"));
-                return (routeName, "DELETE", typeDelete);
+                return (routeName, typeDelete);
             }
-            return (null, null, null);
+            return (null, null);
         }
     }
 }

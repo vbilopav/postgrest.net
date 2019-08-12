@@ -28,8 +28,8 @@ namespace PostgRest.net
 
         public async Task<string> GetString(string command, Action<NpgsqlParameterCollection> parameters = null)
         {
-            HandleLogging(command);
-            await connection.OpenAsync();
+            AddLoggingToNoticeHandler(command);
+            await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 parameters?.Invoke(cmd.Parameters);
@@ -39,8 +39,8 @@ namespace PostgRest.net
 
         public async Task<string> GetString(string command, Func<NpgsqlParameterCollection, Task> parameters = null)
         {
-            HandleLogging(command);
-            await connection.OpenAsync();
+            AddLoggingToNoticeHandler(command);
+            await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 if (parameters != null)
@@ -48,6 +48,14 @@ namespace PostgRest.net
                     await parameters?.Invoke(cmd.Parameters);
                 }
                 return await GetStringContentFromCommand(cmd);
+            }
+        }
+
+        private async Task EnsureConnectionIsOpen()
+        {
+            if (connection.State == System.Data.ConnectionState.Closed)
+            {
+                await connection.OpenAsync();
             }
         }
 
@@ -63,7 +71,7 @@ namespace PostgRest.net
             }
         }
 
-        private void HandleLogging(string command)
+        private void AddLoggingToNoticeHandler(string command)
         {
             var logger = loggerFactory.CreateLogger(command);
             connection.Notice += (sender, args) =>

@@ -9,9 +9,22 @@ namespace PostgRest.net
 {
     public class PgGetController : ControllerBase
     {
+        private readonly IServiceProvider provider;
+
+        protected PgGetController() : base()
+        {
+            provider = null;
+        }
+
+        public PgGetController(IServiceProvider provider) : base()
+        {
+            this.provider = provider;
+        }
+
         [HttpGet]
         public ContentResult Get()
         {
+            //var serviceCollection = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
             if (!ControllerData.Data.TryGetValue(this.GetType().Name, out var info))
             {
                 return new ContentResult { StatusCode = 400 };

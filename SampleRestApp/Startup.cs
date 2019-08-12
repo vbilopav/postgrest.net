@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Npgsql;
 using PostgRest.net;
 
 namespace SampleRestApp
@@ -23,10 +24,21 @@ namespace SampleRestApp
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
+        {        /*
+            services.AddSingleton<NpgsqlConnection, NpgsqlConnection>(provider =>
+            {
+                var config = provider.GetRequiredService<IConfiguration>();
+                var connStr = config.GetPgCloudConnectionString("SampleConnection") ?? "SampleConnection";
+                return new NpgsqlConnection(connStr);
+            });
+               */
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddPostgRest(services, new PostRestOptions {Connection = "PostgreSqlConnection"});
+                .AddPostgRest(services, new PostgRestOptions
+                {
+                    //Connection = "PostgreSqlConnection
+                    Connection = "SampleConnection"
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

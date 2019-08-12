@@ -1,6 +1,6 @@
 ﻿namespace PostgRest.net
 {
-    public class PostRestOptions
+    public class PostgRestOptions
     {
         public string Connection { get;  set; }
         public string Prefix { get; set; } = "rest__";

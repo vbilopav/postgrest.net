@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
@@ -40,8 +38,7 @@ namespace PostgRest.net
             }
             catch (PostgresException e)
             {
-                logger.LogError(e, FormatPostgresExceptionMessage(e));
-                return BadRequestContent(e);
+                return GetExceptionContent(e);
             }
         }
 
@@ -58,10 +55,34 @@ namespace PostgRest.net
             }
             catch (PostgresException e)
             {
-                logger.LogError(e, FormatPostgresExceptionMessage(e));
+                return GetExceptionContent(e);
+            }
+        }
+
+        private ContentResult GetExceptionContent(PostgresException e)
+        {
+            logger.LogError(e, FormatPostgresExceptionMessage(e));
+
+            // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
+            if (e.SqlState == "42501")
+            {
+                return UnathorizedContent();
+            } else
+            {
                 return BadRequestContent(e);
             }
         }
+
+        private static ContentResult UnathorizedContent() => new ContentResult
+        {
+            StatusCode = 401,
+            Content = JsonConvert.SerializeObject(new
+            {
+                messeage = "Unathorized",
+                error = true
+            }),
+            ContentType = "application/json"
+        };
 
         private static ContentResult BadRequestContent(PostgresException e) => new ContentResult
         {

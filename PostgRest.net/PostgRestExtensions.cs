@@ -6,11 +6,11 @@ using System.Reflection;
 
 namespace PostgRest.net
 {
-    public static class PostRestExtensions
+    public static class PostgRestExtensions
     {
-        public static IServiceCollection AddPostgRest(this IServiceCollection services, PostRestOptions options = default)
+        public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = default)
         {
-            options = options ?? new PostRestOptions();
+            options = options ?? new PostgRestOptions();
             if (options.Connection != null)
             {
                 services.AddScoped<NpgsqlConnection, NpgsqlConnection>(provider =>
@@ -25,11 +25,11 @@ namespace PostgRest.net
             return services;
         }
 
-        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostRestOptions options = default)
+        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostgRestOptions options = default)
         {
-            options = options ?? new PostRestOptions();
+            options = options ?? new PostgRestOptions();
             services.AddPostgRest(options);
-            var assembly = typeof(PostRestExtensions).GetTypeInfo().Assembly;
+            var assembly = typeof(PostgRestExtensions).GetTypeInfo().Assembly;
             return builder
                 .AddApplicationPart(assembly)
                 .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(services, options)));
