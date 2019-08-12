@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using System.Reflection;
-using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
+using Npgsql;
 
 namespace PostgRest.net
 {
@@ -35,9 +35,28 @@ namespace PostgRest.net
             {
                 return new ContentResult { StatusCode = 400 };
             }
-            var parameters = "";
-            var command = $"select {info.RoutineName}({parameters})";
-            return await contentService.GetContentAsync(command);
+            if (info.Parameters.Count == 0)
+            {
+                return await contentService.GetContentAsync($"select {info.RoutineName}()");
+            }
+            JObject query = null;
+            JObject body;
+            var stringParameters = new List<string>();
+            var npngParameters = new List<NpgsqlParameter>();
+            foreach(var param in info.Parameters)
+            {
+                if (!param.ParamNameLower.Contains("body"))
+                {
+                    if (query != null)
+                    {
+                        query = Request.Query.ToJObject();
+                    }
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, query.ToString(Formatting.None)));
+                }
+                stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
+            }
+            var command = $"select {info.RoutineName}({string.Join(", ", stringParameters)})";
+            return await contentService.GetContentAsync(command, parameters => parameters.AddRange(npngParameters.ToArray()));
         }
     }
 

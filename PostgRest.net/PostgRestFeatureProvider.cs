@@ -103,8 +103,12 @@ namespace PostgRest.net
                 ReturnType = reader["return_type"] as string,
                 Parameters =
                     JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string)
-                    .ToList()
                     .OrderBy(p => p.Position)
+                    .Select(p => {
+                        p.ParamNameLower = p.ParamName.ToLower();
+                        return p;
+                    })
+                    .ToList()
             });
         }
 
@@ -114,6 +118,7 @@ namespace PostgRest.net
             var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public);
             var type = typeBuilder.CreateTypeInfo();
             feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
+            info.Options = options;
             ControllerData.Data.TryAdd(name, info);
         }
 

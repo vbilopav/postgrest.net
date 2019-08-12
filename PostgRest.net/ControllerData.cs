@@ -8,6 +8,7 @@ namespace PostgRest.net
     internal class PgFuncParam
     {
         public string ParamName { get; set; }
+        public string ParamNameLower { get; set; }
         public string ParamType { get; set; }
         public int Position { get; set; }
         public bool HaveDefault { get; set; }
@@ -19,7 +20,8 @@ namespace PostgRest.net
         public string RouteName { get; set; }
         public Type RouteType { get; set; }
         public string ReturnType { get; set; }
-        public IEnumerable<PgFuncParam> Parameters { get; set; }
+        public IList<PgFuncParam> Parameters { get; set; }
+        public PostgRestOptions Options { get; internal set; }
     }
 
     internal static class ControllerData

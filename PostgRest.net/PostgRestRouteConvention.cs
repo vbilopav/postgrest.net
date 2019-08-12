@@ -25,9 +25,10 @@ namespace PostgRest.net
                 return;
             }
             controller.Selectors.Clear();
+            info.RouteName = options.ApplyRouteName(info.RouteName, info.RoutineName);
             controller.Selectors.Add(new SelectorModel
             {
-                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(options.ApplyRouteName(info.RouteName, info.RoutineName))),
+                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(info.RouteName)),
             });
             options.ApplyFilters(controller.Filters, info.RouteName, info.RoutineName);
         }
