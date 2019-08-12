@@ -4,6 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace PostgRest.net
 {
@@ -27,15 +28,16 @@ namespace PostgRest.net
             return info;
         }
 
-        protected ContentResult GetContent()
+        protected async Task<ContentResult> GetContentAsync()
         {
             var info = GetInfo();
             if (info == null)
             {
                 return new ContentResult { StatusCode = 400 };
             }
-
-            return new ContentResult { Content = info.RoutineName };
+            var parameters = "";
+            var command = $"select {info.RoutineName}({parameters})";
+            return await contentService.GetContentAsync(command);
         }
     }
 
@@ -44,7 +46,7 @@ namespace PostgRest.net
         public PgGetController(IPgDataContentService contentService) : base(contentService) { }
 
         [HttpGet]
-        public ContentResult Get() => GetContent();
+        public async Task<ContentResult> Get() => await GetContentAsync();
     }
 
     public class PgPostController<T> : PgBaseController<T>
@@ -52,7 +54,7 @@ namespace PostgRest.net
         public PgPostController(IPgDataContentService contentService) : base(contentService) { }
 
         [HttpPost]
-        public ContentResult Post() => GetContent();
+        public async Task<ContentResult> Post() => await GetContentAsync();
     }
 
     public class PgPutController<T> : PgBaseController<T>
@@ -60,7 +62,7 @@ namespace PostgRest.net
         public PgPutController(IPgDataContentService contentService) : base(contentService) { }
 
         [HttpPut]
-        public ContentResult Put() => GetContent();
+        public async Task<ContentResult> Put() => await GetContentAsync();
     }
 
     public class PgDeleteController<T> : PgBaseController<T>
@@ -68,6 +70,6 @@ namespace PostgRest.net
         public PgDeleteController(IPgDataContentService contentService) : base(contentService) { }
 
         [HttpDelete]
-        public ContentResult Delete() => GetContent();
+        public async Task<ContentResult> Delete() => await GetContentAsync();
     }
 }

@@ -9,8 +9,9 @@ namespace PostgRest.net
 {
     public interface IPgDataService
     {
-        Task<string> GetString(string command, Action<NpgsqlParameterCollection> parameters = null);
-        Task<string> GetString(string command, Func<NpgsqlParameterCollection, Task> parameters = null);
+        Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters);
+        Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
+        Task<string> GetStringAsync(string command);
     }
 
     public class PgDataService : IPgDataService
@@ -26,7 +27,7 @@ namespace PostgRest.net
             this.loggerFactory = loggerFactory;
         }
 
-        public async Task<string> GetString(string command, Action<NpgsqlParameterCollection> parameters = null)
+        public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters)
         {
             AddLoggingToNoticeHandler(command);
             await EnsureConnectionIsOpen();
@@ -37,7 +38,7 @@ namespace PostgRest.net
             }
         }
 
-        public async Task<string> GetString(string command, Func<NpgsqlParameterCollection, Task> parameters = null)
+        public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters)
         {
             AddLoggingToNoticeHandler(command);
             await EnsureConnectionIsOpen();
@@ -47,6 +48,16 @@ namespace PostgRest.net
                 {
                     await parameters?.Invoke(cmd.Parameters);
                 }
+                return await GetStringContentFromCommand(cmd);
+            }
+        }
+
+        public async Task<string> GetStringAsync(string command)
+        {
+            AddLoggingToNoticeHandler(command);
+            await EnsureConnectionIsOpen();
+            using (var cmd = new NpgsqlCommand(command, connection))
+            {
                 return await GetStringContentFromCommand(cmd);
             }
         }

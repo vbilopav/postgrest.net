@@ -33,7 +33,7 @@ namespace PostgRest.net
             return builder
                 .AddApplicationPart(assembly)
                 .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(services, options)))
-                .AddMvcOptions(o => o.Conventions.Add(new PostgRestRouteConvention()));
+                .AddMvcOptions(o => o.Conventions.Add(new PostgRestRouteConvention(options)));
         }
 
         public static string GetPgCloudConnectionString(this IConfiguration config, string connectionStringName) =>

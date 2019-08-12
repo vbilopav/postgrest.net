@@ -9,8 +9,9 @@ namespace PostgRest.net
 {
     public interface IPgDataContentService
     {
-        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters = null);
-        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters = null);
+        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters);
+        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
+        Task<ContentResult> GetContentAsync(string command);
     }
 
     public class PgDataContentService : IPgDataContentService
@@ -25,31 +26,23 @@ namespace PostgRest.net
             this.logger = logger;
         }
 
-        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters = null)
-        {
-            try
-            {
-                return new ContentResult
-                {
-                    StatusCode = 200,
-                    Content = await data.GetString(command, parameters) ?? DefaultValue,
-                    ContentType = "application/json"
-                };
-            }
-            catch (PostgresException e)
-            {
-                return GetExceptionContent(e);
-            }
-        }
+        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? DefaultValue);
 
-        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters = null)
+        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? DefaultValue);
+
+        public async Task<ContentResult> GetContentAsync(string command) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? DefaultValue);
+
+        private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {
             try
             {
                 return new ContentResult
                 {
                     StatusCode = 200,
-                    Content = await data.GetString(command, parameters) ?? DefaultValue,
+                    Content = await func() ?? DefaultValue,
                     ContentType = "application/json"
                 };
             }

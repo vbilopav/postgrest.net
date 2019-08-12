@@ -10,6 +10,7 @@ namespace PostgRest.net
         public string ParamName { get; set; }
         public string ParamType { get; set; }
         public int Position { get; set; }
+        public bool HaveDefault { get; set; }
     }
 
     internal class ControllerInfo

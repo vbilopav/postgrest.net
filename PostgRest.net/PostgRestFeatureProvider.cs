@@ -10,8 +10,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
 using System.Reflection.Emit;
-using System.Security;
-using Microsoft.AspNetCore.Mvc;
+
 
 namespace PostgRest.net
 {
@@ -23,9 +22,10 @@ namespace PostgRest.net
                 r.data_type as ""return_type"",
                 coalesce(json_agg(
                     json_build_object(
-                        'name', p.parameter_name,
-                        'type', p.data_type,
-                        'position', p.ordinal_position)
+                        'ParamName', p.parameter_name,
+                        'ParamType', p.data_type,
+                        'Position', p.ordinal_position,
+                        'HaveDefault', p.parameter_default is not null)
                 )  filter (where p.parameter_name is not null), '[]') as ""parameters""
             from information_schema.routines r
             left outer join information_schema.parameters p on r.specific_name = p.specific_name
@@ -76,13 +76,13 @@ namespace PostgRest.net
                 {
                     while (reader.Read())
                     {
-                        AddControllersFromReader(feature, reader);
+                        AddControllerFromReader(feature, reader);
                     }
                 }
             }
         }
 
-        private void AddControllersFromReader(ControllerFeature feature, NpgsqlDataReader reader)
+        private void AddControllerFromReader(ControllerFeature feature, NpgsqlDataReader reader)
         {
             if (!(reader["routine_name"] is string name) || !name.StartsWith(options.Prefix))
             {
@@ -101,7 +101,9 @@ namespace PostgRest.net
                 RouteName = routeName,
                 RouteType = routeType,
                 ReturnType = reader["return_type"] as string,
-                Parameters = JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string).ToList()
+                Parameters =
+                    JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string)
+                    .ToList()
                     .OrderBy(p => p.Position)
             });
         }
