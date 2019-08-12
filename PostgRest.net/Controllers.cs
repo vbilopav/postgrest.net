@@ -7,57 +7,67 @@ using Microsoft.Extensions.Logging;
 
 namespace PostgRest.net
 {
-    public class PgGetController : ControllerBase
+    [Route("")]
+    public abstract class PgBaseController<T> : ControllerBase
     {
-        private readonly IServiceProvider provider;
+        protected readonly IPgDataContentService contentService;
 
-        protected PgGetController() : base()
+        protected PgBaseController(IPgDataContentService contentService)
         {
-            provider = null;
+            this.contentService = contentService;
         }
 
-        public PgGetController(IServiceProvider provider) : base()
+        internal ControllerInfo GetInfo()
         {
-            this.provider = provider;
+            var genericType = this.GetType().GenericTypeArguments[0];
+            if (!ControllerData.Data.TryGetValue(genericType.Name, out var info))
+            {
+                return null;
+            }
+            return info;
         }
 
-        [HttpGet]
-        public ContentResult Get()
+        protected ContentResult GetContent()
         {
-            //var serviceCollection = new Microsoft.Extensions.DependencyInjection.ServiceCollection();
-            if (!ControllerData.Data.TryGetValue(this.GetType().Name, out var info))
+            var info = GetInfo();
+            if (info == null)
             {
                 return new ContentResult { StatusCode = 400 };
             }
 
-            return new ContentResult { Content = this.GetType().Name};
+            return new ContentResult { Content = info.RoutineName };
         }
     }
 
-    public class PgPostController : ControllerBase
+    public class PgGetController<T> : PgBaseController<T>
     {
+        public PgGetController(IPgDataContentService contentService) : base(contentService) { }
+
+        [HttpGet]
+        public ContentResult Get() => GetContent();
+    }
+
+    public class PgPostController<T> : PgBaseController<T>
+    {
+        public PgPostController(IPgDataContentService contentService) : base(contentService) { }
+
         [HttpPost]
-        public ContentResult Post()
-        {
-            return new ContentResult { Content = "test" };
-        }
+        public ContentResult Post() => GetContent();
     }
 
-    public class PgPutController : ControllerBase
+    public class PgPutController<T> : PgBaseController<T>
     {
+        public PgPutController(IPgDataContentService contentService) : base(contentService) { }
+
         [HttpPut]
-        public ContentResult Put()
-        {
-            return new ContentResult { Content = "test" };
-        }
+        public ContentResult Put() => GetContent();
     }
 
-    public class PgDeleteController : ControllerBase
+    public class PgDeleteController<T> : PgBaseController<T>
     {
+        public PgDeleteController(IPgDataContentService contentService) : base(contentService) { }
+
         [HttpDelete]
-        public ContentResult Delete()
-        {
-            return new ContentResult { Content = "test" };
-        }
+        public ContentResult Delete() => GetContent();
     }
 }

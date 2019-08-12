@@ -53,10 +53,10 @@ namespace PostgRest.net
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(dynamicAssemblyAssemblyName, AssemblyBuilderAccess.RunAndCollect);
             this.moduleBuilder = assemblyBuilder.DefineDynamicModule(dynamicAssemblyAssemblyName.Name);
 
-            this.typeGet = typeof(PgGetController);
-            this.typePost = typeof(PgPostController);
-            this.typePut = typeof(PgPutController);
-            this.typeDelete = typeof(PgDeleteController);
+            this.typeGet = typeof(PgGetController<>);
+            this.typePost = typeof(PgPostController<>);
+            this.typePut = typeof(PgPutController<>);
+            this.typeDelete = typeof(PgDeleteController<>);
 
             using (var builder = this.services.BuildServiceProvider())
             {
@@ -66,8 +66,6 @@ namespace PostgRest.net
 
         public void PopulateFeature(IEnumerable<ApplicationPart> parts, ControllerFeature feature)
         {
-            RemoveAllExistingControllers(feature);
-
             using (var builder = services.BuildServiceProvider())
             using (var connection = builder.GetService<NpgsqlConnection>())
             using (var cmd = new NpgsqlCommand(Command, connection))
@@ -97,7 +95,7 @@ namespace PostgRest.net
                 return;
             }
 
-            feature.Controllers.Add(GetControllerTypeInfoAndAddToControllerData(new ControllerInfo
+            AddControllerFeature(feature, new ControllerInfo
             {
                 RoutineName = name,
                 RouteName = routeName,
@@ -105,28 +103,16 @@ namespace PostgRest.net
                 ReturnType = reader["return_type"] as string,
                 Parameters = JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string).ToList()
                     .OrderBy(p => p.Position)
-            }));
+            });
         }
 
-        private void RemoveAllExistingControllers(ControllerFeature feature)
+        private void AddControllerFeature(ControllerFeature feature, ControllerInfo info)
         {
-            feature.Controllers.Remove(typeGet.GetTypeInfo());
-            feature.Controllers.Remove(typePost.GetTypeInfo());
-            feature.Controllers.Remove(typePut.GetTypeInfo());
-            feature.Controllers.Remove(typeDelete.GetTypeInfo());
-        }
-
-        private TypeInfo GetControllerTypeInfoAndAddToControllerData(ControllerInfo info)
-        {
-            var controllerTypeBuilder = moduleBuilder.DefineType($"{info.RouteType.Name}Proxy{info.RoutineName.GetHashCode()}", TypeAttributes.Public, typeGet);
-            var routeAttributeBuilder = new CustomAttributeBuilder(typeof(RouteAttribute).GetConstructor(
-                new[] {typeof(string)}),
-                new object[] { info.RouteName });
-
-            controllerTypeBuilder.SetCustomAttribute(routeAttributeBuilder);
-            var result = controllerTypeBuilder.CreateTypeInfo();
-            ControllerData.Data.TryAdd(result.Name, info);
-            return result;
+            var name = $"PgCtrlProxy{info.RoutineName.GetHashCode()}";
+            var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public);
+            var type = typeBuilder.CreateTypeInfo();
+            feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
+            ControllerData.Data.TryAdd(name, info);
         }
 
         private (string, Type) GetRouteNameAndType(string name)
