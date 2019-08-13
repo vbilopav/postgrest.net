@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
-using Npgsql;
 using System;
-using System.Reflection;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace PostgRest.net
 {
@@ -24,6 +24,14 @@ namespace PostgRest.net
                 result[query.Key] = query.Value.ToString();
             }
             return result;
+        }
+
+        public static async Task<string> GetBodyAsync(this HttpRequest request)
+        {
+            using (var reader = new StreamReader(request.Body, Encoding.UTF8))
+            {
+                return await reader.ReadToEndAsync();
+            }
         }
     }
 }

@@ -25,7 +25,8 @@ namespace PostgRest.net
                         'ParamName', p.parameter_name,
                         'ParamType', p.data_type,
                         'Position', p.ordinal_position,
-                        'HaveDefault', p.parameter_default is not null)
+                        'HaveDefault', p.parameter_default is not null,
+                        'Direction', p.parameter_mode)
                 )  filter (where p.parameter_name is not null), '[]') as ""parameters""
             from information_schema.routines r
             left outer join information_schema.parameters p on r.specific_name = p.specific_name
@@ -102,10 +103,13 @@ namespace PostgRest.net
                 RouteType = routeType,
                 ReturnType = reader["return_type"] as string,
                 Parameters =
-                    JsonConvert.DeserializeObject<IEnumerable<PgFuncParam>>(reader["parameters"] as string)
+                    JsonConvert.DeserializeObject<IEnumerable<Parameter>>(reader["parameters"] as string)
                     .OrderBy(p => p.Position)
                     .Select(p => {
-                        p.ParamNameLower = p.ParamName.ToLower();
+                        var parameterLower = p.ParamName.ToLower();
+                        p.ParamNameLower = parameterLower;
+                        p.FromQueryString = options.IsQueryStringParameterWhen(p, name);
+                        p.FromBody = options.IsBodyParameterWhen(p, name);
                         return p;
                     })
                     .ToList()
@@ -114,7 +118,7 @@ namespace PostgRest.net
 
         private void AddControllerFeature(ControllerFeature feature, ControllerInfo info)
         {
-            var name = $"PgCtrlProxy{info.RoutineName.GetHashCode()}";
+            var name = $"Proxy{info.RoutineName.GetHashCode()}";
             var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public);
             var type = typeBuilder.CreateTypeInfo();
             feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
@@ -134,7 +138,7 @@ namespace PostgRest.net
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
-                        options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("get"), "GET"));
+                        options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("get"), "GET"));
                 logger.LogInformation(LogString(routeName, "GET"));
                 return (routeName, typeGet);
             }
@@ -142,7 +146,7 @@ namespace PostgRest.net
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("post"), "POST"));
+                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("post"), "POST"));
                 logger.LogInformation(LogString(routeName, "POST"));
                 return (routeName, typePost);
             }
@@ -150,7 +154,7 @@ namespace PostgRest.net
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("put"), "PUT"));
+                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("put"), "PUT"));
                 logger.LogInformation(LogString(routeName, "PUT"));
                 return (routeName, typePut);
             }
@@ -158,7 +162,7 @@ namespace PostgRest.net
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.GetRouteName(name, candidate, candidateLower.RemoveFromStart("delete"), "DELETE"));
+                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("delete"), "DELETE"));
                 logger.LogInformation(LogString(routeName, "DELETE"));
                 return (routeName, typeDelete);
             }

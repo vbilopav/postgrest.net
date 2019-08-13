@@ -33,7 +33,7 @@ namespace PostgRest.net
             return builder
                 .AddApplicationPart(assembly)
                 .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(services, options)))
-                .AddMvcOptions(o => o.Conventions.Add(new PostgRestRouteConvention(options)));
+                .AddMvcOptions(o => o.Conventions.Add(new PostgRestConvention(options)));
         }
     }
 }

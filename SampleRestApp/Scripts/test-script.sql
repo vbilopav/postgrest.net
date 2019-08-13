@@ -48,11 +48,24 @@ end
 $$ language plpgsql security definer;
 revoke all on function rest__get_values_with_default_value(_query json, _some_value int) from public;
 
+create or replace function rest__post_values(_body json) returns json as
+$$
+begin
+    return json_build_object(
+        'timestamp', now() at time zone 'utc',
+        'values', _body,
+        'test', (select json_agg(test) from test)
+    );
+end
+$$ language plpgsql security definer;
+revoke all on function rest__post_values(_query json) from public;
+
 grant execute on function
     rest__get_values(),
     rest__get_values_json(json),
     rest__get_values_and_table(json),
-    rest__get_values_with_default_value(json, int)
+    rest__get_values_with_default_value(json, int),
+    rest__post_values(json)
 to sample;
 
 --select rest__get_values_and_table('{}');

@@ -40,18 +40,30 @@ namespace PostgRest.net
                 return await contentService.GetContentAsync($"select {info.RoutineName}()");
             }
             JObject query = null;
-            JObject body;
+            JObject body = null;
             var stringParameters = new List<string>();
             var npngParameters = new List<NpgsqlParameter>();
             foreach(var param in info.Parameters)
             {
-                if (!param.ParamNameLower.Contains("body"))
+                if (param.FromQueryString)
                 {
-                    if (query != null)
+                    if (query == null)
                     {
                         query = Request.Query.ToJObject();
                     }
                     npngParameters.Add(new NpgsqlParameter(param.ParamName, query.ToString(Formatting.None)));
+                }
+                else if (param.FromBody)
+                {
+                    if (body == null)
+                    {
+                        body = JObject.Parse(await Request.GetBodyAsync());
+                    }
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, body.ToString(Formatting.None)));
+                }
+                else
+                {
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, null));
                 }
                 stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
             }

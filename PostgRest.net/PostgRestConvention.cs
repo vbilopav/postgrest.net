@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace PostgRest.net
 {
-    public class PostgRestRouteConvention : IControllerModelConvention
+    public class PostgRestConvention : IControllerModelConvention
     {
         private readonly PostgRestOptions options;
 
-        public PostgRestRouteConvention(PostgRestOptions options)
+        public PostgRestConvention(PostgRestOptions options)
         {
             this.options = options;
         }
@@ -31,6 +31,7 @@ namespace PostgRest.net
                 AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(info.RouteName)),
             });
             options.ApplyFilters(controller.Filters, info.RouteName, info.RoutineName);
+            options.ApplyControllerConvention(controller, info);
         }
     }
 }
