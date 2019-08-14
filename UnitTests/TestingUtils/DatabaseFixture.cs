@@ -20,7 +20,7 @@ namespace UnitTests
                 noreplication
                 connection limit -1
                 password 'testing';
-            ");
+            ", true);
         }
 
         public void Dispose()
@@ -35,12 +35,12 @@ namespace UnitTests
             drop role testing;
 
             drop database testing;
-            ");
+            ", true);
         }
 
-        private void ExecuteCommand(string command)
+        public static void ExecuteCommand(string command, bool postgresConnection = false)
         {
-            using (var connection = new NpgsqlConnection(Config.PostgresConnection))
+            using (var connection = new NpgsqlConnection(postgresConnection ? Config.PostgresConnection : Config.PostgresTestingDbConnection))
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 connection.Open();
@@ -53,8 +53,5 @@ namespace UnitTests
     [CollectionDefinition("testing database")]
     public class DatabaseFixtureCollection : ICollectionFixture<DatabaseFixture>
     {
-        // This class has no code, and is never created. Its purpose is simply
-        // to be the place to apply [CollectionDefinition] and all the
-        // ICollectionFixture<> interfaces.
     }
 }

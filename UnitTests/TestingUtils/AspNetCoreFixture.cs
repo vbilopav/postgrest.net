@@ -15,20 +15,35 @@ namespace UnitTests
         void ConfigureServices(IServiceCollection services);
     }
 
-    public class AspNetCoreFixture<T> : IDisposable where T : IConfigureServices, new()
+    public interface ILifeCycle
+    {
+        void BuildUp();
+        void TearDown();
+    }
+
+    public class AspNetCoreFixture<TConfigureServices, TLifeCycle> : IDisposable
+        where TConfigureServices : IConfigureServices, new()
+        where TLifeCycle : ILifeCycle, new()
     {
         private IWebHost host;
+        private readonly ILifeCycle lifeCycle;
 
         public AspNetCoreFixture()
         {
             host = null;
+            lifeCycle = new TLifeCycle();
+            lifeCycle.BuildUp();
         }
 
         public void Initialize(ITestOutputHelper output)
         {
+            if (host != null)
+            {
+                return;
+            }
             host = WebHost.CreateDefaultBuilder()
                 .ConfigureLogging(f => f.AddProvider(new XUnitLoggerProvider(output)))
-                .UseStartup<Startup<T>>()
+                .UseStartup<Startup<TConfigureServices>>()
                 .Build();
             host.Start();
         }
@@ -39,6 +54,7 @@ namespace UnitTests
             {
                 host.Dispose();
             }
+            lifeCycle.TearDown();
         }
     }
 

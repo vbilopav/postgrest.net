@@ -4,12 +4,16 @@ using Xunit.Abstractions;
 namespace UnitTests
 {
     [Collection("testing database")]
-    public abstract class PostgRestClassFixture<T> : IClassFixture<AspNetCoreFixture<T>>
-        where T : IConfigureServices, new()
+    public abstract class PostgRestClassFixture<TConfigureServices, TLifeCycle> :
+        IClassFixture<AspNetCoreFixture<TConfigureServices, TLifeCycle>>
+        where TConfigureServices : IConfigureServices, new()
+        where TLifeCycle : ILifeCycle, new()
     {
         protected readonly ITestOutputHelper output;
 
-        public PostgRestClassFixture(ITestOutputHelper output, AspNetCoreFixture<T> fixture)
+        public PostgRestClassFixture(
+            ITestOutputHelper output,
+            AspNetCoreFixture<TConfigureServices, TLifeCycle> fixture)
         {
             this.output = output;
             fixture.Initialize(this.output);
