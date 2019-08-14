@@ -1,11 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28307.136
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29102.190
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgRest.net", "postgrest.net\PostgRest.net.csproj", "{69E4B0B4-FD3B-4377-B63D-D38A27DF1579}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleRestApp", "SampleRestApp\SampleRestApp.csproj", "{72139DD4-3319-48E8-8478-634666ED5A5C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleRestApp", "SampleRestApp\SampleRestApp.csproj", "{72139DD4-3319-48E8-8478-634666ED5A5C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UnitTests", "UnitTests\UnitTests.csproj", "{00BEB2E1-11CB-481D-8F7A-7F9000A1AB15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{72139DD4-3319-48E8-8478-634666ED5A5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{72139DD4-3319-48E8-8478-634666ED5A5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{72139DD4-3319-48E8-8478-634666ED5A5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00BEB2E1-11CB-481D-8F7A-7F9000A1AB15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00BEB2E1-11CB-481D-8F7A-7F9000A1AB15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00BEB2E1-11CB-481D-8F7A-7F9000A1AB15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00BEB2E1-11CB-481D-8F7A-7F9000A1AB15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
