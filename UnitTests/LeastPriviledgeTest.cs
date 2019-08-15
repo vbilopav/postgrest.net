@@ -1,19 +1,12 @@
-using Newtonsoft.Json.Linq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
 namespace UnitTests
 {
-
-    public class LeastPriviledgeTest : PostgRestClassFixture<
-        TestingConnectionConfig,
-        LeastPriviledgeTest.LifeCycle>
+    public class LeastPriviledgeTest :
+        PostgRestClassFixture<TestingConnectionConfig, LeastPriviledgeTest.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -61,26 +54,22 @@ namespace UnitTests
         [Fact]
         public async Task TryExecuteWithoutGrant()
         {
-            using (var client = new HttpClient())
-            using (var response = await client.GetAsync("https://localhost:5001/api/values-no-grant"))
-            {
-                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
-            }
+            var (_, status, _) = await RestClient.GetAsync<object>("https://localhost:5001/api/values-no-grant");
+            Assert.Equal(HttpStatusCode.NotFound, status);
+        }
+
+        public class ResponseModel
+        {
+            public int[] Values { get; set; }
         }
 
         [Fact]
         public async Task TryExecuteWithGrantAndVerify()
         {
-            using (var client = new HttpClient())
-            using (var response = await client.GetAsync("https://localhost:5001/api/values-with-grant", HttpCompletionOption.ResponseHeadersRead))
-            {
-                Assert.Equal(HttpStatusCode.OK, response.StatusCode);
-                Assert.Equal("application/json", response.Content.Headers.ContentType.ToString());
-
-                var result = JObject.Parse(await response.Content.ReadAsStringAsync());
-                var list = result["values"].Children().ToList();
-                Assert.Equal(new List<JToken> { JToken.Parse("1"), JToken.Parse("2"), JToken.Parse("3") }, list);
-            }
+            var (response, status, contentType) = await RestClient.GetAsync<ResponseModel>("https://localhost:5001/api/values-with-grant");
+            Assert.Equal(HttpStatusCode.OK, status);
+            Assert.Equal("application/json", contentType);
+            Assert.Equal(new int[3] { 1,2,3 }, response.Values);
         }
     }
 }
