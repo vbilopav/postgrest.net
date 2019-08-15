@@ -37,15 +37,15 @@ namespace UnitTests
         {
             try
             {
-                ExecuteCommand(CreateDbAndUser, ConnectionType.Postgres);
+                ExecuteCommand(ConnectionType.Postgres, CreateDbAndUser);
             }
             catch (PostgresException e)
             {
                 if (e.SqlState == "42P04")
                 {
 
-                    ExecuteCommand(DropDbAndUser, ConnectionType.Postgres);
-                    ExecuteCommand(CreateDbAndUser, ConnectionType.Postgres);
+                    ExecuteCommand(ConnectionType.Postgres, DropDbAndUser);
+                    ExecuteCommand(ConnectionType.Postgres, CreateDbAndUser);
                 }
                 else
                 {
@@ -56,10 +56,10 @@ namespace UnitTests
 
         public void Dispose()
         {
-            ExecuteCommand(DropDbAndUser, ConnectionType.Postgres);
+            ExecuteCommand(ConnectionType.Postgres, DropDbAndUser);
         }
 
-        public static void ExecuteCommand(string command, ConnectionType type = ConnectionType.PostgresTesting)
+        public static void ExecuteCommand(ConnectionType type, string command)
         {
             using (var connection = new NpgsqlConnection(Connection(type)))
             using (var cmd = new NpgsqlCommand(command, connection))

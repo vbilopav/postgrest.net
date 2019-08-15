@@ -22,6 +22,20 @@ namespace UnitTests
 
         public static string Connection(ConnectionType type) => Connections[type.ToString()];
  
-        public enum ConnectionType { Postgres, PostgresTesting, Testing }
+        public enum ConnectionType
+        {
+            /// <summary>
+            /// postgres (admin) user on postgres database
+            /// </summary>
+            Postgres,
+            /// <summary>
+            /// postgres user (admin) on testing database (re-created)
+            /// </summary>
+            PostgresTesting,
+            /// <summary>
+            /// testing user (re-created) on testing database (re-created)
+            /// </summary>
+            Testing
+        }
     }
 }

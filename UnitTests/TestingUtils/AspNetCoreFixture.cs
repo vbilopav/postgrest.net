@@ -21,6 +21,19 @@ namespace UnitTests
         void TearDown();
     }
 
+    public class NoopLifeCycle : ILifeCycle
+    {
+        public void BuildUp() { }
+        public void TearDown() { }
+
+    }
+
+    public class AspNetCoreFixture<TConfigureServices> : AspNetCoreFixture<TConfigureServices, NoopLifeCycle>
+        where TConfigureServices : IConfigureServices, new()
+    {
+        public AspNetCoreFixture() : base() {}
+    }
+
     public class AspNetCoreFixture<TConfigureServices, TLifeCycle> : IDisposable
         where TConfigureServices : IConfigureServices, new()
         where TLifeCycle : ILifeCycle, new()

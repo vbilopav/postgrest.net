@@ -19,4 +19,20 @@ namespace UnitTests
             fixture.Initialize(this.output);
         }
     }
+
+    [Collection("testing database")]
+    public abstract class PostgRestClassFixture<TConfigureServices> :
+        IClassFixture<AspNetCoreFixture<TConfigureServices>>
+        where TConfigureServices : IConfigureServices, new()
+    {
+        protected readonly ITestOutputHelper output;
+
+        public PostgRestClassFixture(
+            ITestOutputHelper output,
+            AspNetCoreFixture<TConfigureServices> fixture)
+        {
+            this.output = output;
+            fixture.Initialize(this.output);
+        }
+    }
 }
