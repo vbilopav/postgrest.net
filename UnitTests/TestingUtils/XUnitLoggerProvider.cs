@@ -39,7 +39,7 @@ namespace UnitTests
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
-            testOutputHelper.WriteLine($"{categoryName} [{eventId}] {formatter(state, exception)}");
+            testOutputHelper.WriteLine($"[{logLevel}] {categoryName} [{eventId}] {formatter(state, exception)}");
             if (exception != null)
             {
                 testOutputHelper.WriteLine(exception.ToString());

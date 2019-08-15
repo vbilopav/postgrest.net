@@ -13,7 +13,7 @@ namespace PostgRest.net
         /// If provided new NpgsqlConnection object will be injected into services as request-response scoped object.
         /// If not provided PostgRest.net will assume that NpgsqlConnection object is already injected in services.
         /// </summary>
-        public string Connection { get;  set; }
+        public string Connection { get; set; }
         /// <summary>
         /// Prefix for PostgreSQL routine name which will be considered to expose as REST endpoint.
         /// Routine name is followed by verb to determine endpoint type (eg "rest__{get|post|put|delete}{route name candidate}")

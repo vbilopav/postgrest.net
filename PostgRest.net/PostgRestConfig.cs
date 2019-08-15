@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
 using System;
 using System.Reflection;
@@ -20,8 +21,9 @@ namespace PostgRest.net
                     return new NpgsqlConnection(connStr);
                 });
             }
-            services.AddScoped<IPgDataService, PgDataService>();
-            services.AddScoped<IPgDataContentService, PgDataContentService>();
+            services.TryAddScoped<IPgDataService, PgDataService>();
+            services.TryAddScoped<IPgDataContentService, PgDataContentService>();
+            services.TryAddScoped<IPgLoggingService, PgLoggingService>();
             return services;
         }
 

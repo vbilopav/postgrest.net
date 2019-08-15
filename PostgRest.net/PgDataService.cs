@@ -17,19 +17,17 @@ namespace PostgRest.net
     public class PgDataService : IPgDataService
     {
         private readonly NpgsqlConnection connection;
-        private readonly ILoggerFactory loggerFactory;
-        private static readonly IEnumerable<string> InfoLevels = new[] { "INFO", "NOTICE", "LOG" };
-        private static readonly IEnumerable<string> ErrorLevels = new[] { "ERROR", "PANIC" };
+        private readonly IPgLoggingService loggingService;
 
-        public PgDataService(NpgsqlConnection connection, ILoggerFactory loggerFactory)
+        public PgDataService(NpgsqlConnection connection, IPgLoggingService loggingService)
         {
             this.connection = connection;
-            this.loggerFactory = loggerFactory;
+            this.loggingService = loggingService;
         }
 
         public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters)
         {
-            AddLoggingToNoticeHandler(command);
+            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
@@ -40,7 +38,7 @@ namespace PostgRest.net
 
         public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters)
         {
-            AddLoggingToNoticeHandler(command);
+            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
@@ -54,7 +52,7 @@ namespace PostgRest.net
 
         public async Task<string> GetStringAsync(string command)
         {
-            AddLoggingToNoticeHandler(command);
+            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
@@ -80,35 +78,6 @@ namespace PostgRest.net
                 }
                 return reader.GetFieldType(0) == DBNull.Value.GetType() ? null : reader.GetString(0);
             }
-        }
-
-        private void AddLoggingToNoticeHandler(string command)
-        {
-            var logger = loggerFactory.CreateLogger(command);
-            connection.Notice += (sender, args) =>
-            {
-                var severity = args.Notice.Severity;
-                if (InfoLevels.Contains(severity))
-                {
-                    logger.LogInformation(args.Notice.MessageText);
-                }
-                else if (severity == "WARNING")
-                {
-                    logger.LogWarning(args.Notice.MessageText);
-                }
-                else if (severity.StartsWith("DEBUG"))
-                {
-                    logger.LogDebug(args.Notice.MessageText);
-                }
-                else if (ErrorLevels.Contains(severity))
-                {
-                    logger.LogError(args.Notice.MessageText);
-                }
-                else
-                {
-                    logger.LogTrace(args.Notice.MessageText);
-                }
-            };
         }
     }
 }
