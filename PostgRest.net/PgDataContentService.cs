@@ -12,13 +12,17 @@ namespace PostgRest.net
         Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters);
         Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
         Task<ContentResult> GetContentAsync(string command);
+        void SetContentParameters(int? statusCode, string contentType, string emptyContentValue);
     }
 
     public class PgDataContentService : IPgDataContentService
     {
         private readonly IPgDataService data;
         private readonly ILogger<PgDataContentService> logger;
-        private const string DefaultValue = "{}";
+
+        private string emptyContentValue = "{}";
+        private string contentType = "application/json";
+        private int? statusCode = 200;
 
         public PgDataContentService(IPgDataService data, ILogger<PgDataContentService> logger)
         {
@@ -26,14 +30,21 @@ namespace PostgRest.net
             this.logger = logger;
         }
 
+        public void SetContentParameters(int? statusCode, string contentType, string emptyContentValue)
+        {
+            this.statusCode = statusCode;
+            this.contentType = contentType;
+            this.emptyContentValue = emptyContentValue;
+        }
+
         public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? DefaultValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? emptyContentValue);
 
         public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? DefaultValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? emptyContentValue);
 
         public async Task<ContentResult> GetContentAsync(string command) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? DefaultValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? emptyContentValue);
 
         private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {
@@ -41,9 +52,9 @@ namespace PostgRest.net
             {
                 return new ContentResult
                 {
-                    StatusCode = 200,
-                    Content = await func() ?? DefaultValue,
-                    ContentType = "application/json"
+                    StatusCode = statusCode,
+                    Content = await func() ?? emptyContentValue,
+                    ContentType = contentType
                 };
             }
             catch (PostgresException e)
@@ -54,7 +65,7 @@ namespace PostgRest.net
 
         private ContentResult GetExceptionContent(PostgresException e)
         {
-            logger.LogError(e, FormatPostgresExceptionMessage(e));
+            logger.LogError(e, PgLoggingService.FormatPostgresExceptionMessage(e));
 
             // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
             if (e.SqlState == "42501")
@@ -66,7 +77,7 @@ namespace PostgRest.net
             }
         }
 
-        private static ContentResult UnathorizedContent() => new ContentResult
+        private ContentResult UnathorizedContent() => new ContentResult
         {
             StatusCode = 401,
             Content = JsonConvert.SerializeObject(new
@@ -74,10 +85,10 @@ namespace PostgRest.net
                 messeage = "Unathorized",
                 error = true
             }),
-            ContentType = "application/json"
+            ContentType = contentType
         };
 
-        private static ContentResult BadRequestContent(PostgresException e) => new ContentResult
+        private ContentResult BadRequestContent(PostgresException e) => new ContentResult
         {
             StatusCode = 400,
             Content = JsonConvert.SerializeObject(new
@@ -89,22 +100,7 @@ namespace PostgRest.net
                 constraint = e.ConstraintName,
                 error = true
             }),
-            ContentType = "application/json"
+            ContentType = contentType
         };
-
-        private static string FormatPostgresExceptionMessage(PostgresException e) => $"{e.Severity}\n" +
-            $"Message: {e.Message}\n" +
-            $"Detail: {e.Detail}\n" +
-            $"Line: {e.Line}\n" +
-            $"InternalPosition: {e.InternalPosition}\n" +
-            $"Position: {e.Position}\n" +
-            $"SqlState: {e.SqlState}\n" +
-            $"Statement: {e.Statement}\n" +
-            $"ColumnName: {e.ColumnName}\n" +
-            $"ConstraintName: {e.ConstraintName}\n" +
-            $"TableName: {e.TableName}\n" +
-            $"InternalQuery: {e.InternalQuery}\n" +
-            $"Where: {e.Where}\n" +
-            $"Hint: {e.Hint}\n\n";
     }
 }

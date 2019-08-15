@@ -1,8 +1,4 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using PostgRest.net;
 using System;
-using System.Net;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -10,19 +6,8 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LoggingTests : PostgRestClassFixture<LoggingTests.Services, LoggingTests.LifeCycle>
+    public class LoggingTests : PostgRestClassFixture<DefaultConfig, LoggingTests.LifeCycle>
     {
-        public class Services : IConfigureServices
-        {
-            public void ConfigureServices(IServiceCollection services) =>
-                services.AddMvc()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    .AddPostgRest(services, new PostgRestOptions
-                    {
-                        Connection = TestingConnection
-                    });
-        }
-
         public class LifeCycle : ILifeCycle
         {
             public void BuildUp() => DatabaseFixture.ExecuteCommand(ConnectionType.PostgresTesting, @"
@@ -119,7 +104,7 @@ namespace UnitTests
 
         public LoggingTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<Services, LifeCycle> fixture) : base(new TestOutputHelperAdapter(output), fixture) {}
+            AspNetCoreFixture<DefaultConfig, LifeCycle> fixture) : base(new TestOutputHelperAdapter(output), fixture) {}
 
         [Fact]
         public async Task TestLogWriteFromPostgresFunction()

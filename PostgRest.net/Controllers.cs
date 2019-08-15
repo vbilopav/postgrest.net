@@ -35,6 +35,16 @@ namespace PostgRest.net
             {
                 return new ContentResult { StatusCode = 400 };
             }
+            if (info.ReturnType == "json" || info.ReturnType == "jsonb")
+            {
+                contentService.SetContentParameters(200, "application/json; charset=utf-8", "{}");
+            } else if (info.ReturnType == "void")
+            {
+                contentService.SetContentParameters(204, "text/plain; charset=utf-8", null);
+            } else
+            {
+                contentService.SetContentParameters(200, "text/plain; charset=utf-8", null);
+            }
             if (info.Parameters.Count == 0)
             {
                 return await contentService.GetContentAsync($"select {info.RoutineName}()");

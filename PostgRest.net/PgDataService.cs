@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Npgsql;
 
 namespace PostgRest.net
@@ -76,7 +73,21 @@ namespace PostgRest.net
                 {
                     return null;
                 }
-                return reader.GetFieldType(0) == DBNull.Value.GetType() ? null : reader.GetString(0);
+                var value = reader.GetValue(0);
+                if (value == DBNull.Value)
+                {
+                    return null;
+                }
+                if (value.GetType() == typeof(string))
+                {
+                    return value as string;
+                }
+                else if (value.GetType() == typeof(DateTime))
+                {
+                    DateTime dt = (DateTime)value;
+                    return dt.ToString("s");
+                }
+                return Convert.ToString(value);
             }
         }
     }

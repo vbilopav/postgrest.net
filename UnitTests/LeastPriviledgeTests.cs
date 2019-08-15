@@ -1,6 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using PostgRest.net;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -9,19 +6,8 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LeastPriviledgeTests : PostgRestClassFixture<LeastPriviledgeTests.Services, LeastPriviledgeTests.LifeCycle>
+    public class LeastPriviledgeTests : PostgRestClassFixture<DefaultConfig, LeastPriviledgeTests.LifeCycle>
     {
-        public class Services : IConfigureServices
-        {
-            public void ConfigureServices(IServiceCollection services) =>
-                services.AddMvc()
-                    .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    .AddPostgRest(services, new PostgRestOptions
-                    {
-                        Connection = TestingConnection
-                    });
-        }
-
         public class LifeCycle : ILifeCycle
         {
             public void BuildUp() => DatabaseFixture.ExecuteCommand(ConnectionType.PostgresTesting, @"
@@ -61,7 +47,7 @@ namespace UnitTests
 
         public LeastPriviledgeTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<Services, LifeCycle> fixture) : base(output, fixture) {}
+            AspNetCoreFixture<DefaultConfig, LifeCycle> fixture) : base(output, fixture) {}
 
         [Fact]
         public async Task VerifyNotFoundForEndpointWithNoGrant()
@@ -80,7 +66,7 @@ namespace UnitTests
         {
             var (response, status, contentType) = await RestClient.GetAsync<ResponseModel>("https://localhost:5001/api/values-with-grant");
             Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json", contentType);
+            Assert.Equal("application/json; charset=utf-8", contentType);
             Assert.Equal(new int[3] { 1,2,3 }, response.Values);
         }
     }

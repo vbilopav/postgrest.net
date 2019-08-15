@@ -50,5 +50,20 @@ namespace PostgRest.net
                 }
             };
         }
+
+        public static string FormatPostgresExceptionMessage(PostgresException e) => $"{e.Severity}\n" +
+            $"Message: {e.Message}\n" +
+            $"Detail: {e.Detail}\n" +
+            $"Line: {e.Line}\n" +
+            $"InternalPosition: {e.InternalPosition}\n" +
+            $"Position: {e.Position}\n" +
+            $"SqlState: {e.SqlState}\n" +
+            $"Statement: {e.Statement}\n" +
+            $"ColumnName: {e.ColumnName}\n" +
+            $"ConstraintName: {e.ConstraintName}\n" +
+            $"TableName: {e.TableName}\n" +
+            $"InternalQuery: {e.InternalQuery}\n" +
+            $"Where: {e.Where}\n" +
+            $"Hint: {e.Hint}\n\n";
     }
 }
