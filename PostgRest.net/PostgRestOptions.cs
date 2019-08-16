@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace PostgRest.net
 {
@@ -25,10 +26,14 @@ namespace PostgRest.net
         public string Schema { get; set; } = "public";
         /// <summary>
         /// Provides a method to resolve route name from PostgreSQL routine name
-        /// string ResolveRouteName(string routineName, string candidateRaw, string candidateLowerNoVerb, string verb)
         /// Default method produces snake cased name from routine name without verb: rest__get_values_json -> values-json
         /// </summary>
-        public IRouteNameResolver RouteNameResolver { get; set; } = new KebabCaseRouteNameResolver();
+        public Func<string, string, string, string, string> ResolveRouteName { get; set; } = (routine, routineNoPrefix, routineLowerNoPrefix, verb) =>
+        {
+            // resolve to kebab by default
+            var snaked = string.Concat(routineLowerNoPrefix.RemoveFromStart(verb.ToLower()).Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
+            return snaked.Trim('_').Replace("_", "-");
+        };
         /// <summary>
         /// Pattern that forms route name after it is resolved: values-json -> api/values-json
         /// </summary>
@@ -56,7 +61,7 @@ namespace PostgRest.net
         public Func<Parameter, string, bool> IsBodyParameterWhen { get; set; } = (parameter, routine) =>
             parameter.ParamNameLower.Contains("body") && (parameter.ParamType == "json" || parameter.ParamType == "jsonb");
         /// <summary>
-        /// Sets response type parameters for succesuful requests for different routine types
+        /// Sets response parameters (status code, content type and value for null result) - for succesuful requests for different routine types
         /// </summary>
         public Action<ControllerInfo, IResponse> SetResponseParameters = (info, contentService) =>
         {

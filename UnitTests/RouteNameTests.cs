@@ -11,11 +11,6 @@ namespace UnitTests
 {
     public class RouteNameTests : PostgRestClassFixture<RouteNameTests.Services, RouteNameTests.LifeCycle>
     {
-        public class TestRouteResolver : IRouteNameResolver
-        {
-            public string ResolveRouteName(string routineName, string candidateRaw, string candidateLowerNoVerb, string verb) => routineName;
-        }
-
         public class Services : IConfigureServices
         {
             public void ConfigureServices(IServiceCollection services) =>
@@ -24,7 +19,7 @@ namespace UnitTests
                     .AddPostgRest(services, new PostgRestOptions
                     {
                         Connection = TestingConnection,
-                        RouteNameResolver = new TestRouteResolver(),
+                        ResolveRouteName = (routine, routineNoPrefix, routineLowerNoPrefix, verb) => routine,
                         RouteNamePattern = "api/v2/{0}",
                         ApplyRouteName = (route, routine) => $"{route}-test"
                     });

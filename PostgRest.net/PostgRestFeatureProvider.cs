@@ -136,33 +136,25 @@ namespace PostgRest.net
             string candidateLower = candidate.ToLower();
             if (options.IsGetRouteWhen(candidateLower, name))
             {
-                var routeName =
-                    string.Format(options.RouteNamePattern,
-                        options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("get"), "GET"));
+                var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "GET"));
                 logger.LogInformation(LogString(routeName, "GET"));
                 return (routeName, typeGet);
             }
             if (options.IsPostRouteWhen(candidateLower, name))
             {
-                var routeName =
-                    string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("post"), "POST"));
+                var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "POST"));
                 logger.LogInformation(LogString(routeName, "POST"));
                 return (routeName, typePost);
             }
             if (options.IsPutRouteWhen(candidateLower, name))
             {
-                var routeName =
-                    string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("put"), "PUT"));
+                var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "PUT"));
                 logger.LogInformation(LogString(routeName, "PUT"));
                 return (routeName, typePut);
             }
             if (options.IsDeleteRouteWhen(candidateLower, name))
             {
-                var routeName =
-                    string.Format(options.RouteNamePattern,
-                    options.RouteNameResolver.ResolveRouteName(name, candidate, candidateLower.RemoveFromStart("delete"), "DELETE"));
+                var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "DELETE"));
                 logger.LogInformation(LogString(routeName, "DELETE"));
                 return (routeName, typeDelete);
             }
