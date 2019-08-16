@@ -1,4 +1,5 @@
 using System;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -143,12 +144,15 @@ namespace UnitTests
                 }
             });
 
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-info");
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-notice");
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-log");
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-warn");
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-debug");
-            await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-error");
+            using (var client = new HttpClient())
+            {
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-info", client);
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-notice", client);
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-log", client);
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-warn", client);
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-debug", client);
+                await RestClient.GetAsync<object>("https://localhost:5001/api/test-logging-error", client);
+            }
 
             Assert.True(infoFound);
             Assert.True(noticeFound);
