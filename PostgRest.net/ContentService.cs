@@ -7,44 +7,61 @@ using Npgsql;
 
 namespace PostgRest.net
 {
-    public interface IPgDataContentService
+    public interface IResponse
+    {
+        IResponse SetStatusCode(int? statusCode);
+        IResponse SetContentType(string contentType);
+        IResponse SetDefaultValue(string defaultValue);
+    }
+
+    public interface IContentService : IResponse
     {
         Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters);
         Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
         Task<ContentResult> GetContentAsync(string command);
-        void SetContentParameters(int? statusCode, string contentType, string emptyContentValue);
     }
 
-    public class PgDataContentService : IPgDataContentService
+    public class ContentService : IContentService
     {
-        private readonly IPgDataService data;
-        private readonly ILogger<PgDataContentService> logger;
+        private readonly IDataService data;
+        private readonly ILogger<ContentService> logger;
 
-        private string emptyContentValue = "{}";
+        private string defaultValue = "{}";
         private string contentType = "application/json";
         private int? statusCode = 200;
 
-        public PgDataContentService(IPgDataService data, ILogger<PgDataContentService> logger)
+        public ContentService(IDataService data, ILogger<ContentService> logger)
         {
             this.data = data;
             this.logger = logger;
         }
 
-        public void SetContentParameters(int? statusCode, string contentType, string emptyContentValue)
+        public IResponse SetStatusCode(int? statusCode)
         {
             this.statusCode = statusCode;
+            return this;
+        }
+
+        public IResponse SetContentType(string contentType)
+        {
             this.contentType = contentType;
-            this.emptyContentValue = emptyContentValue;
+            return this;
+        }
+
+        public IResponse SetDefaultValue(string defaultValue)
+        {
+            this.defaultValue = defaultValue;
+            return this;
         }
 
         public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? emptyContentValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? defaultValue);
 
         public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? emptyContentValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? defaultValue);
 
         public async Task<ContentResult> GetContentAsync(string command) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? emptyContentValue);
+            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? defaultValue);
 
         private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {
@@ -53,7 +70,7 @@ namespace PostgRest.net
                 return new ContentResult
                 {
                     StatusCode = statusCode,
-                    Content = await func() ?? emptyContentValue,
+                    Content = await func() ?? defaultValue,
                     ContentType = contentType
                 };
             }
@@ -65,7 +82,7 @@ namespace PostgRest.net
 
         private ContentResult GetExceptionContent(PostgresException e)
         {
-            logger.LogError(e, PgLoggingService.FormatPostgresExceptionMessage(e));
+            logger.LogError(e, LoggingService.FormatPostgresExceptionMessage(e));
 
             // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
             if (e.SqlState == "42501")

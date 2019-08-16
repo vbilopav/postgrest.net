@@ -21,9 +21,9 @@ namespace PostgRest.net
                     return new NpgsqlConnection(connStr);
                 });
             }
-            services.TryAddScoped<IPgDataService, PgDataService>();
-            services.TryAddScoped<IPgDataContentService, PgDataContentService>();
-            services.TryAddScoped<IPgLoggingService, PgLoggingService>();
+            services.TryAddScoped<IDataService, DataService>();
+            services.TryAddScoped<IContentService, ContentService>();
+            services.TryAddScoped<ILoggingService, LoggingService>();
             return services;
         }
 

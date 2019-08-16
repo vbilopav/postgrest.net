@@ -6,23 +6,23 @@ using Npgsql;
 
 namespace PostgRest.net
 {
-    public interface IPgLoggingService
+    public interface ILoggingService
     {
-        NoticeEventHandler GetPgNoticeEventHandler(string command);
+        NoticeEventHandler CreateNoticeEventHandler(string command);
     }
 
-    public class PgLoggingService : IPgLoggingService
+    public class LoggingService : ILoggingService
     {
         private readonly ILoggerFactory loggerFactory;
         private static readonly IEnumerable<string> InfoLevels = new[] { "INFO", "NOTICE", "LOG" };
         private static readonly IEnumerable<string> ErrorLevels = new[] { "ERROR", "PANIC" };
 
-        public PgLoggingService(ILoggerFactory loggerFactory)
+        public LoggingService(ILoggerFactory loggerFactory)
         {
             this.loggerFactory = loggerFactory;
         }
 
-        public NoticeEventHandler GetPgNoticeEventHandler(string command)
+        public NoticeEventHandler CreateNoticeEventHandler(string command)
         {
             var logger = loggerFactory.CreateLogger(command);
             return (sender, args) =>

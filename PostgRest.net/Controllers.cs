@@ -11,9 +11,9 @@ namespace PostgRest.net
     [Route("")]
     public abstract class PgBaseController<T> : ControllerBase
     {
-        protected readonly IPgDataContentService contentService;
+        protected readonly IContentService contentService;
 
-        protected PgBaseController(IPgDataContentService contentService)
+        protected PgBaseController(IContentService contentService)
         {
             this.contentService = contentService;
         }
@@ -35,16 +35,7 @@ namespace PostgRest.net
             {
                 return new ContentResult { StatusCode = 400 };
             }
-            if (info.ReturnType == "json" || info.ReturnType == "jsonb")
-            {
-                contentService.SetContentParameters(200, "application/json; charset=utf-8", "{}");
-            } else if (info.ReturnType == "void")
-            {
-                contentService.SetContentParameters(204, "text/plain; charset=utf-8", null);
-            } else
-            {
-                contentService.SetContentParameters(200, "text/plain; charset=utf-8", null);
-            }
+            info.Options.SetResponseParameters(info, contentService);
             if (info.Parameters.Count == 0)
             {
                 return await contentService.GetContentAsync($"select {info.RoutineName}()");
@@ -84,7 +75,7 @@ namespace PostgRest.net
 
     public class PgGetController<T> : PgBaseController<T>
     {
-        public PgGetController(IPgDataContentService contentService) : base(contentService) { }
+        public PgGetController(IContentService contentService) : base(contentService) { }
 
         [HttpGet]
         public async Task<ContentResult> Get() => await GetContentAsync();
@@ -92,7 +83,7 @@ namespace PostgRest.net
 
     public class PgPostController<T> : PgBaseController<T>
     {
-        public PgPostController(IPgDataContentService contentService) : base(contentService) { }
+        public PgPostController(IContentService contentService) : base(contentService) { }
 
         [HttpPost]
         public async Task<ContentResult> Post() => await GetContentAsync();
@@ -100,7 +91,7 @@ namespace PostgRest.net
 
     public class PgPutController<T> : PgBaseController<T>
     {
-        public PgPutController(IPgDataContentService contentService) : base(contentService) { }
+        public PgPutController(IContentService contentService) : base(contentService) { }
 
         [HttpPut]
         public async Task<ContentResult> Put() => await GetContentAsync();
@@ -108,7 +99,7 @@ namespace PostgRest.net
 
     public class PgDeleteController<T> : PgBaseController<T>
     {
-        public PgDeleteController(IPgDataContentService contentService) : base(contentService) { }
+        public PgDeleteController(IContentService contentService) : base(contentService) { }
 
         [HttpDelete]
         public async Task<ContentResult> Delete() => await GetContentAsync();

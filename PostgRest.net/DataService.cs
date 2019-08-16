@@ -4,19 +4,19 @@ using Npgsql;
 
 namespace PostgRest.net
 {
-    public interface IPgDataService
+    public interface IDataService
     {
         Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters);
         Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
         Task<string> GetStringAsync(string command);
     }
 
-    public class PgDataService : IPgDataService
+    public class DataService : IDataService
     {
         private readonly NpgsqlConnection connection;
-        private readonly IPgLoggingService loggingService;
+        private readonly ILoggingService loggingService;
 
-        public PgDataService(NpgsqlConnection connection, IPgLoggingService loggingService)
+        public DataService(NpgsqlConnection connection, ILoggingService loggingService)
         {
             this.connection = connection;
             this.loggingService = loggingService;
@@ -24,7 +24,7 @@ namespace PostgRest.net
 
         public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters)
         {
-            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
+            connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
@@ -35,7 +35,7 @@ namespace PostgRest.net
 
         public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters)
         {
-            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
+            connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
@@ -49,7 +49,7 @@ namespace PostgRest.net
 
         public async Task<string> GetStringAsync(string command)
         {
-            connection.Notice += loggingService.GetPgNoticeEventHandler(command);
+            connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {

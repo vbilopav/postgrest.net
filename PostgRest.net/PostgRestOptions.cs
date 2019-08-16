@@ -56,6 +56,24 @@ namespace PostgRest.net
         public Func<Parameter, string, bool> IsBodyParameterWhen { get; set; } = (parameter, routine) =>
             parameter.ParamNameLower.Contains("body") && (parameter.ParamType == "json" || parameter.ParamType == "jsonb");
         /// <summary>
+        /// Sets response type parameters for succesuful requests for different routine types
+        /// </summary>
+        public Action<ControllerInfo, IResponse> SetResponseParameters = (info, contentService) =>
+        {
+            if (info.ReturnType == "json" || info.ReturnType == "jsonb")
+            {
+                contentService.SetStatusCode(200).SetContentType("application/json; charset=utf-8").SetDefaultValue("{}");
+            }
+            else if (info.ReturnType == "void")
+            {
+                contentService.SetStatusCode(204).SetContentType("text/plain; charset=utf-8").SetDefaultValue(null);
+            }
+            else
+            {
+                contentService.SetStatusCode(200).SetContentType("text/plain; charset=utf-8").SetDefaultValue(null);
+            }
+        };
+        /// <summary>
         ///   Func to decide is route a GET route. First param is lowered routine name without prefix
         /// </summary>
         public Func<string, string, bool> IsGetRouteWhen { get; set; } = (candidateLower, routine) =>
