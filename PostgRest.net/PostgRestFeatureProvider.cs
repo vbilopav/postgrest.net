@@ -54,10 +54,10 @@ namespace PostgRest.net
             var assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(dynamicAssemblyAssemblyName, AssemblyBuilderAccess.RunAndCollect);
             this.moduleBuilder = assemblyBuilder.DefineDynamicModule(dynamicAssemblyAssemblyName.Name);
 
-            this.typeGet = typeof(PgGetController<>);
-            this.typePost = typeof(PgPostController<>);
-            this.typePut = typeof(PgPutController<>);
-            this.typeDelete = typeof(PgDeleteController<>);
+            this.typeGet = typeof(GetController<>);
+            this.typePost = typeof(PostController<>);
+            this.typePut = typeof(PutController<>);
+            this.typeDelete = typeof(DeleteController<>);
 
             using (var builder = this.services.BuildServiceProvider())
             {
@@ -158,6 +158,7 @@ namespace PostgRest.net
                 logger.LogInformation(LogString(routeName, "DELETE"));
                 return (routeName, typeDelete);
             }
+            logger.LogWarning($"Routine {name} skipped, couldn't map to appropriate route. Check Is[Verb]When option.");
             return (null, null);
         }
     }

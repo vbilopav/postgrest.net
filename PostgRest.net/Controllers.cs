@@ -9,11 +9,11 @@ using Npgsql;
 namespace PostgRest.net
 {
     [Route("")]
-    public abstract class PgBaseController<T> : ControllerBase
+    public abstract class ControllerBase<T> : ControllerBase
     {
         protected readonly IContentService contentService;
 
-        protected PgBaseController(IContentService contentService)
+        protected ControllerBase(IContentService contentService)
         {
             this.contentService = contentService;
         }
@@ -73,33 +73,33 @@ namespace PostgRest.net
         }
     }
 
-    public class PgGetController<T> : PgBaseController<T>
+    public class GetController<T> : ControllerBase<T>
     {
-        public PgGetController(IContentService contentService) : base(contentService) { }
+        public GetController(IContentService contentService) : base(contentService) { }
 
         [HttpGet]
         public async Task<ContentResult> Get() => await GetContentAsync();
     }
 
-    public class PgPostController<T> : PgBaseController<T>
+    public class PostController<T> : ControllerBase<T>
     {
-        public PgPostController(IContentService contentService) : base(contentService) { }
+        public PostController(IContentService contentService) : base(contentService) { }
 
         [HttpPost]
         public async Task<ContentResult> Post() => await GetContentAsync();
     }
 
-    public class PgPutController<T> : PgBaseController<T>
+    public class PutController<T> : ControllerBase<T>
     {
-        public PgPutController(IContentService contentService) : base(contentService) { }
+        public PutController(IContentService contentService) : base(contentService) { }
 
         [HttpPut]
         public async Task<ContentResult> Put() => await GetContentAsync();
     }
 
-    public class PgDeleteController<T> : PgBaseController<T>
+    public class DeleteController<T> : ControllerBase<T>
     {
-        public PgDeleteController(IContentService contentService) : base(contentService) { }
+        public DeleteController(IContentService contentService) : base(contentService) { }
 
         [HttpDelete]
         public async Task<ContentResult> Delete() => await GetContentAsync();

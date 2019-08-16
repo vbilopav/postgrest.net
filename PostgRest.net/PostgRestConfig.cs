@@ -9,7 +9,7 @@ namespace PostgRest.net
 {
     public static class PostgRestConfig
     {
-        public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = default)
+        public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = null)
         {
             options = options ?? new PostgRestOptions();
             if (options.Connection != null)
@@ -27,7 +27,7 @@ namespace PostgRest.net
             return services;
         }
 
-        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostgRestOptions options = default)
+        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostgRestOptions options = null)
         {
             options = options ?? new PostgRestOptions();
             services.AddPostgRest(options);
