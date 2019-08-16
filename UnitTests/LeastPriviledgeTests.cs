@@ -1,3 +1,4 @@
+using Npgsql;
 using System.Net;
 using System.Threading.Tasks;
 using Xunit;
@@ -22,11 +23,14 @@ namespace UnitTests
             $$ language plpgsql security definer;
             revoke all on function rest__get_values_no_grant() from public;
 
+            create table test_values (i int);
+            insert into test_values values (1), (2), (3);
+
             create function rest__get_values_with_grant() returns json as
             $$
             begin
                 return (
-                    select json_build_object('values', array[1, 2, 3])
+                    select json_build_object('values', (select array_agg(i) from test_values))
                 );
             end
             $$ language plpgsql security definer;
@@ -40,6 +44,7 @@ namespace UnitTests
 
             drop function rest__get_values_no_grant();
             drop function rest__get_values_with_grant();
+            drop table test_values;
 
             ");
 
@@ -68,6 +73,28 @@ namespace UnitTests
             Assert.Equal(HttpStatusCode.OK, status);
             Assert.Equal("application/json; charset=utf-8", contentType);
             Assert.Equal(new int[3] { 1,2,3 }, response.Values);
+        }
+
+        [Fact]
+        public void VerifyAccesDeniedToTable()
+        {
+            bool permissionDenied = false;
+            try
+            {
+                DatabaseFixture.ExecuteCommand(ConnectionType.Testing, "select * from test_values;");
+            }
+            catch (PostgresException e)
+            {
+                // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
+                if (e.SqlState == "42501")
+                {
+                    permissionDenied = true;
+                } else
+                {
+                    throw;
+                }
+            }
+            Assert.True(permissionDenied);
         }
     }
 }
