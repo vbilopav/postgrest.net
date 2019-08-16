@@ -55,5 +55,25 @@ namespace PostgRest.net
         /// </summary>
         public Func<Parameter, string, bool> IsBodyParameterWhen { get; set; } = (parameter, routine) =>
             parameter.ParamNameLower.Contains("body") && (parameter.ParamType == "json" || parameter.ParamType == "jsonb");
+        /// <summary>
+        ///   Func to decide is route a GET route. First param is lowered routine name without prefix
+        /// </summary>
+        public Func<string, string, bool> IsGetRouteWhen { get; set; } = (candidateLower, routine) =>
+            candidateLower.StartsWith("get");
+        /// <summary>
+        ///   Func to decide is route a POST route. First param is lowered routine name without prefix
+        /// </summary>
+        public Func<string, string, bool> IsPostRouteWhen { get; set; } = (candidateLower, routine) =>
+            candidateLower.StartsWith("post");
+        /// <summary>
+        ///   Func to decide is route a PUT route. First param is lowered routine name without prefix
+        /// </summary>
+        public Func<string, string, bool> IsPutRouteWhen { get; set; } = (candidateLower, routine) =>
+            candidateLower.StartsWith("put");
+        /// <summary>
+        ///   Func to decide is route a DELETE route. First param is lowered routine name without prefix
+        /// </summary>
+        public Func<string, string, bool> IsDeleteRouteWhen { get; set; } = (candidateLower, routine) =>
+            candidateLower.StartsWith("delete");
     }
 }

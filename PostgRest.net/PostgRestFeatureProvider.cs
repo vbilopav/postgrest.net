@@ -134,7 +134,7 @@ namespace PostgRest.net
 
             string candidate = name.RemoveFromStart(prefix);
             string candidateLower = candidate.ToLower();
-            if (candidateLower.StartsWith("get"))
+            if (options.IsGetRouteWhen(candidateLower, name))
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
@@ -142,7 +142,7 @@ namespace PostgRest.net
                 logger.LogInformation(LogString(routeName, "GET"));
                 return (routeName, typeGet);
             }
-            if (candidateLower.StartsWith("post"))
+            if (options.IsPostRouteWhen(candidateLower, name))
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
@@ -150,7 +150,7 @@ namespace PostgRest.net
                 logger.LogInformation(LogString(routeName, "POST"));
                 return (routeName, typePost);
             }
-            if (candidateLower.StartsWith("put"))
+            if (options.IsPutRouteWhen(candidateLower, name))
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
@@ -158,7 +158,7 @@ namespace PostgRest.net
                 logger.LogInformation(LogString(routeName, "PUT"));
                 return (routeName, typePut);
             }
-            if (candidateLower.StartsWith("delete"))
+            if (options.IsDeleteRouteWhen(candidateLower, name))
             {
                 var routeName =
                     string.Format(options.RouteNamePattern,
