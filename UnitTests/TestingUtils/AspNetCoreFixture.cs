@@ -21,15 +21,8 @@ namespace UnitTests
         void TearDown();
     }
 
-    public class NoopLifeCycle : ILifeCycle
-    {
-        public void BuildUp() { }
-        public void TearDown() { }
-
-    }
-
-    public class AspNetCoreFixture<TConfigureServices> : AspNetCoreFixture<TConfigureServices, NoopLifeCycle>
-        where TConfigureServices : IConfigureServices, new()
+    public class AspNetCoreFixture<TLifeCycle> : AspNetCoreFixture<DefaultConfigServices, TLifeCycle>
+        where TLifeCycle : ILifeCycle, new()
     {
         public AspNetCoreFixture() : base() {}
     }
@@ -48,16 +41,20 @@ namespace UnitTests
             lifeCycle.BuildUp();
         }
 
-        public void Initialize(ITestOutputHelper output)
+        public void Initialize(ITestOutputHelper output, string url)
         {
             if (host != null)
             {
                 return;
             }
-            host = WebHost.CreateDefaultBuilder()
+            var builder = WebHost.CreateDefaultBuilder()
                 .ConfigureLogging(f => f.AddProvider(new XUnitLoggerProvider(output)))
-                .UseStartup<Startup<TConfigureServices>>()
-                .Build();
+                .UseStartup<Startup<TConfigureServices>>();
+            if (url != null)
+            {
+                builder = builder.UseUrls(url);
+            }
+            host = builder.Build();
             host.Start();
         }
 

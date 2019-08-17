@@ -10,8 +10,8 @@ namespace PostgRest.net
         public string RouteNamePattern = "api/{0}";
         public string[] JsonTypes { get; set; } = new string[] { "json", "jsonb" };
         public string VoidType { get; set; } = "void";
-        public string QueryStringParamNameRegex { get; set; } = "^query";
-        public string BodyParamNameRegex { get; set; } = "^body";
+        public string QueryStringParamNameRegex { get; set; } = "query";
+        public string BodyParamNameRegex { get; set; } = "body";
         public string JsonContentType { get; set; } = "application/json; charset=utf-8";
         public string TextContentType { get; set; } = "text/plain; charset=utf-8";
         public string JsonDefaultValue { get; set; } = "{}";

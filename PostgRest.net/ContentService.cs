@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Npgsql;
+using Microsoft.Extensions.Options;
 
 namespace PostgRest.net
 {
@@ -30,13 +31,12 @@ namespace PostgRest.net
         private string contentType;
         private int? statusCode;
 
-        public ContentService(IDataService data, ILogger<ContentService> logger)
+        public ContentService(IDataService data, ILogger<ContentService> logger, IOptions<PostgRestConfig> options)
         {
             this.data = data;
             this.logger = logger;
-            var config = ControllerData.Config;
-            this.defaultValue = config.JsonDefaultValue;
-            this.contentType = config.JsonContentType;
+            this.defaultValue = options.Value.JsonDefaultValue;
+            this.contentType = options.Value.JsonContentType;
             this.statusCode = 200;
         }
 

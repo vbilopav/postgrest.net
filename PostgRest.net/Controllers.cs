@@ -52,6 +52,7 @@ namespace PostgRest.net
                     {
                         query = Request.Query.ToJObject();
                     }
+                    info.Options.ApplyQueryStringParameter?.Invoke(query, param.ParamName, info, this);
                     npngParameters.Add(new NpgsqlParameter(param.ParamName, query.ToString(Formatting.None)));
                 }
                 else if (param.FromBody)
@@ -64,7 +65,9 @@ namespace PostgRest.net
                 }
                 else
                 {
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, null));
+                    object value = DBNull.Value;
+                    info.Options.ApplyParameterValue?.Invoke(v => value = v, param.ParamName, info, this);
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, value));
                 }
                 stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
             }

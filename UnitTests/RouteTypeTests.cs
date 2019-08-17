@@ -7,7 +7,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class RouteTypeTests : PostgRestClassFixture<DefaultConfigServices, RouteTypeTests.LifeCycle>
+    public class RouteTypeTests : PostgRestClassFixture<RouteTypeTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -47,7 +47,7 @@ namespace UnitTests
 
         public RouteTypeTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<DefaultConfigServices, LifeCycle> fixture) : base(output, fixture) {}
+            AspNetCoreFixture<LifeCycle> fixture) : base(output, fixture) {}
 
 
         [Fact]

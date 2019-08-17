@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace PostgRest.net
         /// <summary>
         /// Apply specific controller convention (filter, properties, attributes, etc)
         /// </summary>
-        public Action<ControllerModel, ControllerInfo> ApplyControllerConvention { get; set; }
+        public Action<ControllerModel, ControllerBaseInfo> ApplyControllerConvention { get; set; }
         /// <summary>
         ///  Func to decide is parameter going to be deserialized from query string
         /// </summary>
@@ -59,7 +60,7 @@ namespace PostgRest.net
         /// <summary>
         /// Sets response parameters (status code, content type and value for null result) - for succesuful requests for different routine types
         /// </summary>
-        public Action<ControllerInfo, IResponse> SetResponseParameters { get; set; }
+        public Action<ControllerBaseInfo, IResponse> SetResponseParameters { get; set; }
         /// <summary>
         ///   Func to decide is route a GET route. First param is lowered routine name without prefix
         /// </summary>
@@ -76,6 +77,14 @@ namespace PostgRest.net
         ///   Func to decide is route a DELETE route. First param is lowered routine name without prefix
         /// </summary>
         public Func<string, string, bool> IsDeleteRouteWhen { get; set; }
+        /// <summary>
+        ///  update query string json object that will be sent as parameter
+        /// </summary>
+        public Action<JObject, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyQueryStringParameter { get; set; }
+        /// <summary>
+        ///  update parameter custom value (not mapped as query string or body)
+        /// </summary>
+        public Action<Action<object>, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
 
         public PostgRestOptions(IConfiguration configuration = null)
         {
@@ -84,7 +93,6 @@ namespace PostgRest.net
             {
                 configuration.Bind("PostgRest", Config);
             }
-            ControllerData.Config = Config;
 
             Connection = Config.Connection;
             Prefix = Config.RoutinePrefix;
@@ -127,6 +135,9 @@ namespace PostgRest.net
             IsPostRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.PostRouteRegex, RegexOptions.IgnoreCase).Success;
             IsPutRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.PutRouteRegex, RegexOptions.IgnoreCase).Success;
             IsDeleteRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.DeleteRouteRegex, RegexOptions.IgnoreCase).Success;
+
+            ApplyQueryStringParameter = null;
+            ApplyParameterValue = null;
         }
     }
 }

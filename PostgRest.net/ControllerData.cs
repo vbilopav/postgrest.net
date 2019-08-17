@@ -17,25 +17,22 @@ namespace PostgRest.net
         public bool FromBody { get; set; }
     }
 
-    public class ControllerInfo
+    public class ControllerBaseInfo
     {
         public string RoutineName { get; set; }
         public string RouteName { get; set; }
-        public Type RouteType { get; set; }
         public string ReturnType { get; set; }
         public IList<Parameter> Parameters { get; set; }
+    }
+
+    public class ControllerInfo : ControllerBaseInfo
+    {
+        public Type RouteType { get; set; }
         public PostgRestOptions Options { get; internal set; }
     }
 
     internal static class ControllerData
     {
-        private static PostgRestConfig config;
-
-        public static PostgRestConfig Config
-        {
-            get => config ?? new PostgRestConfig();
-            set => config = value;
-        }
         public static ConcurrentDictionary<string, ControllerInfo> Data { get; } = new ConcurrentDictionary<string, ControllerInfo>();
     }
 }

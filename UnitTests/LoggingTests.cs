@@ -7,7 +7,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LoggingTests : PostgRestClassFixture<DefaultConfigServices, LoggingTests.LifeCycle>
+    public class LoggingTests : PostgRestClassFixture<LoggingTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -105,7 +105,7 @@ namespace UnitTests
 
         public LoggingTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<DefaultConfigServices, LifeCycle> fixture) : base(new TestOutputHelperAdapter(output), fixture) {}
+            AspNetCoreFixture<LifeCycle> fixture) : base(new TestOutputHelperAdapter(output), fixture) {}
 
         [Fact]
         public async Task TestLogWriteFromPostgresFunction()

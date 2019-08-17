@@ -7,7 +7,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LeastPriviledgeTests : PostgRestClassFixture<DefaultConfigServices, LeastPriviledgeTests.LifeCycle>
+    public class LeastPriviledgeTests : PostgRestClassFixture<LeastPriviledgeTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -52,7 +52,7 @@ namespace UnitTests
 
         public LeastPriviledgeTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<DefaultConfigServices, LifeCycle> fixture) : base(output, fixture) {}
+            AspNetCoreFixture<LifeCycle> fixture) : base(output, fixture) {}
 
         [Fact]
         public async Task VerifyNotFoundForEndpointWithNoGrant()
