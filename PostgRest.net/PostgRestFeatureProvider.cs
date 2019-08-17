@@ -16,26 +16,6 @@ namespace PostgRest.net
 {
     public class PostgRestFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
-        private const string Command =
-            @"select
-                r.routine_name,
-                r.data_type as ""return_type"",
-                coalesce(json_agg(
-                    json_build_object(
-                        'ParamName', p.parameter_name,
-                        'ParamType', p.data_type,
-                        'Position', p.ordinal_position,
-                        'HaveDefault', p.parameter_default is not null,
-                        'Direction', p.parameter_mode)
-                )  filter (where p.parameter_name is not null), '[]') as ""parameters""
-            from information_schema.routines r
-            left outer join information_schema.parameters p on r.specific_name = p.specific_name
-            where
-                r.routine_type = 'FUNCTION'
-                and r.specific_schema = @schema
-            group by
-                r.routine_name, r.data_type";
-
         private readonly ILogger<PostgRestFeatureProvider> logger;
         private readonly IServiceCollection services;
         private readonly PostgRestOptions options;
@@ -69,7 +49,7 @@ namespace PostgRest.net
         {
             using (var builder = services.BuildServiceProvider())
             using (var connection = builder.GetService<NpgsqlConnection>())
-            using (var cmd = new NpgsqlCommand(Command, connection))
+            using (var cmd = new NpgsqlCommand(options.Config.ReadPgRoutinesCommand, connection))
             {
                 cmd.Parameters.AddWithValue("schema", options.Schema);
                 connection.Open();

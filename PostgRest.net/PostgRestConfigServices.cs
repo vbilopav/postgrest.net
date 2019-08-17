@@ -11,7 +11,7 @@ namespace PostgRest.net
     {
         public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = null)
         {
-            options = options ?? new PostgRestOptions();
+            options = services.EnsureOptions(options);
             if (options.Connection != null)
             {
                 services.AddScoped<NpgsqlConnection, NpgsqlConnection>(provider =>
@@ -29,13 +29,23 @@ namespace PostgRest.net
 
         public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostgRestOptions options = null)
         {
-            options = options ?? new PostgRestOptions();
+            options = services.EnsureOptions(options);
             services.AddPostgRest(options);
             var assembly = typeof(PostgRestExtensions).GetTypeInfo().Assembly;
             return builder
                 .AddApplicationPart(assembly)
                 .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(services, options)))
                 .AddMvcOptions(o => o.Conventions.Add(new PostgRestConvention(options)));
+        }
+
+        private static PostgRestOptions EnsureOptions(this IServiceCollection services, PostgRestOptions options)
+        {
+            if (options != null)
+            {
+                return options;
+            }
+            var provider = services.BuildServiceProvider();
+            return new PostgRestOptions(provider.GetRequiredService<IConfiguration>());
         }
     }
 }
