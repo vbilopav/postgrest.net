@@ -5,7 +5,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class DefaultConfig : IConfigureServices
+    public class DefaultConfigServices : IConfigureServices
     {
         public void ConfigureServices(IServiceCollection services) =>
             services.AddMvc()

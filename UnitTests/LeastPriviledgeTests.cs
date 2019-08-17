@@ -7,7 +7,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LeastPriviledgeTests : PostgRestClassFixture<DefaultConfig, LeastPriviledgeTests.LifeCycle>
+    public class LeastPriviledgeTests : PostgRestClassFixture<DefaultConfigServices, LeastPriviledgeTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -52,7 +52,7 @@ namespace UnitTests
 
         public LeastPriviledgeTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<DefaultConfig, LifeCycle> fixture) : base(output, fixture) {}
+            AspNetCoreFixture<DefaultConfigServices, LifeCycle> fixture) : base(output, fixture) {}
 
         [Fact]
         public async Task VerifyNotFoundForEndpointWithNoGrant()
@@ -76,12 +76,28 @@ namespace UnitTests
         }
 
         [Fact]
-        public void VerifyAccesDeniedToTable()
+        public void VerifyAccessDeniedToTable()
+        {
+            AssertAccessDenied("select * from test_values;");
+        }
+
+        [Fact]
+        public void VerifyAccessDeniedToDynamicSql()
+        {
+            AssertAccessDenied(@"
+            do $$
+            begin
+                execute 'select * from test_values';
+            end
+            $$;");
+        }
+
+        private void AssertAccessDenied(string sql)
         {
             bool permissionDenied = false;
             try
             {
-                DatabaseFixture.ExecuteCommand(ConnectionType.Testing, "select * from test_values;");
+                DatabaseFixture.ExecuteCommand(ConnectionType.Testing, sql);
             }
             catch (PostgresException e)
             {
@@ -89,7 +105,8 @@ namespace UnitTests
                 if (e.SqlState == "42501")
                 {
                     permissionDenied = true;
-                } else
+                }
+                else
                 {
                     throw;
                 }

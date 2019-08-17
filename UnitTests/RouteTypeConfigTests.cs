@@ -10,9 +10,9 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class RouteTypeConfigTests : PostgRestClassFixture<RouteTypeConfigTests.RouteTypeConfig, RouteTypeConfigTests.LifeCycle>
+    public class RouteTypeConfigTests : PostgRestClassFixture<RouteTypeConfigTests.Services, RouteTypeConfigTests.LifeCycle>
     {
-        public class RouteTypeConfig : IConfigureServices
+        public class Services : IConfigureServices
         {
             public void ConfigureServices(IServiceCollection services) =>
                 services.AddMvc()
@@ -67,7 +67,7 @@ namespace UnitTests
 
         public RouteTypeConfigTests(
             ITestOutputHelper output,
-            AspNetCoreFixture<RouteTypeConfig, LifeCycle> fixture) : base(output, fixture) {}
+            AspNetCoreFixture<Services, LifeCycle> fixture) : base(output, fixture) {}
 
 
         [Fact]

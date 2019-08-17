@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace PostgRest.net
 {
-    public static class PostgRestConfig
+    public static class PostgRestConfigServices
     {
         public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = null)
         {
