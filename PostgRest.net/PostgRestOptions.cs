@@ -39,15 +39,15 @@ namespace PostgRest.net
         /// <summary>
         /// Action to add filter to specific routine indetified with route name and routine name
         /// </summary>
-        public Action<IList<IFilterMetadata>, string, string> ApplyFilters { get; set; } = (filters, route, routine) => { };
+        public Action<IList<IFilterMetadata>, string, string> ApplyFilters { get; set; }
         /// <summary>
         /// Function that receives route and routine and returns final rout name. Default is unchanged
         /// </summary>
-        public Func<string, string, string> ApplyRouteName { get; set; } = (route, routine) => route;
+        public Func<string, string, string> ApplyRouteName { get; set; }
         /// <summary>
         /// Apply specific controller convention (filter, properties, attributes, etc)
         /// </summary>
-        public Action<ControllerModel, ControllerInfo> ApplyControllerConvention { get; set; } = (model, info) => { };
+        public Action<ControllerModel, ControllerInfo> ApplyControllerConvention { get; set; }
         /// <summary>
         ///  Func to decide is parameter going to be deserialized from query string
         /// </summary>
@@ -84,6 +84,7 @@ namespace PostgRest.net
             {
                 configuration.Bind("PostgRest", Config);
             }
+            ControllerData.Config = Config;
 
             Connection = Config.Connection;
             Prefix = Config.RoutinePrefix;
@@ -97,6 +98,9 @@ namespace PostgRest.net
             };
 
             RouteNamePattern = Config.RouteNamePattern;
+            ApplyFilters = (filters, route, routine) => { };
+            ApplyRouteName = (route, routine) => route;
+            ApplyControllerConvention = (model, info) => { };
 
             IsQueryStringParameterWhen = (parameter, routine) =>
                 Regex.Match(parameter.ParamNameLower, Config.QueryStringParamNameRegex, RegexOptions.IgnoreCase).Success && Config.JsonTypes.Contains(parameter.ParamType);

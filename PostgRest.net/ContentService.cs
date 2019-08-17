@@ -26,14 +26,18 @@ namespace PostgRest.net
         private readonly IDataService data;
         private readonly ILogger<ContentService> logger;
 
-        private string defaultValue = "{}";
-        private string contentType = "application/json";
-        private int? statusCode = 200;
+        private string defaultValue;
+        private string contentType;
+        private int? statusCode;
 
         public ContentService(IDataService data, ILogger<ContentService> logger)
         {
             this.data = data;
             this.logger = logger;
+            var config = ControllerData.Config;
+            this.defaultValue = config.JsonDefaultValue;
+            this.contentType = config.JsonContentType;
+            this.statusCode = 200;
         }
 
         public IResponse SetStatusCode(int? statusCode)

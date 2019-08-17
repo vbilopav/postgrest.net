@@ -29,6 +29,13 @@ namespace PostgRest.net
 
     internal static class ControllerData
     {
+        private static PostgRestConfig config;
+
+        public static PostgRestConfig Config
+        {
+            get => config ?? new PostgRestConfig();
+            set => config = value;
+        }
         public static ConcurrentDictionary<string, ControllerInfo> Data { get; } = new ConcurrentDictionary<string, ControllerInfo>();
     }
 }
