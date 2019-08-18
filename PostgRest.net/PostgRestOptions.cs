@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
-using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +8,11 @@ using System.Text.RegularExpressions;
 
 namespace PostgRest.net
 {
+    public class ReferencValueType
+    {
+        public object Value { get; set; }
+    }
+
     public class PostgRestOptions
     {
         public PostgRestConfig Config { get; private set; }
@@ -78,13 +82,17 @@ namespace PostgRest.net
         /// </summary>
         public Func<string, string, bool> IsDeleteRouteWhen { get; set; }
         /// <summary>
-        ///  update query string json object that will be sent as parameter
+        ///  update parameter with custom value by setting first parameter ReferencValueType -> value.Value = "some value";
         /// </summary>
-        public Action<JObject, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyQueryStringParameter { get; set; }
+        public Action<ReferencValueType, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
         /// <summary>
-        ///  update parameter custom value (not mapped as query string or body)
+        /// Decide should routine parameters be mapped by each name from query string
         /// </summary>
-        public Action<Action<object>, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
+        public Func<ControllerBaseInfo, bool> MatchParamsByQueryStringKeyNameWhen { get; set; }
+        /// <summary>
+        /// Decide should routine parameters be mapped by each name from body
+        /// </summary>
+        public Func<ControllerBaseInfo, bool> MatchParamsByBodyKeyNameWhen { get; set; }
 
         public PostgRestOptions(IConfiguration configuration = null)
         {
@@ -136,8 +144,9 @@ namespace PostgRest.net
             IsPutRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.PutRouteRegex, RegexOptions.IgnoreCase).Success;
             IsDeleteRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.DeleteRouteRegex, RegexOptions.IgnoreCase).Success;
 
-            ApplyQueryStringParameter = null;
             ApplyParameterValue = null;
+            MatchParamsByQueryStringKeyNameWhen = null;
+            MatchParamsByBodyKeyNameWhen = null;
         }
     }
 }

@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
 
@@ -9,17 +11,20 @@ namespace PostgRest.net
         Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters);
         Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
         Task<string> GetStringAsync(string command);
+        IList<KeyValuePair<string, object>> GetParameterInfo();
     }
 
     public class DataService : IDataService
     {
         private readonly NpgsqlConnection connection;
         private readonly ILoggingService loggingService;
+        private IList<KeyValuePair<string, object>> parameterInfo;
 
         public DataService(NpgsqlConnection connection, ILoggingService loggingService)
         {
             this.connection = connection;
             this.loggingService = loggingService;
+            this.parameterInfo = null;
         }
 
         public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters)
@@ -65,8 +70,18 @@ namespace PostgRest.net
             }
         }
 
-        private static async Task<string> GetStringContentFromCommand(NpgsqlCommand cmd)
+        public IList<KeyValuePair<string, object>> GetParameterInfo() => this.parameterInfo;
+
+        private async Task<string> GetStringContentFromCommand(NpgsqlCommand cmd)
         {
+            if (cmd.Parameters != null && cmd.Parameters.Count > 0)
+            {
+                this.parameterInfo = cmd.Parameters.Select(p => new KeyValuePair<string, object>(p.ParameterName, p.NpgsqlValue)).ToList();
+            }
+            else
+            {
+                this.parameterInfo = null;
+            }    
             using (var reader = cmd.ExecuteReader())
             {
                 if (!await reader.ReadAsync())

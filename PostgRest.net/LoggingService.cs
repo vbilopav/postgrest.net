@@ -51,7 +51,7 @@ namespace PostgRest.net
             };
         }
 
-        public static string FormatPostgresExceptionMessage(PostgresException e) => $"{e.Severity}\n" +
+        public static string FormatPostgresExceptionMessage(PostgresException e, IDataService data) => $"{e.Severity}\n" +
             $"Message: {e.Message}\n" +
             $"Detail: {e.Detail}\n" +
             $"Line: {e.Line}\n" +
@@ -59,11 +59,26 @@ namespace PostgRest.net
             $"Position: {e.Position}\n" +
             $"SqlState: {e.SqlState}\n" +
             $"Statement: {e.Statement}\n" +
+            FormatParametersInfo(data) +
             $"ColumnName: {e.ColumnName}\n" +
             $"ConstraintName: {e.ConstraintName}\n" +
             $"TableName: {e.TableName}\n" +
             $"InternalQuery: {e.InternalQuery}\n" +
             $"Where: {e.Where}\n" +
             $"Hint: {e.Hint}\n\n";
+
+        private static string FormatParametersInfo(IDataService data)
+        {
+            if (data == null)
+            {
+                return string.Empty;
+            }
+            var info = data.GetParameterInfo();
+            if (info == null || info.Count == 0)
+            {
+                return string.Empty;
+            }
+            return string.Concat("Parameters: ", string.Join(", ", info.Select(p => $"@{p.Key}={p.Value}")), "\n");
+        }
     }
 }

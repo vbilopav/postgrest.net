@@ -46,15 +46,24 @@ namespace PostgRest.net
             var npngParameters = new List<NpgsqlParameter>();
             foreach(var param in info.Parameters)
             {
+                /*
+                if (info.MatchParamsByQueryStringKeyName)
+                {
+                    var value = Request.Query[param.ParamName];
+                }
+                else 
+                */
                 if (param.FromQueryString)
                 {
                     if (query == null)
                     {
                         query = Request.Query.ToJObject();
                     }
-                    info.Options.ApplyQueryStringParameter?.Invoke(query, param.ParamName, info, this);
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, query.ToString(Formatting.None)));
+                    var value = new ReferencValueType { Value = query };
+                    info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
                 }
+
                 else if (param.FromBody)
                 {
                     if (body == null)
@@ -63,11 +72,12 @@ namespace PostgRest.net
                     }
                     npngParameters.Add(new NpgsqlParameter(param.ParamName, body.ToString(Formatting.None)));
                 }
+
                 else
                 {
-                    object value = DBNull.Value;
-                    info.Options.ApplyParameterValue?.Invoke(v => value = v, param.ParamName, info, this);
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, value));
+                    var value = new ReferencValueType { Value = DBNull.Value };
+                    info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+                    npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
                 }
                 stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
             }

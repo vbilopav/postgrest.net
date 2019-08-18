@@ -103,6 +103,8 @@ namespace PostgRest.net
             var type = typeBuilder.CreateTypeInfo();
             feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
             info.Options = options;
+            info.MatchParamsByQueryStringKeyName = options.MatchParamsByQueryStringKeyNameWhen == null ? false : options.MatchParamsByQueryStringKeyNameWhen(info);
+            info.MatchParamsByBodyKeyName = options.MatchParamsByBodyKeyNameWhen == null ? false : options.MatchParamsByBodyKeyNameWhen(info);
             ControllerData.Data.TryAdd(name, info);
         }
 

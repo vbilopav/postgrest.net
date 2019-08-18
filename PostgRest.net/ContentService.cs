@@ -86,7 +86,7 @@ namespace PostgRest.net
 
         private ContentResult GetExceptionContent(PostgresException e)
         {
-            logger.LogError(e, LoggingService.FormatPostgresExceptionMessage(e));
+            logger.LogError(e, LoggingService.FormatPostgresExceptionMessage(e, data));
 
             // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
             if (e.SqlState == "42501")

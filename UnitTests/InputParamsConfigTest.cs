@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json.Linq;
 using PostgRest.net;
 using System.Net;
 using System.Net.Http;
@@ -20,18 +21,15 @@ namespace UnitTests
                     .AddPostgRest(services, new PostgRestOptions
                     {
                         Connection = TestingConnection,
-                        ApplyQueryStringParameter = (query, name, info, controller) =>
-                        {
-                            if (info.RoutineName == "rest__get_return_query_applied" && name == "_query")
-                            {
-                                query["foo"] = "bar";
-                            }
-                        },
-                        ApplyParameterValue = (valueAction, name, info, controller) =>
+                        ApplyParameterValue = (value, name, info, controller) =>
                         {
                             if (info.RoutineName == "rest__get_return_query_additional_applied" && name == "_additional")
                             {
-                                valueAction("some text");
+                                value.Value = "some text";
+                            }
+                            else if (info.RoutineName == "rest__get_return_query_applied" && name == "_query")
+                            {
+                                (value.Value as JObject)["foo"] = "bar";
                             }
                         }
                     });
