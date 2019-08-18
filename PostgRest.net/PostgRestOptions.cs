@@ -8,11 +8,6 @@ using System.Text.RegularExpressions;
 
 namespace PostgRest.net
 {
-    public class ReferencValueType
-    {
-        public object Value { get; set; }
-    }
-
     public class PostgRestOptions
     {
         public PostgRestConfig Config { get; private set; }
@@ -88,11 +83,11 @@ namespace PostgRest.net
         /// <summary>
         /// Decide should routine parameters be mapped by each name from query string
         /// </summary>
-        public Func<ControllerBaseInfo, bool> MatchParamsByQueryStringKeyNameWhen { get; set; }
+        public Func<ControllerBaseInfo, bool> MatchParamsByQueryStringKeyWhen { get; set; }
         /// <summary>
         /// Decide should routine parameters be mapped by each name from body
         /// </summary>
-        public Func<ControllerBaseInfo, bool> MatchParamsByBodyKeyNameWhen { get; set; }
+        public Func<ControllerBaseInfo, bool> MatchParamsByBodyKeyWhen { get; set; }
 
         public PostgRestOptions(IConfiguration configuration = null)
         {
@@ -145,8 +140,8 @@ namespace PostgRest.net
             IsDeleteRouteWhen = (candidateLower, routine) => Regex.Match(candidateLower, Config.DeleteRouteRegex, RegexOptions.IgnoreCase).Success;
 
             ApplyParameterValue = null;
-            MatchParamsByQueryStringKeyNameWhen = null;
-            MatchParamsByBodyKeyNameWhen = null;
+            MatchParamsByQueryStringKeyWhen = null;
+            MatchParamsByBodyKeyWhen = null;
         }
     }
 }

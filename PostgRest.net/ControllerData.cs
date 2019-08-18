@@ -27,8 +27,8 @@ namespace PostgRest.net
 
     public class ControllerInfo : ControllerBaseInfo
     {
-        public bool MatchParamsByQueryStringKeyName { get; set; }
-        public bool MatchParamsByBodyKeyName { get; set; }
+        public bool MatchParamsByQueryStringKey { get; set; }
+        public bool MatchParamsByBodyKey { get; set; }
         public Type RouteType { get; set; }
         public PostgRestOptions Options { get; internal set; }
     }

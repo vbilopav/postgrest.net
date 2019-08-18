@@ -5,17 +5,36 @@ using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json;
 using Npgsql;
+using System.Linq;
+using Microsoft.Extensions.Primitives;
 
 namespace PostgRest.net
 {
+    public class ReferencValueType
+    {
+        private object value = DBNull.Value;
+        public object Value { get => value; set => this.value = value ?? DBNull.Value; }
+    }
+
     [Route("")]
     public abstract class ControllerBase<T> : ControllerBase
     {
         protected readonly IContentService contentService;
 
+        private JObject query;
+        private JObject body;
+        private ControllerInfo info;
+        private readonly IList<string> stringParameters;
+        private readonly IList<NpgsqlParameter> npngParameters;
+
         protected ControllerBase(IContentService contentService)
         {
             this.contentService = contentService;
+            query = null;
+            body = null;
+            info = null;
+            stringParameters = new List<string>();
+            npngParameters = new List<NpgsqlParameter>();
         }
 
         internal ControllerInfo GetInfo()
@@ -30,7 +49,7 @@ namespace PostgRest.net
 
         protected async Task<ContentResult> GetContentAsync()
         {
-            var info = GetInfo();
+            info = GetInfo();
             if (info == null)
             {
                 return new ContentResult { StatusCode = 400 };
@@ -40,49 +59,78 @@ namespace PostgRest.net
             {
                 return await contentService.GetContentAsync($"select {info.RoutineName}()");
             }
-            JObject query = null;
-            JObject body = null;
-            var stringParameters = new List<string>();
-            var npngParameters = new List<NpgsqlParameter>();
+
             foreach(var param in info.Parameters)
             {
-                /*
-                if (info.MatchParamsByQueryStringKeyName)
+                if (info.MatchParamsByQueryStringKey)
                 {
-                    var value = Request.Query[param.ParamName];
+                    ParseMatchParamsByQueryStringKeyName(param);
                 }
-                else 
-                */
-                if (param.FromQueryString)
+
+                else if (param.FromQueryString)
                 {
-                    if (query == null)
-                    {
-                        query = Request.Query.ToJObject();
-                    }
-                    var value = new ReferencValueType { Value = query };
-                    info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
+                    ParseParamFromQueryString(param);
                 }
 
                 else if (param.FromBody)
                 {
-                    if (body == null)
-                    {
-                        body = JObject.Parse(await Request.GetBodyAsync());
-                    }
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, body.ToString(Formatting.None)));
+                    await ParseParamFromBody(param);
                 }
 
                 else
                 {
-                    var value = new ReferencValueType { Value = DBNull.Value };
-                    info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
-                    npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
+                    ParseCustomParam(param);
                 }
+
                 stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
             }
-            var command = $"select {info.RoutineName}({string.Join(", ", stringParameters)})";
-            return await contentService.GetContentAsync(command, parameters => parameters.AddRange(npngParameters.ToArray()));
+
+            return await contentService.GetContentAsync(
+                $"select {info.RoutineName}({string.Join(", ", stringParameters)})", 
+                parameters => parameters.AddRange(npngParameters.ToArray()));
+        }
+
+        private void ParseParamFromQueryString(Parameter param)
+        {
+            if (query == null)
+            {
+                query = Request.Query.ToJObject();
+            }
+            var value = new ReferencValueType { Value = query };
+            info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+            npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
+        }
+
+        private async Task ParseParamFromBody(Parameter param)
+        {
+            if (body == null)
+            {
+                body = JObject.Parse(await Request.GetBodyAsync());
+            }
+            var value = new ReferencValueType { Value = query };
+            info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+            npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
+        }
+
+        private void ParseCustomParam(Parameter param)
+        {
+            var value = new ReferencValueType();
+            info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+            npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
+        }
+
+        private void ParseMatchParamsByQueryStringKeyName(Parameter param)
+        {
+            if (Request.Query[param.ParamName] == StringValues.Empty)
+            {
+                ParseCustomParam(param);
+            }
+            else
+            {
+                var value = new ReferencValueType { Value = string.Join("", Request.Query[param.ParamName].ToArray()) };
+                info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+                npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
+            }
         }
     }
 
