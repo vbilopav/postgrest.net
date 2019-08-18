@@ -7,6 +7,7 @@ using Newtonsoft.Json;
 using Npgsql;
 using System.Linq;
 using Microsoft.Extensions.Primitives;
+using Microsoft.Extensions.Options;
 
 namespace PostgRest.net
 {
@@ -20,16 +21,17 @@ namespace PostgRest.net
     public abstract class ControllerBase<T> : ControllerBase
     {
         protected readonly IContentService contentService;
-
+        private readonly IOptions<PostgRestConfig> options;
         private JObject query;
         private JObject body;
         private ControllerInfo info;
         private readonly IList<string> stringParameters;
         private readonly IList<NpgsqlParameter> npngParameters;
 
-        protected ControllerBase(IContentService contentService)
+        protected ControllerBase(IContentService contentService, IOptions<PostgRestConfig> options)
         {
             this.contentService = contentService;
+            this.options = options;
             query = null;
             body = null;
             info = null;
@@ -57,38 +59,46 @@ namespace PostgRest.net
             info.Options.SetResponseParameters(info, contentService);
             if (info.Parameters.Count == 0)
             {
-                return await contentService.GetContentAsync($"select {info.RoutineName}()");
+                return await Execute();
             }
 
-            foreach(var param in info.Parameters)
+            foreach (var param in info.Parameters)
             {
+                if (param.Direction == "OUT")
+                {
+                    continue;
+                }
+
                 if (info.MatchParamsByQueryStringKey)
                 {
                     ParseMatchParamsByQueryStringKeyName(param);
                 }
-
                 else if (param.FromQueryString)
                 {
                     ParseParamFromQueryString(param);
                 }
-
                 else if (param.FromBody)
                 {
                     await ParseParamFromBody(param);
                 }
-
                 else
                 {
                     ParseCustomParam(param);
                 }
-
                 stringParameters.Add($"@{param.ParamName}::{param.ParamType}");
             }
 
-            return await contentService.GetContentAsync(
-                $"select {info.RoutineName}({string.Join(", ", stringParameters)})", 
-                parameters => parameters.AddRange(npngParameters.ToArray()));
+            return await Execute();
         }
+
+        private async Task<ContentResult> Execute() => 
+            await contentService.GetContentAsync(
+                $"{SelectExpression} {info.RoutineName}({string.Join(", ", stringParameters)})",
+                parameters => parameters.AddRange(npngParameters.ToArray()), 
+                IsRecordSet);
+
+        private bool IsRecordSet => options.Value.RecordsetTypes.Contains(info.ReturnType);
+        private string SelectExpression => IsRecordSet ? "select * from" : "select";
 
         private void ParseParamFromQueryString(Parameter param)
         {
@@ -136,7 +146,7 @@ namespace PostgRest.net
 
     public class GetController<T> : ControllerBase<T>
     {
-        public GetController(IContentService contentService) : base(contentService) { }
+        public GetController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
 
         [HttpGet]
         public async Task<ContentResult> Get() => await GetContentAsync();
@@ -144,7 +154,7 @@ namespace PostgRest.net
 
     public class PostController<T> : ControllerBase<T>
     {
-        public PostController(IContentService contentService) : base(contentService) { }
+        public PostController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
 
         [HttpPost]
         public async Task<ContentResult> Post() => await GetContentAsync();
@@ -152,7 +162,7 @@ namespace PostgRest.net
 
     public class PutController<T> : ControllerBase<T>
     {
-        public PutController(IContentService contentService) : base(contentService) { }
+        public PutController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
 
         [HttpPut]
         public async Task<ContentResult> Put() => await GetContentAsync();
@@ -160,7 +170,7 @@ namespace PostgRest.net
 
     public class DeleteController<T> : ControllerBase<T>
     {
-        public DeleteController(IContentService contentService) : base(contentService) { }
+        public DeleteController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
 
         [HttpDelete]
         public async Task<ContentResult> Delete() => await GetContentAsync();

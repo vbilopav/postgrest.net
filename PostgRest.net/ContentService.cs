@@ -17,9 +17,9 @@ namespace PostgRest.net
 
     public interface IContentService : IResponse
     {
-        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters);
-        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters);
-        Task<ContentResult> GetContentAsync(string command);
+        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false);
+        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false);
+        Task<ContentResult> GetContentAsync(string command, bool recordset = false);
     }
 
     public class ContentService : IContentService
@@ -58,14 +58,14 @@ namespace PostgRest.net
             return this;
         }
 
-        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters, recordset) ?? defaultValue);
 
-        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters, recordset) ?? defaultValue);
 
-        public async Task<ContentResult> GetContentAsync(string command) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, bool recordset = false) =>
+            await TryGetContentAsync(async () => await data.GetStringAsync(command, recordset) ?? defaultValue);
 
         private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {
