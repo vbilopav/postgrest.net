@@ -72,7 +72,7 @@ namespace UnitTests
             configure.ConfigureServices(services);
         }
 
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             app.UseDeveloperExceptionPage();
             app.UseHttpsRedirection();

@@ -61,7 +61,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyAdditionalValuesResults()
         {
-            var (result, status, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/return-query-applied?key1=value1");
+            var (result, _, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/return-query-applied?key1=value1");
             Assert.Equal(@"{""key1"":""value1"",""foo"":""bar""}", result);
         }
 

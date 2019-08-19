@@ -67,29 +67,41 @@ namespace UnitTests
         [Fact]
         public async Task VerifyRouteIsPost()
         {
-            var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route-is-post", new StringContent(""));
-            Assert.Equal(HttpStatusCode.NoContent, status);
+            using (var content = new StringContent(""))
+            {
+                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route-is-post", content);
+                Assert.Equal(HttpStatusCode.NoContent, status);
+            }
         }
 
         [Fact]
         public async Task VerifyRouteIsNotPost()
         {
-            var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route-is-not-post", new StringContent(""));
-            Assert.Equal(HttpStatusCode.NotFound, status);
+            using (var content = new StringContent(""))
+            {
+                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route-is-not-post", content);
+                Assert.Equal(HttpStatusCode.NotFound, status);
+            }
         }
 
         [Fact]
         public async Task VerifyRouteIsPut()
         {
-            var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route-is-put", new StringContent(""));
-            Assert.Equal(HttpStatusCode.NoContent, status);
+            using (var content = new StringContent(""))
+            {
+                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route-is-put", content);
+                Assert.Equal(HttpStatusCode.NoContent, status);
+            }
         }
 
         [Fact]
         public async Task VerifyRouteIsNotPut()
         {
-            var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route-is-not-put", new StringContent(""));
-            Assert.Equal(HttpStatusCode.NotFound, status);
+            using (var content = new StringContent(""))
+            {
+                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route-is-not-put", content);
+                Assert.Equal(HttpStatusCode.NotFound, status);
+            }
         }
 
         [Fact]

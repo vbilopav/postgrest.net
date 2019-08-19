@@ -52,7 +52,8 @@ namespace UnitTests
         [Fact]
         public async Task VerifyMatchByQueryStringNameResults()
         {
-            var (result, status, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19");
+            var (result, _
+                , _) = await RestClient.GetAsync<string>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19");
             Assert.Equal(@"{""first"" : 999, ""second"" : ""foobar"", ""third"" : ""2019-05-19T00:00:00"", ""fourth"" : null}", result);
         }
     }
