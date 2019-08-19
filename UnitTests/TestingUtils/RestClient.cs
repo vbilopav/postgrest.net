@@ -27,7 +27,7 @@ namespace UnitTests
             Func<HttpClient, Task<HttpResponseMessage>> func, HttpClient client = null)
             where TResult : class
         {
-            async Task<(TResult, HttpStatusCode, string)> executeAction(HttpClient c)
+            async Task<(TResult, HttpStatusCode, string)> ExecuteAction(HttpClient c)
             {
                 using (var response = await func(c))
                 {
@@ -44,14 +44,13 @@ namespace UnitTests
                     return (result, response.StatusCode, response.Content.Headers?.ContentType?.ToString());
                 }
             }
-
-            if (client == null)
+            if (client != null)
             {
-                using (var c = new HttpClient())
-                    return await executeAction(c);
-            } else
+                return await ExecuteAction(client);
+            }
+            using (var c = new HttpClient())
             {
-                return await executeAction(client);
+                return await ExecuteAction(c);
             }
         }
     }

@@ -97,7 +97,7 @@ namespace PostgRest.net
                 parameters => parameters.AddRange(npngParameters.ToArray()), 
                 IsRecordSet);
 
-        private bool IsRecordSet => options.Value.RecordsetTypes.Contains(info.ReturnType);
+        private bool IsRecordSet => options.Value.RecordSetTypes.Contains(info.ReturnType);
         private string SelectExpression => IsRecordSet ? "select * from" : "select";
 
         private void ParseParamFromQueryString(Parameter param)

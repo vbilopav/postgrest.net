@@ -9,7 +9,7 @@ namespace PostgRest.net
         public string DatabaseSchema { get; set; } = "public";
         public string RouteNamePattern = "api/{0}";
         public string[] JsonTypes { get; set; } = new string[] { "json", "jsonb" };
-        public string[] RecordsetTypes { get; set; } = new string[] { "USER-DEFINED", "record" };
+        public string[] RecordSetTypes { get; set; } = new string[] { "USER-DEFINED", "record" };
         public string VoidType { get; set; } = "void";
         public string QueryStringParamNameRegex { get; set; } = "query";
         public string BodyParamNameRegex { get; set; } = "body";

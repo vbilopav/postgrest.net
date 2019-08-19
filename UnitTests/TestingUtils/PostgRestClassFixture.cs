@@ -9,15 +9,15 @@ namespace UnitTests
         where TConfigureServices : IConfigureServices, new()
         where TLifeCycle : ILifeCycle, new()
     {
-        protected readonly ITestOutputHelper output;
+        protected readonly ITestOutputHelper Output;
 
-        public PostgRestClassFixture(
+        protected PostgRestClassFixture(
             ITestOutputHelper output,
             AspNetCoreFixture<TConfigureServices, TLifeCycle> fixture, 
             string url = null)
         {
-            this.output = output;
-            fixture.Initialize(this.output, url);
+            this.Output = output;
+            fixture.Initialize(this.Output, url);
         }
     }
 
@@ -26,33 +26,15 @@ namespace UnitTests
         IClassFixture<AspNetCoreFixture<TLifeCycle>>
         where TLifeCycle : ILifeCycle, new()
     {
-        protected readonly ITestOutputHelper output;
+        protected readonly ITestOutputHelper Output;
 
-        public PostgRestClassFixture(
+        protected PostgRestClassFixture(
             ITestOutputHelper output,
             AspNetCoreFixture<TLifeCycle> fixture, 
             string url = null)
         {
-            this.output = output;
-            fixture.Initialize(this.output, url);
+            this.Output = output;
+            fixture.Initialize(this.Output, url);
         }
     }
-
-    /*
-    [Collection("testing database")]
-    public abstract class PostgRestClassFixture<TConfigureServices> :
-        IClassFixture<AspNetCoreFixture<TConfigureServices>>
-        where TConfigureServices : IConfigureServices, new()
-    {
-        protected readonly ITestOutputHelper output;
-
-        public PostgRestClassFixture(
-            ITestOutputHelper output,
-            AspNetCoreFixture<TConfigureServices> fixture)
-        {
-            this.output = output;
-            fixture.Initialize(this.output);
-        }
-    }
-    */
 }

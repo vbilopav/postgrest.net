@@ -2,8 +2,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using PostgRest.net;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -23,13 +21,14 @@ namespace UnitTests
                         Connection = TestingConnection,
                         ApplyParameterValue = (value, name, info, controller) =>
                         {
-                            if (info.RoutineName == "rest__get_return_query_additional_applied" && name == "_additional")
+                            switch (info.RoutineName)
                             {
-                                value.Value = "some text";
-                            }
-                            else if (info.RoutineName == "rest__get_return_query_applied" && name == "_query")
-                            {
-                                (value.Value as JObject)["foo"] = "bar";
+                                case "rest__get_return_query_additional_applied" when name == "_additional":
+                                    value.Value = "some text";
+                                    break;
+                                case "rest__get_return_query_applied" when name == "_query":
+                                    ((JObject) value.Value)["foo"] = "bar";
+                                    break;
                             }
                         }
                     });

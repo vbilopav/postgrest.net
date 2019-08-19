@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Threading.Tasks;
 using Xunit.Abstractions;
 
 
@@ -60,10 +59,7 @@ namespace UnitTests
 
         public void Dispose()
         {
-            if (host != null)
-            {
-                host.Dispose();
-            }
+            host?.Dispose();
             lifeCycle.TearDown();
         }
     }

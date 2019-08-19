@@ -6,7 +6,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class ResponseFromRecordsetTests : PostgRestClassFixture<ResponseFromRecordsetTests.LifeCycle>
+    public class ResponseFromRecordSetTests : PostgRestClassFixture<ResponseFromRecordSetTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -37,7 +37,7 @@ namespace UnitTests
 
         }
 
-        public ResponseFromRecordsetTests(
+        public ResponseFromRecordSetTests(
             ITestOutputHelper output,
             AspNetCoreFixture<LifeCycle> fixture) : base(output, fixture) {}
 

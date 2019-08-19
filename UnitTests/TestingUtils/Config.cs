@@ -6,19 +6,22 @@ namespace UnitTests
     {
         public const string TestDatabase = "testing";
         public const string TestUser = "testing";
+        public const string AdminDatabase = "postgres";
+        public const string AdminUser = "postgres";
+
 
         public static readonly IDictionary<string, string> Connections = new Dictionary<string, string>()
         {
-            { "Postgres", "Server=localhost;Database=postgres;Port=5433;User Id=postgres;Password=postgres;" },
-            { "PostgresTesting", $"Server=localhost;Database={TestDatabase};Port=5433;User Id=postgres;Password=postgres;" },
+            { "Postgres", $"Server=localhost;Database={AdminDatabase};Port=5433;User Id={AdminUser};Password={AdminUser};" },
+            { "PostgresTesting", $"Server=localhost;Database={TestDatabase};Port=5433;User Id={AdminUser};Password={AdminUser};" },
             { "Testing", $"Server=localhost;Database={TestDatabase};Port=5433;User Id={TestUser};Password={TestUser};" }
         };
 
-        public static string PostgresConnection { get => Connections["Postgres"]; }
+        public static string PostgresConnection => Connections["Postgres"];
 
-        public static string PostgresTestingConnection { get => Connections["PostgresTesting"]; }
+        public static string PostgresTestingConnection => Connections["PostgresTesting"];
 
-        public static string TestingConnection { get => Connections["Testing"]; }
+        public static string TestingConnection => Connections["Testing"];
 
         public static string Connection(ConnectionType type) => Connections[type.ToString()];
  

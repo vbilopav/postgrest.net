@@ -51,7 +51,7 @@ namespace UnitTests
             AspNetCoreFixture<Services, LifeCycle> fixture) : base(output, fixture) { }
 
         [Fact]
-        public async Task VerifyEndpintWithNewRouteName()
+        public async Task VerifyEndpointWithNewRouteName()
         {
             var (_, status, _) = await RestClient.GetAsync<object>("https://localhost:5001/api/v2/rest__get_test_route_name-test");
             Assert.Equal(HttpStatusCode.OK, status);

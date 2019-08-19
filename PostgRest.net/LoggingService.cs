@@ -69,11 +69,7 @@ namespace PostgRest.net
 
         private static string FormatParametersInfo(IDataService data)
         {
-            if (data == null)
-            {
-                return string.Empty;
-            }
-            var info = data.GetParameterInfo();
+            var info = data?.GetParameterInfo();
             if (info == null || info.Count == 0)
             {
                 return string.Empty;

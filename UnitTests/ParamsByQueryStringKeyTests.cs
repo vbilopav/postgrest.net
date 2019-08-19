@@ -1,9 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json.Linq;
 using PostgRest.net;
-using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
@@ -28,6 +25,7 @@ namespace UnitTests
         public class LifeCycle : ILifeCycle
         {
             public void BuildUp() => DatabaseFixture.ExecuteCommand(ConnectionType.PostgresTesting, @"
+
             create function rest__get_values_from_params(_int int, _text text, _timestamp timestamp, _unbound text) returns json as $$
             begin
                 return json_build_object(
@@ -37,10 +35,13 @@ namespace UnitTests
                     'fourth', _unbound
                 );
             end $$ language plpgsql;
+
             ");
 
             public void TearDown() => DatabaseFixture.ExecuteCommand(ConnectionType.PostgresTesting, @"
+
             drop function rest__get_values_from_params(int, text, timestamp, text);
+
             ");
         }
 

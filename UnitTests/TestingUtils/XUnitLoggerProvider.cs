@@ -48,7 +48,7 @@ namespace UnitTests
 
         private class NoopDisposable : IDisposable
         {
-            public static NoopDisposable Instance = new NoopDisposable();
+            public static readonly NoopDisposable Instance = new NoopDisposable();
             public void Dispose() { }
         }
     }

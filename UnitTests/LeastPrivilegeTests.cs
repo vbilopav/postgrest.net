@@ -7,7 +7,7 @@ using static UnitTests.Config;
 
 namespace UnitTests
 {
-    public class LeastPriviledgeTests : PostgRestClassFixture<LeastPriviledgeTests.LifeCycle>
+    public class LeastPrivilegeTests : PostgRestClassFixture<LeastPrivilegeTests.LifeCycle>
     {
         public class LifeCycle : ILifeCycle
         {
@@ -50,7 +50,7 @@ namespace UnitTests
 
         }
 
-        public LeastPriviledgeTests(
+        public LeastPrivilegeTests(
             ITestOutputHelper output,
             AspNetCoreFixture<LifeCycle> fixture) : base(output, fixture) {}
 

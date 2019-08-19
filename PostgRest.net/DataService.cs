@@ -98,16 +98,15 @@ namespace PostgRest.net
                 {
                     return null;
                 }
-                if (value.GetType() == typeof(string))
+                switch (value)
                 {
-                    return value as string;
+                    case string s:
+                        return s;
+                    case DateTime dt:
+                        return dt.ToString("s");
+                    default:
+                        return Convert.ToString(value);
                 }
-                else if (value.GetType() == typeof(DateTime))
-                {
-                    DateTime dt = (DateTime)value;
-                    return dt.ToString("s");
-                }
-                return Convert.ToString(value);
             }
         }
 

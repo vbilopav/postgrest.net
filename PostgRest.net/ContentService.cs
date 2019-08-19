@@ -91,19 +91,19 @@ namespace PostgRest.net
             // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
             if (e.SqlState == "42501")
             {
-                return UnathorizedContent();
+                return UnauthorizedContent();
             } else
             {
                 return BadRequestContent(e);
             }
         }
 
-        private ContentResult UnathorizedContent() => new ContentResult
+        private ContentResult UnauthorizedContent() => new ContentResult
         {
             StatusCode = 401,
             Content = JsonConvert.SerializeObject(new
             {
-                messeage = "Unathorized",
+                messeage = "Unauthorized",
                 error = true
             }),
             ContentType = contentType

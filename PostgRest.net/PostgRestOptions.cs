@@ -13,7 +13,7 @@ namespace PostgRest.net
         public PostgRestConfig Config { get; private set; }
         /// <summary>
         /// Connection string or connection string name.
-        /// Name will try to find conection string from configuration and also from Azure PostgreSQL connection string configuration convention (POSTGRESQLCONNSTR_{name})
+        /// Name will try to find connection string from configuration and also from Azure PostgreSQL connection string configuration convention (POSTGRESQLCONNSTR_{name})
         /// If provided new NpgsqlConnection object will be injected into services as request-response scoped object.
         /// If not provided PostgRest.net will assume that NpgsqlConnection object is already injected in services.
         /// </summary>
@@ -37,7 +37,7 @@ namespace PostgRest.net
         /// </summary>
         public string RouteNamePattern { get; set; }
         /// <summary>
-        /// Action to add filter to specific routine indetified with route name and routine name
+        /// Action to add filter to specific routine identified with route name and routine name
         /// </summary>
         public Action<IList<IFilterMetadata>, string, string> ApplyFilters { get; set; }
         /// <summary>
@@ -57,7 +57,7 @@ namespace PostgRest.net
         /// </summary>
         public Func<Parameter, string, bool> IsBodyParameterWhen { get; set; }
         /// <summary>
-        /// Sets response parameters (status code, content type and value for null result) - for succesuful requests for different routine types
+        /// Sets response parameters (status code, content type and value for null result) - for successful requests for different routine types
         /// </summary>
         public Action<ControllerBaseInfo, IResponse> SetResponseParameters { get; set; }
         /// <summary>
@@ -77,7 +77,7 @@ namespace PostgRest.net
         /// </summary>
         public Func<string, string, bool> IsDeleteRouteWhen { get; set; }
         /// <summary>
-        ///  update parameter with custom value by setting first parameter ReferencValueType -> value.Value = "some value";
+        ///  update parameter with custom value by setting first parameter ReferenceValueType -> value.Value = "some value";
         /// </summary>
         public Action<ReferencValueType, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
         /// <summary>
@@ -92,10 +92,7 @@ namespace PostgRest.net
         public PostgRestOptions(IConfiguration configuration = null)
         {
             Config = new PostgRestConfig();
-            if (configuration != null)
-            {
-                configuration.Bind("PostgRest", Config);
-            }
+            configuration?.Bind("PostgRest", Config);
 
             Connection = Config.Connection;
             Prefix = Config.RoutinePrefix;
@@ -104,7 +101,7 @@ namespace PostgRest.net
             ResolveRouteName = (routine, routineNoPrefix, routineLowerNoPrefix, verb) =>
             {
                 // resolve to kebab by default
-                var snaked = string.Concat(routineLowerNoPrefix.RemoveFromStart(verb.ToLower()).Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x.ToString() : x.ToString()));
+                var snaked = string.Concat(routineLowerNoPrefix.RemoveFromStart(verb.ToLower()).Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()));
                 return snaked.Trim('_').Replace("_", "-");
             };
 

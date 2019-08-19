@@ -82,7 +82,7 @@ namespace UnitTests
         public class TestOutputHelperAdapter : ITestOutputHelper
         {
             private Action<string> injected;
-            ITestOutputHelper outputHelper;
+            private readonly ITestOutputHelper outputHelper;
 
             public TestOutputHelperAdapter(ITestOutputHelper outputHelper)
             {
@@ -116,7 +116,7 @@ namespace UnitTests
             bool warnFound = false;
             bool debugFound = false;
             bool errorFound = false;
-            (output as TestOutputHelperAdapter).Inject(message =>
+            (Output as TestOutputHelperAdapter)?.Inject(message =>
             {
                 if (!infoFound)
                 {

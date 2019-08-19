@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
@@ -114,8 +113,8 @@ namespace PostgRest.net
             string LogString(string route, string verb) =>
                 $"Mapping PostgresSQL function \"{name}\" to REST API endpoint \"{verb} {route}\" ...";
 
-            string candidate = name.RemoveFromStart(prefix);
-            string candidateLower = candidate.ToLower();
+            var candidate = name.RemoveFromStart(prefix);
+            var candidateLower = candidate.ToLower();
             if (options.IsGetRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "GET"));
