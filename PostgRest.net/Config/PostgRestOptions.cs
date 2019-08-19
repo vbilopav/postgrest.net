@@ -79,7 +79,7 @@ namespace PostgRest.net
         /// <summary>
         ///  update parameter with custom value by setting first parameter ReferenceValueType -> value.Value = "some value";
         /// </summary>
-        public Action<ReferencValueType, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
+        public Action<ReferenceValueType, string, ControllerBaseInfo, Microsoft.AspNetCore.Mvc.ControllerBase> ApplyParameterValue { get; set; }
         /// <summary>
         /// Decide should routine parameters be mapped by each name from query string
         /// </summary>

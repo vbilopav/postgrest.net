@@ -15,25 +15,25 @@ namespace PostgRest.net
         IResponse SetDefaultValue(string defaultValue);
     }
 
-    public interface IContentService : IResponse
+    public interface IStringContentService : IResponse
     {
         Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false);
         Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false);
         Task<ContentResult> GetContentAsync(string command, bool recordset = false);
     }
 
-    public class ContentService : IContentService
+    public class StringContentService : IStringContentService
     {
-        private readonly IDataService data;
-        private readonly ILogger<ContentService> logger;
+        private readonly IStringDataService stringData;
+        private readonly ILogger<StringContentService> logger;
 
         private string defaultValue;
         private string contentType;
         private int? statusCode;
 
-        public ContentService(IDataService data, ILogger<ContentService> logger, IOptions<PostgRestConfig> options)
+        public StringContentService(IStringDataService stringData, ILogger<StringContentService> logger, IOptions<PostgRestConfig> options)
         {
-            this.data = data;
+            this.stringData = stringData;
             this.logger = logger;
             this.defaultValue = options.Value.JsonDefaultValue;
             this.contentType = options.Value.JsonContentType;
@@ -59,13 +59,13 @@ namespace PostgRest.net
         }
 
         public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters, recordset) ?? defaultValue);
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, recordset) ?? defaultValue);
 
         public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, parameters, recordset) ?? defaultValue);
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, recordset) ?? defaultValue);
 
         public async Task<ContentResult> GetContentAsync(string command, bool recordset = false) =>
-            await TryGetContentAsync(async () => await data.GetStringAsync(command, recordset) ?? defaultValue);
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, recordset) ?? defaultValue);
 
         private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {
@@ -86,16 +86,10 @@ namespace PostgRest.net
 
         private ContentResult GetExceptionContent(PostgresException e)
         {
-            logger.LogError(e, LoggingService.FormatPostgresExceptionMessage(e, data));
+            logger.LogError(e, LoggingService.FormatPostgresExceptionMessage(e, stringData));
 
-            // insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
-            if (e.SqlState == "42501")
-            {
-                return UnauthorizedContent();
-            } else
-            {
-                return BadRequestContent(e);
-            }
+            // state 42501 insufficient_privilege, see: https://www.postgresql.org/docs/11/errcodes-appendix.html
+            return e.SqlState == "42501" ? UnauthorizedContent() : BadRequestContent(e);
         }
 
         private ContentResult UnauthorizedContent() => new ContentResult

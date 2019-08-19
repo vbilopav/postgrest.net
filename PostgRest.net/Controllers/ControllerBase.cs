@@ -1,26 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
-using Newtonsoft.Json.Linq;
-using Newtonsoft.Json;
-using Npgsql;
+﻿using System.Collections.Generic;
 using System.Linq;
-using Microsoft.Extensions.Primitives;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Npgsql;
 
 namespace PostgRest.net
 {
-    public class ReferencValueType
-    {
-        private object value = DBNull.Value;
-        public object Value { get => value; set => this.value = value ?? DBNull.Value; }
-    }
-
     [Route("")]
     public abstract class ControllerBase<T> : ControllerBase
     {
-        protected readonly IContentService contentService;
+        protected readonly IStringContentService StringContentService;
+
         private readonly IOptions<PostgRestConfig> options;
         private JObject query;
         private JObject body;
@@ -28,9 +22,9 @@ namespace PostgRest.net
         private readonly IList<string> stringParameters;
         private readonly IList<NpgsqlParameter> npngParameters;
 
-        protected ControllerBase(IContentService contentService, IOptions<PostgRestConfig> options)
+        protected ControllerBase(IStringContentService stringContentService, IOptions<PostgRestConfig> options)
         {
-            this.contentService = contentService;
+            this.StringContentService = stringContentService;
             this.options = options;
             query = null;
             body = null;
@@ -42,11 +36,7 @@ namespace PostgRest.net
         internal ControllerInfo GetInfo()
         {
             var genericType = this.GetType().GenericTypeArguments[0];
-            if (!ControllerData.Data.TryGetValue(genericType.Name, out var info))
-            {
-                return null;
-            }
-            return info;
+            return !ControllerData.Data.TryGetValue(genericType.Name, out var controllerInfo) ? null : controllerInfo;
         }
 
         protected async Task<ContentResult> GetContentAsync()
@@ -56,7 +46,7 @@ namespace PostgRest.net
             {
                 return new ContentResult { StatusCode = 400 };
             }
-            info.Options.SetResponseParameters(info, contentService);
+            info.Options.SetResponseParameters(info, StringContentService);
             if (info.Parameters.Count == 0)
             {
                 return await Execute();
@@ -92,7 +82,7 @@ namespace PostgRest.net
         }
 
         private async Task<ContentResult> Execute() => 
-            await contentService.GetContentAsync(
+            await StringContentService.GetContentAsync(
                 $"{SelectExpression} {info.RoutineName}({string.Join(", ", stringParameters)})",
                 parameters => parameters.AddRange(npngParameters.ToArray()), 
                 IsRecordSet);
@@ -106,7 +96,7 @@ namespace PostgRest.net
             {
                 query = Request.Query.ToJObject();
             }
-            var value = new ReferencValueType { Value = query };
+            var value = new ReferenceValueType { Value = query };
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
             npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
         }
@@ -117,14 +107,14 @@ namespace PostgRest.net
             {
                 body = JObject.Parse(await Request.GetBodyAsync());
             }
-            var value = new ReferencValueType { Value = query };
+            var value = new ReferenceValueType { Value = query };
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
             npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
         }
 
         private void ParseCustomParam(Parameter param)
         {
-            var value = new ReferencValueType();
+            var value = new ReferenceValueType();
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
             npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
         }
@@ -137,42 +127,10 @@ namespace PostgRest.net
             }
             else
             {
-                var value = new ReferencValueType { Value = string.Join("", Request.Query[param.ParamName].ToArray()) };
+                var value = new ReferenceValueType { Value = string.Join("", Request.Query[param.ParamName].ToArray()) };
                 info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
                 npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
             }
         }
-    }
-
-    public class GetController<T> : ControllerBase<T>
-    {
-        public GetController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
-
-        [HttpGet]
-        public async Task<ContentResult> Get() => await GetContentAsync();
-    }
-
-    public class PostController<T> : ControllerBase<T>
-    {
-        public PostController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
-
-        [HttpPost]
-        public async Task<ContentResult> Post() => await GetContentAsync();
-    }
-
-    public class PutController<T> : ControllerBase<T>
-    {
-        public PutController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
-
-        [HttpPut]
-        public async Task<ContentResult> Put() => await GetContentAsync();
-    }
-
-    public class DeleteController<T> : ControllerBase<T>
-    {
-        public DeleteController(IContentService contentService, IOptions<PostgRestConfig> options) : base(contentService, options) { }
-
-        [HttpDelete]
-        public async Task<ContentResult> Delete() => await GetContentAsync();
     }
 }

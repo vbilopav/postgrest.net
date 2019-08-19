@@ -7,7 +7,7 @@ using Npgsql;
 
 namespace PostgRest.net
 {
-    public interface IDataService
+    public interface IStringDataService
     {
         Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false);
         Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false);
@@ -15,13 +15,13 @@ namespace PostgRest.net
         IList<KeyValuePair<string, object>> GetParameterInfo();
     }
 
-    public class DataService : IDataService
+    public class StringDataService : IStringDataService
     {
         private readonly NpgsqlConnection connection;
         private readonly ILoggingService loggingService;
         private IList<KeyValuePair<string, object>> parameterInfo;
 
-        public DataService(NpgsqlConnection connection, ILoggingService loggingService)
+        public StringDataService(NpgsqlConnection connection, ILoggingService loggingService)
         {
             this.connection = connection;
             this.loggingService = loggingService;

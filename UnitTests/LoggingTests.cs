@@ -140,7 +140,7 @@ namespace UnitTests
                 }
                 if (!errorFound)
                 {
-                    errorFound = string.Equals(message, "[Error] PostgRest.net.ContentService [0] ERROR\nMessage: P0001: error log\nDetail: \nLine: 3778\nInternalPosition: 0\nPosition: 0\nSqlState: P0001\nStatement: select rest__get_test_logging_error()\nColumnName: \nConstraintName: \nTableName: \nInternalQuery: \nWhere: PL/pgSQL function rest__get_test_logging_error() line 3 at RAISE\nHint: \n\n");
+                    errorFound = string.Equals(message, "[Error] PostgRest.net.StringContentService [0] ERROR\nMessage: P0001: error log\nDetail: \nLine: 3778\nInternalPosition: 0\nPosition: 0\nSqlState: P0001\nStatement: select rest__get_test_logging_error()\nColumnName: \nConstraintName: \nTableName: \nInternalQuery: \nWhere: PL/pgSQL function rest__get_test_logging_error() line 3 at RAISE\nHint: \n\n");
                 }
             });
 
