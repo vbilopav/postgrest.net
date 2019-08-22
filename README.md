@@ -34,6 +34,6 @@ $$ language plpgsql;
 
 4. Run your app. 
 
-Congratulations! 
+	Congratulations! 
 
 Now you have following enpoint `GET /api/return-query-string` that returns your query string in json.

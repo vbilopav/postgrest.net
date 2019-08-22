@@ -10,7 +10,7 @@ namespace UnitTests
         public void ConfigureServices(IServiceCollection services) =>
             services.AddMvc()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                .AddPostgRest(services, new PostgRestOptions
+                .AddPostgRest(new PostgRestOptions
                 {
                     Connection = TestingConnection
                 });

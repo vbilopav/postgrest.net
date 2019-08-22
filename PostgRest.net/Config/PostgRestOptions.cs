@@ -87,7 +87,7 @@ namespace PostgRest.net
         /// <summary>
         /// Decide should routine parameters be mapped by each name from body
         /// </summary>
-        public Func<ControllerBaseInfo, bool> MatchParamsByBodyKeyWhen { get; set; }
+        public Func<ControllerBaseInfo, bool> MatchParamsByFormKeyWhen { get; set; }
 
         public PostgRestOptions(IConfiguration configuration = null)
         {
@@ -111,9 +111,12 @@ namespace PostgRest.net
             ApplyControllerConvention = (model, info) => { };
 
             IsQueryStringParameterWhen = (parameter, routine) =>
-                Regex.Match(parameter.ParamNameLower, Config.QueryStringParamNameRegex, RegexOptions.IgnoreCase).Success && Config.JsonTypes.Contains(parameter.ParamType);
+                Regex.Match(parameter.ParamNameLower, Config.QueryStringParamNameRegex, RegexOptions.IgnoreCase).Success && 
+                Config.JsonTypes.Contains(parameter.ParamType);
+
             IsBodyParameterWhen = (parameter, routine) =>
-                Regex.Match(parameter.ParamNameLower, Config.BodyParamNameRegex, RegexOptions.IgnoreCase).Success && Config.JsonTypes.Contains(parameter.ParamType);
+                Regex.Match(parameter.ParamNameLower, Config.BodyParamNameRegex, RegexOptions.IgnoreCase).Success &&
+                (Config.JsonTypes.Contains(parameter.ParamType) || parameter.ParamType == "text");
 
             SetResponseParameters = (info, contentService) =>
             {
@@ -138,7 +141,7 @@ namespace PostgRest.net
 
             ApplyParameterValue = null;
             MatchParamsByQueryStringKeyWhen = null;
-            MatchParamsByBodyKeyWhen = null;
+            MatchParamsByFormKeyWhen = null;
         }
     }
 }

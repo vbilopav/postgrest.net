@@ -9,9 +9,9 @@ namespace PostgRest.net
 {
     public interface IStringDataService
     {
-        Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false);
-        Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false);
-        Task<string> GetStringAsync(string command, bool recordset = false);
+        Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool fromRecordSet = false);
+        Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool fromRecordSet = false);
+        Task<string> GetStringAsync(string command, bool fromRecordSet = false);
         IList<KeyValuePair<string, object>> GetParameterInfo();
     }
 
@@ -28,18 +28,18 @@ namespace PostgRest.net
             this.parameterInfo = null;
         }
 
-        public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false)
+        public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 parameters?.Invoke(cmd.Parameters);
-                return await GetStringContentFromCommand(cmd, recordset);
+                return await GetStringContentFromCommand(cmd, fromRecordSet);
             }
         }
 
-        public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false)
+        public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
@@ -49,17 +49,17 @@ namespace PostgRest.net
                 {
                     await parameters?.Invoke(cmd.Parameters);
                 }
-                return await GetStringContentFromCommand(cmd, recordset);
+                return await GetStringContentFromCommand(cmd, fromRecordSet);
             }
         }
 
-        public async Task<string> GetStringAsync(string command, bool recordset = false)
+        public async Task<string> GetStringAsync(string command, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
             await EnsureConnectionIsOpen();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
-                return await GetStringContentFromCommand(cmd, recordset);
+                return await GetStringContentFromCommand(cmd, fromRecordSet);
             }
         }
 
@@ -73,10 +73,10 @@ namespace PostgRest.net
 
         public IList<KeyValuePair<string, object>> GetParameterInfo() => this.parameterInfo;
 
-        private async Task<string> GetStringContentFromCommand(NpgsqlCommand cmd, bool recordset = false)
+        private async Task<string> GetStringContentFromCommand(NpgsqlCommand cmd, bool fromRecordSet = false)
         {
             ExtractParamsInfo(cmd);
-            if (!recordset)
+            if (!fromRecordSet)
             {
                 return await GetStringValueFromCommand(cmd);
             }
@@ -85,7 +85,7 @@ namespace PostgRest.net
                 return await GetStringRecordsFromCommand(cmd);
             }
         }
-        private async Task<string> GetStringValueFromCommand(NpgsqlCommand cmd)
+        private static async Task<string> GetStringValueFromCommand(NpgsqlCommand cmd)
         {
             using (var reader = cmd.ExecuteReader())
             {
@@ -110,7 +110,7 @@ namespace PostgRest.net
             }
         }
 
-        private async Task<string> GetStringRecordsFromCommand(NpgsqlCommand cmd)
+        private static async Task<string> GetStringRecordsFromCommand(NpgsqlCommand cmd)
         {
             var result = new List<IDictionary<string, object>>();
             using (var reader = cmd.ExecuteReader())

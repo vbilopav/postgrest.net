@@ -38,12 +38,25 @@ namespace UnitTests
 
             grant execute on function rest__get_values_with_grant() to testing;
 
+            create function rest__get_values_with_grant_param(_p text) returns json as
+            $$
+            begin
+                return (
+                    select json_build_object('values', (select array_agg(i) from test_values))
+                );
+            end
+            $$ language plpgsql security definer;
+            revoke all on function rest__get_values_with_grant_param(text) from public;
+
+            grant execute on function rest__get_values_with_grant_param(text) to testing;
+
             ");
 
             public void TearDown() => DatabaseFixture.ExecuteCommand(ConnectionType.PostgresTesting, @"
 
             drop function rest__get_values_no_grant();
             drop function rest__get_values_with_grant();
+            drop function rest__get_values_with_grant_param(text);
             drop table test_values;
 
             ");
@@ -91,6 +104,15 @@ namespace UnitTests
             end
             $$;");
         }
+
+        [Fact]
+        public void VerifyAttemptSqlInjection()
+        {
+            AssertAccessDenied(@"
+                select rest__get_values_with_grant_param('');select * from test_values;--');
+            ");
+        }
+
 
         private void AssertAccessDenied(string sql)
         {

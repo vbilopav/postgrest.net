@@ -17,7 +17,7 @@ namespace PostgRest.net
 
         private readonly IOptions<PostgRestConfig> options;
         private JObject query;
-        private JObject body;
+        private object body;
         private ControllerInfo info;
         private readonly IList<string> stringParameters;
         private readonly IList<NpgsqlParameter> npngParameters;
@@ -63,6 +63,10 @@ namespace PostgRest.net
                 {
                     ParseMatchParamsByQueryStringKeyName(param);
                 }
+                else if (info.MatchParamsByFormKey)
+                {
+                    ParseMatchParamsByBFormKeyName(param);
+                }
                 else if (param.FromQueryString)
                 {
                     ParseParamFromQueryString(param);
@@ -81,14 +85,15 @@ namespace PostgRest.net
             return await Execute();
         }
 
-        private async Task<ContentResult> Execute() => 
-            await StringContentService.GetContentAsync(
-                $"{SelectExpression} {info.RoutineName}({string.Join(", ", stringParameters)})",
-                parameters => parameters.AddRange(npngParameters.ToArray()), 
-                IsRecordSet);
-
-        private bool IsRecordSet => options.Value.RecordSetTypes.Contains(info.ReturnType);
-        private string SelectExpression => IsRecordSet ? "select * from" : "select";
+        private async Task<ContentResult> Execute()
+        {
+            var isRecordSet = options.Value.RecordSetTypes.Contains(info.ReturnType);
+            var expression = isRecordSet ? "select * from" : "select";
+            return await StringContentService.GetContentAsync(
+                $"{expression} {info.RoutineName}({string.Join(", ", stringParameters)})",
+                parameters => parameters.AddRange(npngParameters.ToArray()),
+                isRecordSet);
+        }
 
         private void ParseParamFromQueryString(Parameter param)
         {
@@ -98,18 +103,30 @@ namespace PostgRest.net
             }
             var value = new ReferenceValueType { Value = query };
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
-            npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
+            npngParameters.Add(new NpgsqlParameter(param.ParamName, ((JObject) value.Value).ToString(Formatting.None)));
         }
 
         private async Task ParseParamFromBody(Parameter param)
         {
             if (body == null)
             {
-                body = JObject.Parse(await Request.GetBodyAsync());
+                if (Request.ContentType.StartsWith("application/json"))
+                {
+                    body = JObject.Parse(await Request.GetBodyAsync());
+                }
+                else if (Request.ContentType.StartsWith("multipart/form-data"))
+                {
+                    body = Request.Form.ToJObject();
+                }
+                else
+                {
+                    body = await Request.GetBodyAsync();
+                }
             }
-            var value = new ReferenceValueType { Value = query };
+            var value = new ReferenceValueType { Value = body };
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
-            npngParameters.Add(new NpgsqlParameter(param.ParamName, (value.Value as JObject).ToString(Formatting.None)));
+            var actual = value.Value is JObject jObject ? jObject.ToString(Formatting.None) : value.Value;
+            npngParameters.Add(new NpgsqlParameter(param.ParamName, actual));
         }
 
         private void ParseCustomParam(Parameter param)
@@ -128,6 +145,20 @@ namespace PostgRest.net
             else
             {
                 var value = new ReferenceValueType { Value = string.Join("", Request.Query[param.ParamName].ToArray()) };
+                info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
+                npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
+            }
+        }
+
+        private void ParseMatchParamsByBFormKeyName(Parameter param)
+        {
+            if (Request.Form[param.ParamName] == StringValues.Empty)
+            {
+                ParseCustomParam(param);
+            }
+            else
+            {
+                var value = new ReferenceValueType { Value = string.Join("", Request.Form[param.ParamName].ToArray()) };
                 info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
                 npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
             }

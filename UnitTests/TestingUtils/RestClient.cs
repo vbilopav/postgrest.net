@@ -2,6 +2,7 @@
 using System;
 using System.Net;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Threading.Tasks;
 
 namespace UnitTests
@@ -10,20 +11,20 @@ namespace UnitTests
     {
         public static async Task<(TResult, HttpStatusCode, string)> GetAsync<TResult>(string url, HttpClient client = null)
             where TResult : class =>
-            await ReactActionAsync<TResult>(async c => await c.GetAsync(url, HttpCompletionOption.ResponseHeadersRead), client);
+            await RestActionAsync<TResult>(async c => await c.GetAsync(url, HttpCompletionOption.ResponseHeadersRead), client);
 
         public static async Task<(TResult, HttpStatusCode, string)> PostAsync<TResult>(string url, HttpContent content, HttpClient client = null)
             where TResult : class =>
-            await ReactActionAsync<TResult>(async c => await c.PostAsync(url, content), client);
+            await RestActionAsync<TResult>(async c => await c.PostAsync(url, content), client);
 
         public static async Task<(TResult, HttpStatusCode, string)> PutAsync<TResult>(string url, HttpContent content, HttpClient client = null)
             where TResult : class =>
-            await ReactActionAsync<TResult>(async c => await c.PutAsync(url, content), client);
+            await RestActionAsync<TResult>(async c => await c.PutAsync(url, content), client);
 
         public static async Task<(TResult, HttpStatusCode, string)> DeleteAsync<TResult>(string url, HttpClient client = null) where TResult : class =>
-            await ReactActionAsync<TResult>(async c => await c.DeleteAsync(url), client);
+            await RestActionAsync<TResult>(async c => await c.DeleteAsync(url), client);
 
-        private static async Task<(TResult, HttpStatusCode, string)> ReactActionAsync<TResult>(
+        private static async Task<(TResult, HttpStatusCode, string)> RestActionAsync<TResult>(
             Func<HttpClient, Task<HttpResponseMessage>> func, HttpClient client = null)
             where TResult : class
         {

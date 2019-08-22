@@ -75,7 +75,6 @@ namespace UnitTests
         public void Configure(IApplicationBuilder app)
         {
             app.UseDeveloperExceptionPage();
-            app.UseHttpsRedirection();
             app.UseMvc();
         }
     }

@@ -26,14 +26,14 @@ namespace PostgRest.net
             return services;
         }
 
-        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, IServiceCollection services, PostgRestOptions options = null)
+        public static IMvcBuilder AddPostgRest(this IMvcBuilder builder, PostgRestOptions options = null)
         {
-            options = services.EnsureOptions(options);
-            services.AddPostgRest(options);
+            options = builder.Services.EnsureOptions(options);
+            builder.Services.AddPostgRest(options);
             var assembly = typeof(PostgRestExtensions).GetTypeInfo().Assembly;
             return builder
                 .AddApplicationPart(assembly)
-                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(services, options)))
+                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(builder.Services, options)))
                 .AddMvcOptions(o => o.Conventions.Add(new PostgRestConvention(options)));
         }
 

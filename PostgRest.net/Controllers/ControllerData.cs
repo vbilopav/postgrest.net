@@ -17,18 +17,21 @@ namespace PostgRest.net
         public bool FromBody { get; set; }
     }
 
+    public enum Verb { Get, Post, Put, Delete }
+
     public class ControllerBaseInfo
     {
         public string RoutineName { get; set; }
         public string RouteName { get; set; }
         public string ReturnType { get; set; }
         public IList<Parameter> Parameters { get; set; }
+        public Verb Verb { get; set; }
     }
 
     public class ControllerInfo : ControllerBaseInfo
     {
         public bool MatchParamsByQueryStringKey { get; set; }
-        public bool MatchParamsByBodyKey { get; set; }
+        public bool MatchParamsByFormKey { get; set; }
         public Type RouteType { get; set; }
         public PostgRestOptions Options { get; internal set; }
     }

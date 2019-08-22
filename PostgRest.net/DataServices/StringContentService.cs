@@ -17,8 +17,8 @@ namespace PostgRest.net
 
     public interface IStringContentService : IResponse
     {
-        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false);
-        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false);
+        Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool fromRecordSet = false);
+        Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool fromRecordSet = false);
         Task<ContentResult> GetContentAsync(string command, bool recordset = false);
     }
 
@@ -58,14 +58,14 @@ namespace PostgRest.net
             return this;
         }
 
-        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool recordset = false) =>
-            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, recordset) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, Action<NpgsqlParameterCollection> parameters, bool fromRecordSet = false) =>
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, fromRecordSet) ?? defaultValue);
 
-        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool recordset = false) =>
-            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, recordset) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool fromRecordSet = false) =>
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, parameters, fromRecordSet) ?? defaultValue);
 
-        public async Task<ContentResult> GetContentAsync(string command, bool recordset = false) =>
-            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, recordset) ?? defaultValue);
+        public async Task<ContentResult> GetContentAsync(string command, bool fromRecordSet = false) =>
+            await TryGetContentAsync(async () => await stringData.GetStringAsync(command, fromRecordSet) ?? defaultValue);
 
         private async Task<ContentResult> TryGetContentAsync(Func<Task<string>> func)
         {

@@ -17,7 +17,7 @@ namespace UnitTests
             public void ConfigureServices(IServiceCollection services) =>
                 services.AddMvc()
                     .SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
-                    .AddPostgRest(services, new PostgRestOptions
+                    .AddPostgRest(new PostgRestOptions
                     {
                         Connection = TestingConnection,
                         IsGetRouteWhen = (route, _) => route.EndsWith("get"),
@@ -101,11 +101,10 @@ namespace UnitTests
         public async Task VerifyRouteIsNotPost()
         {
             using (var client = new HttpClient())
-            using (var content = new StringContent(""))
             {
-                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/post-route", content, client);
+                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/post-route", null, client);
                 Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route", content, client);
+                (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route", null, client);
                 Assert.Equal(HttpStatusCode.NotFound, status);
             }
         }
@@ -124,11 +123,10 @@ namespace UnitTests
         public async Task VerifyRouteIsNotPut()
         {
             using (var client = new HttpClient())
-            using (var content = new StringContent(""))
             {
-                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/put-route", content, client);
+                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/put-route", null, client);
                 Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route", content, client);
+                (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route", null, client);
                 Assert.Equal(HttpStatusCode.NotFound, status);
             }
         }

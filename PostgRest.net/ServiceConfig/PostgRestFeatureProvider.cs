@@ -69,7 +69,7 @@ namespace PostgRest.net
                 return;
             }
 
-            var (routeName, routeType) = GetRouteNameAndType(name);
+            var (routeName, routeType, verb) = GetRouteNameAndType(name);
             if (routeName == null)
             {
                 return;
@@ -81,6 +81,7 @@ namespace PostgRest.net
                 RouteName = routeName,
                 RouteType = routeType,
                 ReturnType = reader["return_type"] as string,
+                Verb = (Verb)verb,
                 Parameters =
                     JsonConvert.DeserializeObject<IEnumerable<Parameter>>(reader["parameters"] as string)
                     .OrderBy(p => p.Position)
@@ -102,12 +103,12 @@ namespace PostgRest.net
             var type = typeBuilder.CreateTypeInfo();
             feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
             info.Options = options;
-            info.MatchParamsByQueryStringKey = options.MatchParamsByQueryStringKeyWhen == null ? false : options.MatchParamsByQueryStringKeyWhen(info);
-            info.MatchParamsByBodyKey = options.MatchParamsByBodyKeyWhen == null ? false : options.MatchParamsByBodyKeyWhen(info);
+            info.MatchParamsByQueryStringKey = options.MatchParamsByQueryStringKeyWhen?.Invoke(info) ?? false;
+            info.MatchParamsByFormKey = options.MatchParamsByFormKeyWhen?.Invoke(info) ?? false;
             ControllerData.Data.TryAdd(name, info);
         }
 
-        private (string, Type) GetRouteNameAndType(string name)
+        private (string, Type, Verb?) GetRouteNameAndType(string name)
         {
             var prefix = options.Prefix ?? "";
             string LogString(string route, string verb) =>
@@ -119,28 +120,28 @@ namespace PostgRest.net
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "GET"));
                 logger.LogInformation(LogString(routeName, "GET"));
-                return (routeName, typeGet);
+                return (routeName, typeGet, Verb.Get);
             }
             if (options.IsPostRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "POST"));
                 logger.LogInformation(LogString(routeName, "POST"));
-                return (routeName, typePost);
+                return (routeName, typePost, Verb.Post);
             }
             if (options.IsPutRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "PUT"));
                 logger.LogInformation(LogString(routeName, "PUT"));
-                return (routeName, typePut);
+                return (routeName, typePut, Verb.Put);
             }
             if (options.IsDeleteRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "DELETE"));
                 logger.LogInformation(LogString(routeName, "DELETE"));
-                return (routeName, typeDelete);
+                return (routeName, typeDelete, Verb.Delete);
             }
             logger.LogWarning($"Routine {name} skipped, couldn't map to appropriate route. Check Is[Verb]When option.");
-            return (null, null);
+            return (null, null, null);
         }
     }
 }
