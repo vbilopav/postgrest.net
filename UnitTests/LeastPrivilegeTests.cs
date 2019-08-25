@@ -1,6 +1,7 @@
 using Npgsql;
 using System.Net;
 using System.Threading.Tasks;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -70,8 +71,8 @@ namespace UnitTests
         [Fact]
         public async Task VerifyNotFoundForEndpointWithNoGrant()
         {
-            var (_, status, _) = await RestClient.GetAsync<object>("https://localhost:5001/api/values-no-grant");
-            Assert.Equal(HttpStatusCode.NotFound, status);
+            var (_, response) = await Client.GetAsync<object>("https://localhost:5001/api/values-no-grant");
+            Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
         }
 
         public class ResponseModel
@@ -82,10 +83,10 @@ namespace UnitTests
         [Fact]
         public async Task VerifyResponseForEndpointWithGrant()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<ResponseModel>("https://localhost:5001/api/values-with-grant");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal(new int[3] { 1,2,3 }, response.Values);
+            var (result, response) = await Client.GetAsync<ResponseModel>("https://localhost:5001/api/values-with-grant");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal(new int[3] { 1, 2, 3 }, result.Values);
         }
 
         [Fact]

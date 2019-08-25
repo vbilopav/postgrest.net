@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
 using PostgRest.net;
 using System.Threading.Tasks;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -73,16 +74,16 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetAdditionalValuesResults()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/return-query-applied?key1=value1");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-applied", new Query(new { key1 = "value1"}));
+
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("bar", result["foo"]);
-
         }
 
         [Fact]
         public async Task VerifyGetReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/return-query-additional-applied?foo=bar");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional-applied", new Query(new {foo = "bar"}));
             Assert.Equal("some text", result["additional"]);
             Assert.Equal("bar", result["foo"]);
         }
@@ -90,16 +91,15 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteAdditionalValuesResults()
         {
-            var (result, _, _) = await RestClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-applied?key1=value1");
+            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/return-query-applied", new Query(new { key1 = "value1" }));
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("bar", result["foo"]);
-
         }
 
         [Fact]
         public async Task VerifyDeleteReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-additional-applied?foo=bar");
+            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/return-query-additional-applied", new Query(new { foo = "bar" }));
             Assert.Equal("some text", result["additional"]);
             Assert.Equal("bar", result["foo"]);
         }

@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PostgRest.net;
 using System.Net;
 using System.Threading.Tasks;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -54,29 +55,29 @@ namespace UnitTests
         [Fact]
         public async Task VerifyEndpointWithNewRouteNameForGet()
         {
-            var (_, status, _) = await RestClient.GetAsync<object>("https://localhost:5001/api/v2/rest__get_test_route_name-test");
-            Assert.Equal(HttpStatusCode.OK, status);
+            var (_, response) = await Client.GetAsync<object>("https://localhost:5001/api/v2/rest__get_test_route_name-test");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
         public async Task VerifyEndpointWithNewRouteNameForPost()
         {
-            var (_, status, _) = await RestClient.PostAsync<object>("https://localhost:5001/api/v2/rest__post_test_route_name-test", null);
-            Assert.Equal(HttpStatusCode.OK, status);
+            var (_, response) = await Client.PostAsync<object>("https://localhost:5001/api/v2/rest__post_test_route_name-test");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
         public async Task VerifyEndpointWithNewRouteNameForPut()
         {
-            var (_, status, _) = await RestClient.PutAsync<object>("https://localhost:5001/api/v2/rest__put_test_route_name-test", null);
-            Assert.Equal(HttpStatusCode.OK, status);
+            var (_, response) = await Client.PutAsync<object>("https://localhost:5001/api/v2/rest__put_test_route_name-test");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
 
         [Fact]
         public async Task VerifyEndpointWithNewRouteNameForDelete()
         {
-            var (_, status, _) = await RestClient.DeleteAsync<object>("https://localhost:5001/api/v2/rest__delete_test_route_name-test");
-            Assert.Equal(HttpStatusCode.OK, status);
+            var (_, response) = await Client.DeleteAsync<object>("https://localhost:5001/api/v2/rest__delete_test_route_name-test");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -83,7 +84,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifySetOfResultsForGet()
         {
-            var (response, _, _) = await RestClient.GetAsync<JArray>("https://localhost:5001/api/setof");
+            var response = await SimpleClient.GetAsync<JArray>("https://localhost:5001/api/setof");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -96,7 +97,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyTableResultsForGet()
         {
-            var (response, _, _) = await RestClient.GetAsync<JArray>("https://localhost:5001/api/table");
+            var response = await SimpleClient.GetAsync<JArray>("https://localhost:5001/api/table");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -109,7 +110,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifySetOfResultsForPost()
         {
-            var (response, _, _) = await RestClient.PostAsync<JArray>("https://localhost:5001/api/setof", null);
+            var response = await SimpleClient.PostAsync<JArray>("https://localhost:5001/api/setof");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -122,7 +123,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyTableResultsForPost()
         {
-            var (response, _, _) = await RestClient.PutAsync<JArray>("https://localhost:5001/api/table", null);
+            var response = await SimpleClient.PutAsync<JArray>("https://localhost:5001/api/table");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -135,7 +136,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifySetOfResultsForPut()
         {
-            var (response, _, _) = await RestClient.PutAsync<JArray>("https://localhost:5001/api/setof", null);
+            var response = await SimpleClient.PutAsync<JArray>("https://localhost:5001/api/setof");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -148,7 +149,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifySetOfResultsForDelete()
         {
-            var (response, _, _) = await RestClient.DeleteAsync<JArray>("https://localhost:5001/api/setof");
+            var response = await SimpleClient.DeleteAsync<JArray>("https://localhost:5001/api/setof");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);
@@ -161,7 +162,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyTableResultsForDelete()
         {
-            var (response, _, _) = await RestClient.DeleteAsync<JArray>("https://localhost:5001/api/table");
+            var response = await SimpleClient.DeleteAsync<JArray>("https://localhost:5001/api/table");
             var list = response.Children().ToArray();
             Assert.Equal(1, list[0]["id"]);
             Assert.Equal("a", list[0]["name"]);

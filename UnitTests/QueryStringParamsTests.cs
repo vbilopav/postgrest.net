@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -78,7 +79,12 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetReturnQueryString()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/return-query?key1=value1&key2=value2&foo=bar&1=2");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query?1=2", new Query(new
+            {
+                key1 = "value1",
+                key2 = "value2",
+                foo = "bar"
+            }));
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
@@ -88,7 +94,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional?foo=bar");
             Assert.Equal("bar", result["foo"]);
             Assert.Equal("", result["additional"]);
         }
@@ -96,7 +102,12 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostReturnQueryString()
         {
-            var (result, _, _) = await RestClient.PostAsync<JObject>("https://localhost:5001/api/return-query?key1=value1&key2=value2&foo=bar&1=2", null);
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-query?1=2", new Query(new
+            {
+                key1 = "value1",
+                key2 = "value2",
+                foo = "bar"
+            }));
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
@@ -106,7 +117,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.PostAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar", null);
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-query-additional?foo=bar");
             Assert.Equal("bar", result["foo"]);
             Assert.Equal("", result["additional"]);
         }
@@ -114,7 +125,12 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutReturnQueryString()
         {
-            var (result, _, _) = await RestClient.PutAsync<JObject>("https://localhost:5001/api/return-query?key1=value1&key2=value2&foo=bar&1=2", null);
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-query?1=2", new Query(new
+            {
+                key1 = "value1",
+                key2 = "value2",
+                foo = "bar"
+            }));
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
@@ -124,7 +140,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.PutAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar", null);
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-query-additional?foo=bar");
             Assert.Equal("bar", result["foo"]);
             Assert.Equal("", result["additional"]);
         }
@@ -132,7 +148,12 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteReturnQueryString()
         {
-            var (result, _, _) = await RestClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query?key1=value1&key2=value2&foo=bar&1=2");
+            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/return-query?1=2", new Query(new
+            {
+                key1 = "value1",
+                key2 = "value2",
+                foo = "bar"
+            }));
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
@@ -142,7 +163,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteReturnQueryStringAdditionalParam()
         {
-            var (result, _, _) = await RestClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar");
             Assert.Equal("bar", result["foo"]);
             Assert.Equal("", result["additional"]);
         }

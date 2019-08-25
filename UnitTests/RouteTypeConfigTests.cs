@@ -4,6 +4,7 @@ using PostgRest.net;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -71,8 +72,8 @@ namespace UnitTests
         [Fact]
         public async Task VerifyRouteIsGet()
         {
-            var (_, status, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/route-is-get");
-            Assert.Equal(HttpStatusCode.NoContent, status);
+            var (_, response) = await Client.GetAsync("https://localhost:5001/api/route-is-get");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         [Fact]
@@ -80,21 +81,18 @@ namespace UnitTests
         {
             using (var client = new HttpClient())
             {
-                var (_, status, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/get-route", client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.GetAsync<string>("https://localhost:5001/api/route", client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
+                var (_, response) = await Client.GetAsync("https://localhost:5001/api/get-route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                (_, response) = await Client.GetAsync("https://localhost:5001/api/route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 
         [Fact]
         public async Task VerifyRouteIsPost()
         {
-            using (var content = new StringContent(""))
-            {
-                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route-is-post", content);
-                Assert.Equal(HttpStatusCode.NoContent, status);
-            }
+            var (_, response) = await Client.PostAsync("https://localhost:5001/api/route-is-post", body: new TextPlain(""));
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         [Fact]
@@ -102,21 +100,18 @@ namespace UnitTests
         {
             using (var client = new HttpClient())
             {
-                var (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/post-route", null, client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.PostAsync<string>("https://localhost:5001/api/route", null, client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
+                var (_, response) = await Client.PostAsync("https://localhost:5001/api/post-route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                (_, response) = await Client.PostAsync("https://localhost:5001/api/route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 
         [Fact]
         public async Task VerifyRouteIsPut()
         {
-            using (var content = new StringContent(""))
-            {
-                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route-is-put", content);
-                Assert.Equal(HttpStatusCode.NoContent, status);
-            }
+            var (_, response) = await Client.PutAsync("https://localhost:5001/api/route-is-put", body: new TextPlain(""));
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         [Fact]
@@ -124,18 +119,18 @@ namespace UnitTests
         {
             using (var client = new HttpClient())
             {
-                var (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/put-route", null, client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.PutAsync<string>("https://localhost:5001/api/route", null, client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
+                var (_, response) = await Client.PutAsync("https://localhost:5001/api/put-route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                (_, response) = await Client.PutAsync("https://localhost:5001/api/route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
 
         [Fact]
         public async Task VerifyRouteIsDelete()
         {
-            var (_, status, _) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/route-is-delete");
-            Assert.Equal(HttpStatusCode.NoContent, status);
+            var (_, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/route-is-delete");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
         }
 
         [Fact]
@@ -143,10 +138,10 @@ namespace UnitTests
         {
             using (var client = new HttpClient())
             {
-                var (_, status, _) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/delete-route", client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
-                (_, status, _) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/route", client);
-                Assert.Equal(HttpStatusCode.NotFound, status);
+                var (_, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/delete-route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
+                (_, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/route", client: client);
+                Assert.Equal(HttpStatusCode.NotFound, response.StatusCode);
             }
         }
     }

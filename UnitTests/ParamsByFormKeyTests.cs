@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PostgRest.net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -65,35 +66,33 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostMatchByFormNameResults()
         {
-            using (var formData = new MultipartFormDataContent())
-            {
-                formData.Add(new StringContent("999"), "_int");
-                formData.Add(new StringContent("foobar"), "_text");
-                formData.Add(new StringContent("2019-05-19"), "_timestamp");
-
-                var (result, _, _) = await RestClient.PostAsync<JObject>("https://localhost:5001/api/values-from-form", formData);
-                Assert.Equal(999, result["first"]);
-                Assert.Equal("foobar", result["second"]);
-                Assert.Equal("2019-05-19T00:00:00", result["third"]);
-                Assert.Null((string) result["fourth"]);
-            }
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/values-from-form", 
+                body: new Form(new
+                {
+                    _int = 999,
+                    _text = "foobar",
+                    _timestamp = "2019-05-19"
+                }));
+            Assert.Equal(999, result["first"]);
+            Assert.Equal("foobar", result["second"]);
+            Assert.Equal("2019-05-19T00:00:00", result["third"]);
+            Assert.Null((string)result["fourth"]);
         }
 
         [Fact]
         public async Task VerifyPutMatchByFormNameResults()
         {
-            using (var formData = new MultipartFormDataContent())
-            {
-                formData.Add(new StringContent("999"), "_int");
-                formData.Add(new StringContent("foobar"), "_text");
-                formData.Add(new StringContent("2019-05-19"), "_timestamp");
-
-                var (result, _, _) = await RestClient.PutAsync<JObject>("https://localhost:5001/api/values-from-form", formData);
-                Assert.Equal(999, result["first"]);
-                Assert.Equal("foobar", result["second"]);
-                Assert.Equal("2019-05-19T00:00:00", result["third"]);
-                Assert.Null((string) result["fourth"]);
-            }
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/values-from-form",
+                body: new Form(new
+                {
+                    _int = 999,
+                    _text = "foobar",
+                    _timestamp = "2019-05-19"
+                }));
+            Assert.Equal(999, result["first"]);
+            Assert.Equal("foobar", result["second"]);
+            Assert.Equal("2019-05-19T00:00:00", result["third"]);
+            Assert.Null((string)result["fourth"]);
         }
     }
 }

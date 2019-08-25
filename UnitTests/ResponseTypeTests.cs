@@ -1,5 +1,6 @@
 using System.Net;
 using System.Threading.Tasks;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -118,182 +119,182 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetJsonNull()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/json-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/json-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyGetJsonbNull()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/jsonb-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/jsonb-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyGetJsonbValue()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/jsonb-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal(@"{""field"": ""value""}", response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/jsonb-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal(@"{""field"": ""value""}", result);
         }
 
         [Fact]
         public async Task VerifyGetVoid()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/void");
-            Assert.Equal(HttpStatusCode.NoContent, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/void");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyGetTextNull()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/text-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/text-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyGetTextValue()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/text-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("text", response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/text-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("text", result);
         }
 
         [Fact]
         public async Task VerifyGetIntegerNull()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/integer-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/integer-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyGetIntegerValue()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/integer-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("999", response);
+            var (result, response) = await Client.GetAsync<string>("https://localhost:5001/api/integer-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("999", result);
         }
 
         [Fact]
         public async Task VerifyGetTimestampNull()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/timestamp-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var(result, response) = await Client.GetAsync<string>("https://localhost:5001/api/timestamp-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyGetTimestampValue()
         {
-            var (response, status, contentType) = await RestClient.GetAsync<string>("https://localhost:5001/api/timestamp-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("2019-05-19T00:00:00", response);
+            var (result, response) =  await Client.GetAsync<string>("https://localhost:5001/api/timestamp-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("2019-05-19T00:00:00", result);
         }
 
         //post
         [Fact]
         public async Task VerifyPostJsonNull()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/json-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/json-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyPostJsonbNull()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/jsonb-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/jsonb-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyPostJsonbValue()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/jsonb-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal(@"{""field"": ""value""}", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/jsonb-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal(@"{""field"": ""value""}", result);
         }
 
         [Fact]
         public async Task VerifyPostVoid()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/void", null);
-            Assert.Equal(HttpStatusCode.NoContent, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/void");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPostTextNull()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/text-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/text-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPostTextValue()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/text-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("text", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/text-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("text", result);
         }
 
         [Fact]
         public async Task VerifyPostIntegerNull()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/integer-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/integer-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPostIntegerValue()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/integer-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("999", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/integer-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("999", result);
         }
 
         [Fact]
         public async Task VerifyPostTimestampNull()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/timestamp-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/timestamp-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPostTimestampValue()
         {
-            var (response, status, contentType) = await RestClient.PostAsync<string>("https://localhost:5001/api/timestamp-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("2019-05-19T00:00:00", response);
+            var (result, response) = await Client.PostAsync<string>("https://localhost:5001/api/timestamp-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("2019-05-19T00:00:00", result);
         }
 
 
@@ -301,182 +302,182 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutJsonNull()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/json-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/json-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyPutJsonbNull()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/jsonb-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/jsonb-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyPutJsonbValue()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/jsonb-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal(@"{""field"": ""value""}", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/jsonb-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal(@"{""field"": ""value""}", result);
         }
 
         [Fact]
         public async Task VerifyPutVoid()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/void", null);
-            Assert.Equal(HttpStatusCode.NoContent, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/void");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPutTextNull()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/text-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/text-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPutTextValue()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/text-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("text", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/text-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("text", result);
         }
 
         [Fact]
         public async Task VerifyPutIntegerNull()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/integer-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/integer-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPutIntegerValue()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/integer-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("999", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/integer-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("999", result);
         }
 
         [Fact]
         public async Task VerifyPutTimestampNull()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/timestamp-null", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/timestamp-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyPutTimestampValue()
         {
-            var (response, status, contentType) = await RestClient.PutAsync<string>("https://localhost:5001/api/timestamp-value", null);
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("2019-05-19T00:00:00", response);
+            var (result, response) = await Client.PutAsync<string>("https://localhost:5001/api/timestamp-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("2019-05-19T00:00:00", result);
         }
 
         // delete
         [Fact]
         public async Task VerifyDeleteJsonNull()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/json-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/json-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyDeleteJsonbNull()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/jsonb-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal("{}", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/jsonb-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal("{}", result);
         }
 
         [Fact]
         public async Task VerifyDeleteJsonbValue()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/jsonb-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("application/json; charset=utf-8", contentType);
-            Assert.Equal(@"{""field"": ""value""}", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/jsonb-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("application/json; charset=utf-8", response.ContentType);
+            Assert.Equal(@"{""field"": ""value""}", result);
         }
 
         [Fact]
         public async Task VerifyDeleteVoid()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/void");
-            Assert.Equal(HttpStatusCode.NoContent, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/void");
+            Assert.Equal(HttpStatusCode.NoContent, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyDeleteTextNull()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/text-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/text-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyDeleteTextValue()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/text-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("text", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/text-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("text", result);
         }
 
         [Fact]
         public async Task VerifyDeleteIntegerNull()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/integer-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/integer-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyDeleteIntegerValue()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/integer-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("999", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/integer-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("999", result);
         }
 
         [Fact]
         public async Task VerifyDeleteTimestampNull()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/timestamp-null");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Empty(response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/timestamp-null");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Empty(result);
         }
 
         [Fact]
         public async Task VerifyDeleteTimestampValue()
         {
-            var (response, status, contentType) = await RestClient.DeleteAsync<string>("https://localhost:5001/api/timestamp-value");
-            Assert.Equal(HttpStatusCode.OK, status);
-            Assert.Equal("text/plain; charset=utf-8", contentType);
-            Assert.Equal("2019-05-19T00:00:00", response);
+            var (result, response) = await Client.DeleteAsync<string>("https://localhost:5001/api/timestamp-value");
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+            Assert.Equal("text/plain; charset=utf-8", response.ContentType);
+            Assert.Equal("2019-05-19T00:00:00", result);
         }
     }
 }

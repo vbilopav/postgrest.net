@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PostgRest.net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
 using static UnitTests.Config;
@@ -86,7 +87,13 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetMatchByQueryStringNameResults()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/values-from-params",
+            query: new Query(new
+            {
+                _int = 999,
+                _text = "foobar",
+                _timestamp = "2019-05-19"
+            }));
             Assert.Equal(999, result["first"]);
             Assert.Equal("foobar", result["second"]);
             Assert.Equal("2019-05-19T00:00:00", result["third"]);
@@ -96,7 +103,13 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostMatchByQueryStringNameResults()
         {
-            var (result, _, _) = await RestClient.PostAsync<JObject>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19", null);
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/values-from-params",
+                query: new Query(new
+                {
+                    _int = 999,
+                    _text = "foobar",
+                    _timestamp = "2019-05-19"
+                }));
             Assert.Equal(999, result["first"]);
             Assert.Equal("foobar", result["second"]);
             Assert.Equal("2019-05-19T00:00:00", result["third"]);
@@ -106,7 +119,13 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutMatchByQueryStringNameResults()
         {
-            var (result, _, _) = await RestClient.PutAsync<JObject>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19", null);
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/values-from-params",
+                query: new Query(new
+                {
+                    _int = 999,
+                    _text = "foobar",
+                    _timestamp = "2019-05-19"
+                }));
             Assert.Equal(999, result["first"]);
             Assert.Equal("foobar", result["second"]);
             Assert.Equal("2019-05-19T00:00:00", result["third"]);
@@ -116,7 +135,13 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteMatchByQueryStringNameResults()
         {
-            var (result, _, _) = await RestClient.GetAsync<JObject>("https://localhost:5001/api/values-from-params?_int=999&_text=foobar&_timestamp=2019-05-19");
+            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/values-from-params",
+                query: new Query(new
+                {
+                    _int = 999,
+                    _text = "foobar",
+                    _timestamp = "2019-05-19"
+                }));
             Assert.Equal(999, result["first"]);
             Assert.Equal("foobar", result["second"]);
             Assert.Equal("2019-05-19T00:00:00", result["third"]);
