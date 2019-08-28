@@ -85,7 +85,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostJsonBodyAdditional()
         {
-            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-body-additional",
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-body-additional/path-param/",
                 body: new Json(new
                 {
                     key1 = "value1",
@@ -95,7 +95,7 @@ namespace UnitTests
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -116,7 +116,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutJsonBodyAdditional()
         {
-            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-body-additional",
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-body-additional/path-param/",
                 body: new Json(new
                 {
                     key1 = "value1",
@@ -126,7 +126,7 @@ namespace UnitTests
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -147,7 +147,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostFormBodyAdditional()
         {
-            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-body-additional",
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-body-additional/path-param/",
                 body: new Form(new
                 {
                     key1 = "value1",
@@ -157,7 +157,7 @@ namespace UnitTests
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -178,7 +178,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutFormBodyAdditional()
         {
-            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-body-additional",
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-body-additional/path-param/",
                 body: new Form(new
                 {
                     key1 = "value1",
@@ -188,7 +188,7 @@ namespace UnitTests
             Assert.Equal("value1", result["key1"]);
             Assert.Equal("value2", result["key2"]);
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]

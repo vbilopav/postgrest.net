@@ -21,7 +21,7 @@ namespace UnitTests
                     .AddPostgRest(new PostgRestOptions
                     {
                         Connection = TestingConnection,
-                        MatchParamsByFormKeyWhen = info =>  info.RouteName == "api/values-from-form"
+                        MatchParamsByFormKeyWhen = info =>  info.RouteName == "api/values-from-form/"
                     });
         }
 

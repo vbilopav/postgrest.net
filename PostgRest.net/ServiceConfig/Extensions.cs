@@ -9,7 +9,7 @@ using Microsoft.Extensions.Primitives;
 
 namespace PostgRest.net
 {
-    public static class PostgRestExtensions
+    public static class Extensions
     {
         public static string GetPgCloudConnectionString(this IConfiguration config, string connectionStringName) =>
             config.GetConnectionString(connectionStringName) ?? config.GetSection($"POSTGRESQLCONNSTR_{connectionStringName}")?.Value;

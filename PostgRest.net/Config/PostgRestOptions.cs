@@ -102,7 +102,8 @@ namespace PostgRest.net
             {
                 // resolve to kebab by default
                 var snaked = string.Concat(routineLowerNoPrefix.RemoveFromStart(verb.ToLower()).Select((x, i) => i > 0 && char.IsUpper(x) ? "_" + x : x.ToString()));
-                return snaked.Trim('_').Replace("_", "-");
+                var result = snaked.Trim('_').Replace("_", "-");
+                return result.EndsWith("/") ? result : string.Concat(result, "/");
             };
 
             RouteNamePattern = Config.RouteNamePattern;

@@ -4,11 +4,11 @@ using Microsoft.AspNetCore.Mvc.ApplicationModels;
 
 namespace PostgRest.net
 {
-    public class PostgRestConvention : IControllerModelConvention
+    public class ControllerConvention : IControllerModelConvention
     {
         private readonly PostgRestOptions options;
 
-        public PostgRestConvention(PostgRestOptions options)
+        public ControllerConvention(PostgRestOptions options)
         {
             this.options = options;
         }
@@ -26,10 +26,30 @@ namespace PostgRest.net
             }
             controller.Selectors.Clear();
             info.RouteName = options.ApplyRouteName(info.RouteName, info.RoutineName);
+            
+            /*
+            if (info.RoutineName == "rest__get_values" && info.ReturnType == "text")
+            {
+                var r = string.Concat(info.RouteName, "/{1}");
+                controller.Selectors.Add(new SelectorModel
+                {
+                    AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(r))
+                });
+                return;
+            }
+            else
+            {
+                controller.Selectors.Add(new SelectorModel
+                {
+                    AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(info.RouteName))
+                });
+            }
+            */
             controller.Selectors.Add(new SelectorModel
             {
-                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(info.RouteName)),
+                AttributeRouteModel = new AttributeRouteModel(new RouteAttribute(info.RouteName))
             });
+
             options.ApplyFilters(controller.Filters, info.RouteName, info.RoutineName);
             options.ApplyControllerConvention(controller, info);
         }

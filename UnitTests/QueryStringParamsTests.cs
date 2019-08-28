@@ -94,9 +94,9 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional/path-param/?foo=bar");
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -117,9 +117,9 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPostReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.PostAsync("https://localhost:5001/api/return-query-additional/path-param/?foo=bar");
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -140,9 +140,9 @@ namespace UnitTests
         [Fact]
         public async Task VerifyPutReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.PutAsync("https://localhost:5001/api/return-query-additional/path-param/?foo=bar");
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
 
         [Fact]
@@ -163,9 +163,9 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-additional?foo=bar");
+            var result = await SimpleClient.DeleteAsync<JObject>("https://localhost:5001/api/return-query-additional/path-param/?foo=bar");
             Assert.Equal("bar", result["foo"]);
-            Assert.Equal("", result["additional"]);
+            Assert.Equal("path-param", result["additional"]);
         }
     }
 }

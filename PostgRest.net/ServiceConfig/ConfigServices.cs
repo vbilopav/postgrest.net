@@ -6,7 +6,7 @@ using System.Reflection;
 
 namespace PostgRest.net
 {
-    public static class PostgRestConfigServices
+    public static class ConfigServices
     {
         public static IServiceCollection AddPostgRest(this IServiceCollection services, PostgRestOptions options = null)
         {
@@ -30,11 +30,15 @@ namespace PostgRest.net
         {
             options = builder.Services.EnsureOptions(options);
             builder.Services.AddPostgRest(options);
-            var assembly = typeof(PostgRestExtensions).GetTypeInfo().Assembly;
+            var assembly = typeof(Extensions).GetTypeInfo().Assembly;
             return builder
                 .AddApplicationPart(assembly)
-                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new PostgRestFeatureProvider(builder.Services, options)))
-                .AddMvcOptions(o => o.Conventions.Add(new PostgRestConvention(options)));
+                .ConfigureApplicationPartManager(m => m.FeatureProviders.Add(new FeatureProvider(builder.Services, options)))
+                .AddMvcOptions(o =>
+                {
+                    o.Conventions.Add(new ControllerConvention(options));
+                    o.Conventions.Add(new ActionModelConvention());
+                });
         }
 
         private static PostgRestOptions EnsureOptions(this IServiceCollection services, PostgRestOptions options)

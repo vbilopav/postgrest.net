@@ -13,9 +13,9 @@ using System.Reflection.Emit;
 
 namespace PostgRest.net
 {
-    public class PostgRestFeatureProvider : IApplicationFeatureProvider<ControllerFeature>
+    public class FeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {
-        private readonly ILogger<PostgRestFeatureProvider> logger;
+        private readonly ILogger<FeatureProvider> logger;
         private readonly IServiceCollection services;
         private readonly PostgRestOptions options;
         private readonly ModuleBuilder moduleBuilder;
@@ -24,7 +24,7 @@ namespace PostgRest.net
         private readonly Type typePut;
         private readonly Type typeDelete;
 
-        public PostgRestFeatureProvider(IServiceCollection services, PostgRestOptions options)
+        public FeatureProvider(IServiceCollection services, PostgRestOptions options)
         {
             this.services = services;
             this.options = options;
@@ -40,7 +40,7 @@ namespace PostgRest.net
 
             using (var builder = this.services.BuildServiceProvider())
             {
-                logger = builder.GetService<ILogger<PostgRestFeatureProvider>>();
+                logger = builder.GetService<ILogger<FeatureProvider>>();
             }
         }
 
@@ -75,6 +75,18 @@ namespace PostgRest.net
                 return;
             }
 
+            var parameters =
+                JsonConvert.DeserializeObject<IEnumerable<Parameter>>(reader["parameters"] as string)
+                    .OrderBy(p => p.Position)
+                    .Select(p =>
+                    {
+                        var parameterLower = p.ParamName.ToLower();
+                        p.ParamNameLower = parameterLower;
+                        p.FromQueryString = options.IsQueryStringParameterWhen(p, name);
+                        p.FromBody = options.IsBodyParameterWhen(p, name);
+                        return p;
+                    })
+                    .ToList();
             AddControllerFeature(feature, new ControllerInfo
             {
                 RoutineName = name,
@@ -82,62 +94,53 @@ namespace PostgRest.net
                 RouteType = routeType,
                 ReturnType = reader["return_type"] as string,
                 Verb = (Verb)verb,
-                Parameters =
-                    JsonConvert.DeserializeObject<IEnumerable<Parameter>>(reader["parameters"] as string)
-                    .OrderBy(p => p.Position)
-                    .Select(p => {
-                        var parameterLower = p.ParamName.ToLower();
-                        p.ParamNameLower = parameterLower;
-                        p.FromQueryString = options.IsQueryStringParameterWhen(p, name);
-                        p.FromBody = options.IsBodyParameterWhen(p, name);
-                        return p;
-                    })
-                    .ToList()
+                Parameters = parameters
             });
         }
 
         private void AddControllerFeature(ControllerFeature feature, ControllerInfo info)
         {
-            var name = $"Proxy{info.RoutineName.GetHashCode()}";
+            var name = $"Proxy{info.RoutineName.GetHashCode()}_{Guid.NewGuid().ToString().Split('-').First()}";
             var typeBuilder = moduleBuilder.DefineType(name, TypeAttributes.Public);
             var type = typeBuilder.CreateTypeInfo();
             feature.Controllers.Add(info.RouteType.MakeGenericType(type).GetTypeInfo());
             info.Options = options;
             info.MatchParamsByQueryStringKey = options.MatchParamsByQueryStringKeyWhen?.Invoke(info) ?? false;
             info.MatchParamsByFormKey = options.MatchParamsByFormKeyWhen?.Invoke(info) ?? false;
+            if (!info.MatchParamsByQueryStringKey && !info.MatchParamsByFormKey)
+            {
+
+                info.RouteName = string.Concat(info.RouteName,
+                    string.Join("", 
+                        info.Parameters.Where(p => !p.FromQueryString && !p.FromBody && p.Direction == "IN").Select(p => $"{{{p.ParamName}}}/")));
+            }
+            logger.LogInformation($"Mapping PostgresSQL function \"{name}\" to REST API endpoint \"{info.Verb.ToString().ToUpper()} {info.RouteName}\" ...");
             ControllerData.Data.TryAdd(name, info);
         }
 
         private (string, Type, Verb?) GetRouteNameAndType(string name)
         {
             var prefix = options.Prefix ?? "";
-            string LogString(string route, string verb) =>
-                $"Mapping PostgresSQL function \"{name}\" to REST API endpoint \"{verb} {route}\" ...";
-
             var candidate = name.RemoveFromStart(prefix);
             var candidateLower = candidate.ToLower();
             if (options.IsGetRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "GET"));
-                logger.LogInformation(LogString(routeName, "GET"));
                 return (routeName, typeGet, Verb.Get);
             }
             if (options.IsPostRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "POST"));
-                logger.LogInformation(LogString(routeName, "POST"));
                 return (routeName, typePost, Verb.Post);
             }
             if (options.IsPutRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "PUT"));
-                logger.LogInformation(LogString(routeName, "PUT"));
                 return (routeName, typePut, Verb.Put);
             }
             if (options.IsDeleteRouteWhen(candidateLower, name))
             {
                 var routeName = string.Format(options.RouteNamePattern, options.ResolveRouteName(name, candidate, candidateLower, "DELETE"));
-                logger.LogInformation(LogString(routeName, "DELETE"));
                 return (routeName, typeDelete, Verb.Delete);
             }
             logger.LogWarning($"Routine {name} skipped, couldn't map to appropriate route. Check Is[Verb]When option.");

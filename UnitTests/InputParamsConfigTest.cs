@@ -24,10 +24,10 @@ namespace UnitTests
                         {
                             switch (info.RouteName)
                             {
-                                case "api/return-query-additional-applied" when name == "_additional":
+                                case "api/return-query-additional-applied/{_additional}/" when name == "_additional":
                                     value.Value = "some text";
                                     break;
-                                case "api/return-query-applied" when name == "_query":
+                                case "api/return-query-applied/" when name == "_query":
                                     ((JObject)value.Value)["foo"] = "bar";
                                     break;
                             }
@@ -83,7 +83,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyGetReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional-applied", new Query(new {foo = "bar"}));
+            var result = await SimpleClient.GetAsync("https://localhost:5001/api/return-query-additional-applied/path-param/", new Query(new {foo = "bar"}));
             Assert.Equal("some text", result["additional"]);
             Assert.Equal("bar", result["foo"]);
         }
@@ -99,7 +99,7 @@ namespace UnitTests
         [Fact]
         public async Task VerifyDeleteReturnQueryStringAdditionalParam()
         {
-            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/return-query-additional-applied", new Query(new { foo = "bar" }));
+            var result = await SimpleClient.DeleteAsync("https://localhost:5001/api/return-query-additional-applied/path-param/", new Query(new { foo = "bar" }));
             Assert.Equal("some text", result["additional"]);
             Assert.Equal("bar", result["foo"]);
         }

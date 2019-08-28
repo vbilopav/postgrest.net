@@ -20,7 +20,7 @@ namespace UnitTests
                     .AddPostgRest(new PostgRestOptions
                     {
                         Connection = TestingConnection,
-                        MatchParamsByQueryStringKeyWhen = info =>  info.RouteName == "api/values-from-params"
+                        MatchParamsByQueryStringKeyWhen = info =>  info.RouteName == "api/values-from-params/"
                     });
         }
 

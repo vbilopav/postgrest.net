@@ -110,9 +110,13 @@ namespace PostgRest.net
         {
             if (body == null)
             {
+                var content = await Request.GetBodyAsync();
                 if (Request.ContentType.StartsWith("application/json"))
                 {
-                    body = JObject.Parse(await Request.GetBodyAsync());
+                    if (!string.IsNullOrEmpty(content))
+                    {
+                        body = JObject.Parse(content);
+                    }
                 }
                 else if (Request.ContentType.StartsWith("multipart/form-data"))
                 {
@@ -120,7 +124,7 @@ namespace PostgRest.net
                 }
                 else
                 {
-                    body = await Request.GetBodyAsync();
+                    body = content;
                 }
             }
             var value = new ReferenceValueType { Value = body };
@@ -132,6 +136,11 @@ namespace PostgRest.net
         private void ParseCustomParam(Parameter param)
         {
             var value = new ReferenceValueType();
+            var routeValue = this.ControllerContext.RouteData?.Values?[param.ParamName];
+            if (routeValue != null)
+            {
+                value.Value = routeValue;
+            }
             info.Options.ApplyParameterValue?.Invoke(value, param.ParamName, info, this);
             npngParameters.Add(new NpgsqlParameter(param.ParamName, value.Value));
         }
