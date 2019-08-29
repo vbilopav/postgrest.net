@@ -114,7 +114,24 @@ namespace PostgRest.net
                     string.Join("", 
                         info.Parameters.Where(p => !p.FromQueryString && !p.FromBody && p.Direction == "IN").Select(p => $"{{{p.ParamName}}}/")));
             }
-            logger.LogInformation($"Mapping PostgresSQL function \"{name}\" to REST API endpoint \"{info.Verb.ToString().ToUpper()} {info.RouteName}\" ...");
+            var verb = info.Verb.ToString().ToUpper();
+            var paramsDesc = info.Parameters.Select(
+                p =>
+                {
+                    var comment = "";
+                    if (p.FromQueryString)
+                    {
+                        comment = string.Concat(comment, "/*from query string*/");
+                    }
+                    if (p.FromBody)
+                    {
+                        comment = string.Concat(comment, "/*from body*/");
+                    }
+                    return $"{comment}{p.Direction} {p.ParamName} {p.ParamType}";
+                })
+                .ToArray();
+            var routine = $"function {info.RoutineName}({string.Join(", ", paramsDesc)}) returns {info.ReturnType}";
+            logger.LogInformation($"Mapping PostgreSQL routine \"{routine}\" to REST API endpoint \"{verb} {info.RouteName}\" ... \n");
             ControllerData.Data.TryAdd(name, info);
         }
 
