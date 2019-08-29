@@ -4,7 +4,7 @@ Turn your PostgreSQL database directly into a RESTful API with .NET Core.
 
 ## Quick start
 
-1. Add **postgrest.net** Nuget to your project.
+1. Add **postgrest.net** NuGet to your project.
 
 2. Add `AddPostgRest()` to your MVC builder configuration, like this:
 
@@ -19,7 +19,7 @@ services.AddMvc().AddPostgRest();
 	
 4. Add some PostgreSQL functions to your database. 
 
-Now, When you run you application all functiion that have default naming convention (name starts with **`rest_{get|post|put|delete}`**) are turned automatically into RESTful enpoints.
+Now, When you run you application all function that have default naming convention (name starts with **`rest_{get|post|put|delete}`**) are turned automatically into RESTful endpoints.
 
 ## Examples
 
@@ -30,7 +30,9 @@ create function rest__get_values(_id int) returns text as
 $$
 begin
 	return (
-		select "value" from "values" where id = _id
+		select "value" 
+		from "values" 
+		where id = _id
 	);
 end
 $$ language plpgsql;
@@ -44,7 +46,7 @@ info: PostgRest.net.FeatureProvider[0]
 ```
 
 - You can also map **query string** values or **body** values (either json or multipart form) to your PostgreSQL function parameters.
-By convention if parameter name contains `body` or `query` (this is configurable) it will be mapped to body or query string respectivly.
+By convention if parameter name contains `body` or `query` (this is configurable) it will be mapped to body or query string respectively.
 For example, if you include `_body` parameter in function, you may see following info log in your application console:
 
 ```
@@ -52,11 +54,31 @@ info: PostgRest.net.FeatureProvider[0]
       Mapping PostgreSQL routine "function rest__put_values(/*from body*/IN _body json) returns json" to REST API endpoint "PUT api/values/" ...
 ```
 
+- Also, in spirit of full integration, any log executed inside your PostgreSQL routine (`raise info`, etc) - will be treated as normal part of .NET core logging.
 
 Checkout full, working examples in [examples directory](https://github.com/vbilopav/postgrest.net/tree/master/Examples) of this repository
 
-
 Also, you may consult [unit tests directory](https://github.com/vbilopav/postgrest.net/tree/master/UnitTests) for different usage examples.
+
+## Benefits of using **postgrest.net**
+
+#### Productivity
+
+#### Maintainability
+
+#### Security
+
+## Future plans
+
+#### Testing helpers NuGet Library
+
+#### Migration mechanism tool with schema hashing
+
+#### Integration of PostgreSQL role based security with .NET Core security system
+
+#### Schema compare tool based on Monaco diff editor
+
+#### Function edit tool  based on Monaco editor
 
 ## Licence
 

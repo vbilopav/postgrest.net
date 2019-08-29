@@ -84,8 +84,8 @@ begin
     return _result;
 end
 $$ language plpgsql security definer;
-revoke all on function rest__post_values(json) from public;
-grant execute on function rest__post_values(json) to quickstart_values_controller;
+revoke all on function rest__put_values(json) from public;
+grant execute on function rest__put_values(json) to quickstart_values_controller;
 
 /*
 * delete record by id
