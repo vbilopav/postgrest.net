@@ -42,7 +42,7 @@ $$ language plpgsql;
 
 ```
 info: PostgRest.net.FeatureProvider[0]
-	  Mapping PostgreSQL routine "function rest__get_values(IN _id integer) returns text" to REST API endpoint "GET api/values/{_id}/" ...
+Mapping PostgreSQL routine "function rest__get_values(IN _id integer) returns text" to REST API endpoint "GET api/values/{_id}/" ...
 ```
 
 - You can also map **query string** values or **body** values (either json or multipart form) to your PostgreSQL function parameters.
@@ -51,7 +51,7 @@ For example, if you include `_body` parameter in function, you may see following
 
 ```
 info: PostgRest.net.FeatureProvider[0]
-      Mapping PostgreSQL routine "function rest__put_values(/*from body*/IN _body json) returns json" to REST API endpoint "PUT api/values/" ...
+Mapping PostgreSQL routine "function rest__put_values(/*from body*/IN _body json) returns json" to REST API endpoint "PUT api/values/" ...
 ```
 
 - Also, in spirit of full integration, any log executed inside your PostgreSQL routine (`raise info`, etc) - will be treated as normal part of .NET core logging.
