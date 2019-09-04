@@ -19,11 +19,11 @@ services.AddMvc().AddPostgRest();
 	
 4. Add some PostgreSQL functions to your database. 
 
-Now, When you run you application all function that have default naming convention (name starts with **`rest_{get|post|put|delete}`**) are turned automatically into RESTful endpoints.
+Now, when you run you application all function that have default naming convention (name starts with **`rest_{get|post|put|delete}`**) are turned automatically into RESTful endpoints.
 
 ## Examples
 
-- Add following function to you PostgreSQL database:
+- Add following function to your PostgreSQL database:
 
 ```sql
 create function rest__get_values(_id int) returns text as
