@@ -217,17 +217,20 @@ Furthermore, having high cohesion of SQL code (close to each other and easier to
 
 ### Security
 
+Virtually all database systems have their own security. By using PostgreSQL function you can take full advantage of PostgreSQL role-based security and add another security layer around your application and take your application security to another level.
+
+Here are full instruction on how to leverage PostgreSQL to protect your system from unauthorized access and SQL injections:
+[How to write super-uber-mega secure, sql-injection bullet-proof PostgreSQL queries](https://github.com/vbilopav/articles_repo/blob/master/How%20to%20write%20super-uber-mega%20secure%2C%20sql-injection%20bullet-proof%20PostgreSQL%20queries.md)
+
 ## Future plans
 
-### Testing helpers NuGet Library
+### Testing NuGet Library
 
 ### Migration tools
 
 ### Integration of PostgreSQL role based security with .NET Core security system
 
 ### Schema compare tool
-
-### Function edit tool
 
 ## Licence
 
