@@ -11,7 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{36
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Quickstart", "Quickstart", "{2F37A211-7D51-4E45-93B8-D0FFEDC9161C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValuesController", "Examples\Quickstart\ValuesController\ValuesController.csproj", "{F0697B06-E602-4942-ADBE-813D0A2EB36E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ValuesController", "Examples\Quickstart\ValuesController\ValuesController.csproj", "{F0697B06-E602-4942-ADBE-813D0A2EB36E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ValuesControllerTests", "Examples\Quickstart\ValuesControllerTests\ValuesControllerTests.csproj", "{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,6 +33,10 @@ Global
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -38,6 +44,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{2F37A211-7D51-4E45-93B8-D0FFEDC9161C} = {36811115-6868-4359-A568-8D3318D4676C}
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
+		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {146DC1B2-AB57-4008-8C55-B64C0EA89018}
