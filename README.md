@@ -96,7 +96,7 @@ That function returning JSON can be simply wired up with `postgrest.net.StringCo
 
 ## Yes, but why? / Benefits
 
-A lot has changes since SQL-92.
+A lot has changed since SQL-92.
 
 Modern SQL language is [turing complete](https://en.wikipedia.org/wiki/Turing_completeness) calculus engine. It is only ever successful programming language of forth generation with elements of fifth generation.
 
