@@ -10,14 +10,14 @@ namespace PostgTest.XUnit.Net
         private string dropTestDatabase = null;
         private string dropTestUser = null;
 
-        public string Server { get; set; } = "localhost";
-        public int Port { get; set; } = 5432;
-        public string DefaultDatabase { get; set; } = "postgres";
-        public string DefaultUser { get; set; } = "postgres";
-        public string DefaultUserPassword { get; set; } = "postgres";
-        public string TestDatabase { get; set; } = "postg_test_db";
-        public string TestUser { get; set; } = "postg_test_user";
-        public string CreateTestDatabase
+        public virtual string Server { get; set; } = "localhost";
+        public virtual int Port { get; set; } = 5432;
+        public virtual string DefaultDatabase { get; set; } = "postgres";
+        public virtual string DefaultUser { get; set; } = "postgres";
+        public virtual string DefaultUserPassword { get; set; } = "postgres";
+        public virtual string TestDatabase { get; set; } = "postg_test_db";
+        public virtual string TestUser { get; set; } = "postg_test_user";
+        public virtual string CreateTestDatabase
         {
             get
             {
@@ -36,7 +36,7 @@ namespace PostgTest.XUnit.Net
             }
             set => createTestDatabase = value;
         }
-        public string CreateTestUser
+        public virtual string CreateTestUser
         {
             get
             {
@@ -53,12 +53,12 @@ namespace PostgTest.XUnit.Net
                         noinherit
                         noreplication
                         connection limit -1
-                        password 'testing';
+                        password '{this.TestUser}';
                 ";
             }
             set => createTestUser = value;
         }
-        public string DropTestDatabase
+        public virtual string DropTestDatabase
         {
             get
             {
@@ -83,7 +83,7 @@ namespace PostgTest.XUnit.Net
             }
             set => dropTestDatabase = value;
         }
-        public string DropTestUser
+        public virtual string DropTestUser
         {
             get
             {
