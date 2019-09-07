@@ -19,7 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\postgrest.net\PostgRest.net.csproj" />
+    <ProjectReference Include="..\..\postgrest.net\PostgRest.Net.csproj" />
   </ItemGroup>
 
 </Project>

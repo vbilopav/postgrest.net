@@ -2,6 +2,8 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
+using PostgRest.Net.Config;
+using PostgRest.Net.ServiceConfig;
 using PostgRest.net.Tests.TestingUtils;
 using VerySimpleRestClient;
 using Xunit;

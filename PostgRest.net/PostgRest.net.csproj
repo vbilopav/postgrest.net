@@ -6,7 +6,7 @@
     <UpgradeBackupLocation>
     </UpgradeBackupLocation>
     <OldToolsVersion>2.0</OldToolsVersion>
-    <Version>0.0.1</Version>
+    <Version>0.0.2</Version>
     <Authors>Vedran Bilopavlović / VB Software (c)</Authors>
     <Company>VB Software (c)</Company>
     <Description>Turn your PostgreSQL database directly into a RESTful API with .NET Core!</Description>

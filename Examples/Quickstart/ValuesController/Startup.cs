@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PostgRest.net;
+using PostgRest.Net.ServiceConfig;
 using Swashbuckle.AspNetCore.Swagger;
 
 

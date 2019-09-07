@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace PostgRest.net
+namespace PostgRest.Net.Controllers
 {
     public class ReferenceValueType
     {

@@ -21,6 +21,8 @@ services.AddMvc().AddPostgRest();
 
 Now, when you run you application all function that have default naming convention (name starts with **`rest_{get|post|put|delete}`**) are turned automatically into RESTful endpoints.
 
+## [Version history](https://github.com/vbilopav/postgrest.net/blob/master/VERSION-HISTORY.md)
+
 ## Examples
 
 - Add following function to your PostgreSQL database:
@@ -29,11 +31,11 @@ Now, when you run you application all function that have default naming conventi
 create function rest__get_values(_id int) returns text as
 $$
 begin
-    return (
-        select "value"
-        from "values"
-        where id = _id
-    );
+	return (
+		select "value"
+		from "values"
+		where id = _id
+	);
 end
 $$ language plpgsql;
 ```
@@ -68,18 +70,18 @@ $$
 declare _company json;
 declare _company_id integer;
 begin
-    select to_json(c), c.id into _company, _company_id
-    from (
-        select id, name from companies c where user_id = _user_id limit 1
-    ) c;
-    return json_build_object(
-        'company', _company,
-        'sectors', (
-            select coalesce(json_agg(s), '[]') from (
-                select id, name from sectors where company_id = _company_id order by company_id
-            ) s
-        )
-    );
+	select to_json(c), c.id into _company, _company_id
+	from (
+		select id, name from companies c where user_id = _user_id limit 1
+	) c;
+	return json_build_object(
+		'company', _company,
+		'sectors', (
+			select coalesce(json_agg(s), '[]') from (
+				select id, name from sectors where company_id = _company_id order by company_id
+			) s
+		)
+	);
 end
 $$ language plpgsql;
 ```
@@ -87,11 +89,11 @@ $$ language plpgsql;
 That function returning JSON can be simply wired up with `postgrest.net.StringContentService` service:
 
 ```csharp
-    [HttpGet]
-    [Route("api/company-and-sectors")]
-    public async Task<ContentResult> GetCompanyAndSectorsAsync() =>
-        await _content.GetContentAsync("select select_company_and_sectors_by_user_id(@userId)",
-            parameters => parameters.AddWithValue("userId", this.User.GetId()));
+	[HttpGet]
+	[Route("api/company-and-sectors")]
+	public async Task<ContentResult> GetCompanyAndSectorsAsync() =>
+		await _content.GetContentAsync("select select_company_and_sectors_by_user_id(@userId)",
+			parameters => parameters.AddWithValue("userId", this.User.GetId()));
 ```
 
 ## Yes, but why? / Benefits
@@ -137,20 +139,20 @@ $$
 declare _company json;
 declare _company_id integer;
 begin
-    select to_json(c), c.id into _company, _company_id
-    from (
-        select id, name
-        from companies c
-        where user_id = (_query->>'user_id')::int --_query parameter is query string serialized to json
-    ) c;
-    return json_build_object(
-        'company', _company,
-        'sectors', (
-            select coalesce(json_agg(s), '[]') from (
-                select id, name from sectors where company_id = _company_id order by company_id
-            ) s
-        )
-    );
+	select to_json(c), c.id into _company, _company_id
+	from (
+		select id, name
+		from companies c
+		where user_id = (_query->>'user_id')::int --_query parameter is query string serialized to json
+	) c;
+	return json_build_object(
+		'company', _company,
+		'sectors', (
+			select coalesce(json_agg(s), '[]') from (
+				select id, name from sectors where company_id = _company_id order by company_id
+			) s
+		)
+	);
 end
 $$ language plpgsql;
 ```
@@ -163,24 +165,24 @@ $$
 declare _company json;
 declare _company_id integer;
 begin
-    select to_json(c), c.id into _company, _company_id
-    from (
-        select id, name, address
-        from companies c
-        where user_id = (_query->>'user_id')::int --_query parameter is query string serialized to json
-    ) c;
+	select to_json(c), c.id into _company, _company_id
+	from (
+		select id, name, address
+		from companies c
+		where user_id = (_query->>'user_id')::int --_query parameter is query string serialized to json
+	) c;
 
-    -- this will create log as normal .net core log.information would
-    raise info 'selected company: %', _company;
+	-- this will create log as normal .net core log.information would
+	raise info 'selected company: %', _company;
 
-    return json_build_object(
-        'company', _company,
-        'sectors', (
-            select coalesce(json_agg(s), '[]') from (
-                select id, name, address from sectors where company_id = _company_id order by company_id
-            ) s
-        )
-    );
+	return json_build_object(
+		'company', _company,
+		'sectors', (
+			select coalesce(json_agg(s), '[]') from (
+				select id, name, address from sectors where company_id = _company_id order by company_id
+			) s
+		)
+	);
 end
 $$ language plpgsql;
 ```
@@ -224,13 +226,21 @@ Here are full instruction on how to leverage PostgreSQL to protect your system f
 
 ## Future plans
 
-### Testing NuGet Library
+### Testing helper NuGet Library
 
-### Migration tools
+- And I don't want to hear "you can't test that" any more ...
 
-### Integration of PostgreSQL role based security with .NET Core security system
+### Attributes system
 
-### Schema compare tool
+- Simplify options interface with decoupled classes with custom attributes.
+
+### Migration tools / Diff tool / PostgreSQL database project
+
+- See Microsoft Database project for SQL Server. The way to keep changes, migrations under version-control system.
+
+### Integration of PostgreSQL role-based security system with .NET Core security system
+
+- PostgreSQL like all other modern databases has it's own security system. I wan't to see how it would be possible to use it in .NET Core.
 
 ## Licence
 

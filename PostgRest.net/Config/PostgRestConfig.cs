@@ -1,6 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
-
-namespace PostgRest.net
+﻿namespace PostgRest.Net.Config
 {
     public class PostgRestConfig
     {

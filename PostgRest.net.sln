@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29215.179
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgRest.net", "postgrest.net\PostgRest.net.csproj", "{69E4B0B4-FD3B-4377-B63D-D38A27DF1579}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgRest.Net", "postgrest.net\PostgRest.Net.csproj", "{69E4B0B4-FD3B-4377-B63D-D38A27DF1579}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{36811115-6868-4359-A568-8D3318D4676C}"
 EndProject
@@ -16,6 +16,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6B78643D-2999-4282-B8E9-7FF6382A94EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgRest.net.Tests", "Tests\PostgRest.net.Tests\PostgRest.net.Tests.csproj", "{BEC7A146-D719-4DC1-853F-183213524C4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgTest.XUnit.Net", "PostgTest.XUnit.Net\PostgTest.XUnit.Net.csproj", "{6D6A38C7-88CE-43B7-924A-E98403A50370}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D6A38C7-88CE-43B7-924A-E98403A50370}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D6A38C7-88CE-43B7-924A-E98403A50370}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D6A38C7-88CE-43B7-924A-E98403A50370}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D6A38C7-88CE-43B7-924A-E98403A50370}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

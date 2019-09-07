@@ -7,8 +7,11 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Npgsql;
+using PostgRest.Net.Config;
+using PostgRest.Net.DataServices;
+using PostgRest.Net.ServiceConfig;
 
-namespace PostgRest.net
+namespace PostgRest.Net.Controllers
 {
     [Route("")]
     public abstract class ControllerBase<T> : ControllerBase

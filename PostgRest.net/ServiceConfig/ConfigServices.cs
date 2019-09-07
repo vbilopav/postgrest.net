@@ -1,10 +1,12 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Npgsql;
-using System.Reflection;
+using PostgRest.Net.Config;
+using PostgRest.Net.DataServices;
 
-namespace PostgRest.net
+namespace PostgRest.Net.ServiceConfig
 {
     public static class ConfigServices
     {

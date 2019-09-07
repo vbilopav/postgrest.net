@@ -1,8 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using PostgRest.Net.Config;
+using PostgRest.Net.Controllers;
 
-
-namespace PostgRest.net
+namespace PostgRest.Net.ServiceConfig
 {
     public class ControllerConvention : IControllerModelConvention
     {

@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Npgsql;
-using Microsoft.Extensions.Options;
+using PostgRest.Net.Config;
 
-namespace PostgRest.net
+namespace PostgRest.Net.DataServices
 {
     public interface IResponse
     {

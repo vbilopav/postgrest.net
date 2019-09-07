@@ -1,10 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json.Linq;
+using PostgRest.Net.Config;
+using PostgRest.Net.DataServices;
 
-
-namespace PostgRest.net
+namespace PostgRest.Net.Controllers
 {
     public class GetController<T> : ControllerBase<T>
     {

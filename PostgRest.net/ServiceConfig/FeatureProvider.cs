@@ -1,17 +1,18 @@
 ﻿using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc.ApplicationParts;
-using Npgsql;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.DependencyInjection;
-using Newtonsoft.Json;
+using System.Reflection;
 using System.Reflection.Emit;
+using Microsoft.AspNetCore.Mvc.ApplicationParts;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using Npgsql;
+using PostgRest.Net.Config;
+using PostgRest.Net.Controllers;
 
-
-namespace PostgRest.net
+namespace PostgRest.Net.ServiceConfig
 {
     public class FeatureProvider : IApplicationFeatureProvider<ControllerFeature>
     {

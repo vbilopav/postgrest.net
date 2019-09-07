@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
-
 using Microsoft.AspNetCore.Mvc.ApplicationModels;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
+using PostgRest.Net.Controllers;
 
-
-namespace PostgRest.net
+namespace PostgRest.Net.ServiceConfig
 {
     public static class ParameterInfoFactory
     {

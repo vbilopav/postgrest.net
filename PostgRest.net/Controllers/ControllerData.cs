@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
+using PostgRest.Net.Config;
 
-namespace PostgRest.net
+namespace PostgRest.Net.Controllers
 {
     public class Parameter
     {

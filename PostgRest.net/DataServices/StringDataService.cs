@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Npgsql;
 
-namespace PostgRest.net
+namespace PostgRest.Net.DataServices
 {
     public interface IStringDataService
     {

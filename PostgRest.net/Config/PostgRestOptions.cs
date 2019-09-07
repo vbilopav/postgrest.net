@@ -1,12 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc.ApplicationModels;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Configuration;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Mvc.ApplicationModels;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.Extensions.Configuration;
+using PostgRest.Net.Controllers;
+using PostgRest.Net.DataServices;
+using PostgRest.Net.ServiceConfig;
 
-namespace PostgRest.net
+namespace PostgRest.Net.Config
 {
     public class PostgRestOptions
     {

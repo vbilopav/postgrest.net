@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using Npgsql;
 
-namespace PostgRest.net
+namespace PostgRest.Net.DataServices
 {
     public interface ILoggingService
     {
