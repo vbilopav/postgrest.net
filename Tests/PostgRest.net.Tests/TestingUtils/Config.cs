@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace UnitTests
+namespace PostgRest.net.Tests.TestingUtils
 {
     public static class Config
     {

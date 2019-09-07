@@ -1,13 +1,13 @@
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
+using PostgRest.net.Tests.TestingUtils;
 using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
-using static UnitTests.Config;
+using static PostgRest.net.Tests.TestingUtils.Config;
 
-namespace UnitTests
+namespace PostgRest.net.Tests
 {
     public class ResponseFromRecordSetTests : PostgRestClassFixture<ResponseFromRecordSetTests.LifeCycle>
     {

@@ -1,8 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
+﻿using System;
+using Microsoft.Extensions.Logging;
 using Xunit.Abstractions;
 
-namespace UnitTests
+namespace PostgRest.net.Tests.TestingUtils
 {
     public class XUnitLoggerProvider : ILoggerProvider
     {

@@ -1,9 +1,9 @@
-﻿using Npgsql;
-using System;
+﻿using System;
+using Npgsql;
 using Xunit;
-using static UnitTests.Config;
+using static PostgRest.net.Tests.TestingUtils.Config;
 
-namespace UnitTests
+namespace PostgRest.net.Tests.TestingUtils
 {
     public class DatabaseFixture : IDisposable
     {

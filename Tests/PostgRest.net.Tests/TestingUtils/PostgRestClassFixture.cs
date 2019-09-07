@@ -1,7 +1,7 @@
 using Xunit;
 using Xunit.Abstractions;
 
-namespace UnitTests
+namespace PostgRest.net.Tests.TestingUtils
 {
     [Collection("testing database")]
     public abstract class PostgRestClassFixture<TConfigureServices, TLifeCycle> :

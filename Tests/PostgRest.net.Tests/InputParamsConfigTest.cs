@@ -1,14 +1,14 @@
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json.Linq;
-using PostgRest.net;
-using System.Threading.Tasks;
+using PostgRest.net.Tests.TestingUtils;
 using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
-using static UnitTests.Config;
+using static PostgRest.net.Tests.TestingUtils.Config;
 
-namespace UnitTests
+namespace PostgRest.net.Tests
 {
     public class InputParamsConfigTest : PostgRestClassFixture<InputParamsConfigTest.Services, InputParamsConfigTest.LifeCycle>
     {

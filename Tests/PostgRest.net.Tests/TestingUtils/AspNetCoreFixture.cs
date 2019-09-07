@@ -1,13 +1,12 @@
-﻿using Microsoft.AspNetCore;
+﻿using System;
+using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using Xunit.Abstractions;
 
-
-namespace UnitTests
+namespace PostgRest.net.Tests.TestingUtils
 {
     public interface IConfigureServices
     {

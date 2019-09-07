@@ -1,15 +1,15 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection;
-using PostgRest.net;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
+using PostgRest.net.Tests.TestingUtils;
 using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
-using static UnitTests.Config;
+using static PostgRest.net.Tests.TestingUtils.Config;
 
-namespace UnitTests
+namespace PostgRest.net.Tests
 {
     public class RouteTypeConfigTests : PostgRestClassFixture<RouteTypeConfigTests.Services, RouteTypeConfigTests.LifeCycle>
     {

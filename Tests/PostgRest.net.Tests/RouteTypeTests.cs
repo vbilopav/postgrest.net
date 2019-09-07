@@ -1,12 +1,12 @@
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
+using PostgRest.net.Tests.TestingUtils;
 using VerySimpleRestClient;
 using Xunit;
 using Xunit.Abstractions;
-using static UnitTests.Config;
+using static PostgRest.net.Tests.TestingUtils.Config;
 
-namespace UnitTests
+namespace PostgRest.net.Tests
 {
     public class RouteTypeTests : PostgRestClassFixture<RouteTypeTests.LifeCycle>
     {
