@@ -1,15 +1,4 @@
-﻿do $$
-begin
-    if current_database() <> 'quickstart_values_controller' or current_user = 'quickstart_values_controller'
-    then
-        raise exception 'wrong connection';
-    end if;
-
-    drop function if exists rest__put_values(json);
-end
-$$;
-
-/*
+﻿/*
 * put value to update a record
 * `PUT api/values/`
 */

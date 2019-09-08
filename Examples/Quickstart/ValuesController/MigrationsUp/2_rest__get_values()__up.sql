@@ -1,15 +1,4 @@
-﻿do $$
-begin
-    if current_database() <> 'quickstart_values_controller' or current_user = 'quickstart_values_controller'
-    then
-        raise exception 'wrong connection';
-    end if;
-    
-    drop function if exists rest__get_values();
-end
-$$;
-
-/*
+﻿/*
 * get all values
 * `GET api/values/`
 */

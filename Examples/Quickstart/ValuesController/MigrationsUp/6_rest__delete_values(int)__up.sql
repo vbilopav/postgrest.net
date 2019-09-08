@@ -1,15 +1,4 @@
-﻿do $$
-begin
-    if current_database() <> 'quickstart_values_controller' or current_user = 'quickstart_values_controller'
-    then
-        raise exception 'wrong connection';
-    end if;
-
-    drop function if exists rest__delete_values(int);
-end
-$$;
-
-/*
+﻿/*
 * delete record by id
 * `DELETE api/values/{_id}/`
 */
