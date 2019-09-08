@@ -3,12 +3,39 @@
 
 namespace PostgTest.XUnit.Net
 {
+    public interface IPostgreSqlTestConfig
+    {
+        string Server { get; set; }
+        int Port { get; set; }
+        string DefaultDatabase { get; set; }
+        string DefaultUser { get; set; }
+        string TestDatabase { get; set; }
+        string TestUser { get; set; }
+        bool CreateTestDatabase { get; set; }
+        string CreateTestDatabaseCommand { get; set; }
+        string DefaultUserPassword { get; set; }
+        string CreateTestUserCommand { get; set; }
+        string DropTestDatabaseCommand { get; set; }
+        string DropTestUserCommand { get; set; }
+    }
+
+    public static class PostgreSqlTestConfigExtensions
+    {
+        public static string GetDefaultConnectionString(this IPostgreSqlTestConfig config) =>
+            $"Server={config.Server};Database={config.DefaultDatabase};Port={config.Port};User Id={config.DefaultUser};Password={config.DefaultUserPassword};";
+
+        public static string GetTestConnectionString(this IPostgreSqlTestConfig config) =>
+            string.IsNullOrEmpty(config.TestUser) ?
+                config.GetDefaultConnectionString() :
+                $"Server={config.Server};Database={config.TestDatabase};Port={config.Port};User Id={config.TestUser};Password={config.DefaultUserPassword};";
+    }
+
     public class PostgreSqlTestConfig : IPostgreSqlTestConfig
     {
-        private string createTestDatabase = null;
-        private string createTestUser = null;
-        private string dropTestDatabase = null;
-        private string dropTestUser = null;
+        private string createTestDatabaseCmd = null;
+        private string createTestUserCmd = null;
+        private string dropTestDatabaseCmd = null;
+        private string dropTestUserCmd = null;
 
         public virtual string Server { get; set; } = "localhost";
         public virtual int Port { get; set; } = 5432;
@@ -17,13 +44,18 @@ namespace PostgTest.XUnit.Net
         public virtual string DefaultUserPassword { get; set; } = "postgres";
         public virtual string TestDatabase { get; set; } = "postg_test_db";
         public virtual string TestUser { get; set; } = "postg_test_user";
+        public virtual bool CreateTestDatabase { get; set; } = true;
         public virtual string CreateTestDatabaseCommand
         {
             get
             {
-                if (createTestDatabase != null)
+                if (!this.CreateTestDatabase)
                 {
-                    return createTestDatabase;
+                    return null;
+                }
+                if (createTestDatabaseCmd != null)
+                {
+                    return createTestDatabaseCmd;
                 }
                 if (string.IsNullOrEmpty(this.TestDatabase))
                 {
@@ -34,15 +66,15 @@ namespace PostgTest.XUnit.Net
                     create database {this.TestDatabase};
                 ";
             }
-            set => createTestDatabase = value;
+            set => createTestDatabaseCmd = value;
         }
         public virtual string CreateTestUserCommand
         {
             get
             {
-                if (createTestUser != null)
+                if (createTestUserCmd != null)
                 {
-                    return createTestUser;
+                    return createTestUserCmd;
                 }
                 return string.IsNullOrEmpty(this.TestUser) ? null : $@"
                     create role testing with
@@ -56,15 +88,15 @@ namespace PostgTest.XUnit.Net
                         password '{this.TestUser}';
                 ";
             }
-            set => createTestUser = value;
+            set => createTestUserCmd = value;
         }
         public virtual string DropTestDatabaseCommand
         {
             get
             {
-                if (dropTestDatabase != null)
+                if (dropTestDatabaseCmd != null)
                 {
-                    return dropTestDatabase;
+                    return dropTestDatabaseCmd;
                 }
                 if (string.IsNullOrEmpty(this.TestDatabase))
                 {
@@ -81,21 +113,21 @@ namespace PostgTest.XUnit.Net
                     drop database {this.TestDatabase};
                 ";
             }
-            set => dropTestDatabase = value;
+            set => dropTestDatabaseCmd = value;
         }
         public virtual string DropTestUserCommand
         {
             get
             {
-                if (dropTestUser != null)
+                if (dropTestUserCmd != null)
                 {
-                    return dropTestUser;
+                    return dropTestUserCmd;
                 }
                 return string.IsNullOrEmpty(this.TestUser) ? null : $@"
                     drop role {this.TestUser};
                 ";
             }
-            set => dropTestUser = value;
+            set => dropTestUserCmd = value;
         }
     }
 }

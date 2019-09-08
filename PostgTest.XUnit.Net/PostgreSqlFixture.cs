@@ -18,12 +18,12 @@ namespace PostgTest.XUnit.Net
         {
             config = Config.Value;
             connection = new NpgsqlConnection(config.GetDefaultConnectionString());
-            CreateTestDatabaseAndUser();
+            CreateTestDatabaseAndTestUser();
         }
 
         public void Dispose()
         {
-            DropTestDatabaseAndUser();
+            ExecuteDropTestDatabaseAndTestUser();
             if (connection.State == ConnectionState.Open)
             {
                 connection.Close();
@@ -31,21 +31,19 @@ namespace PostgTest.XUnit.Net
             connection.Dispose();
         }
 
-        private void CreateTestDatabaseAndUser()
+        private void CreateTestDatabaseAndTestUser()
         {
             try
             {
-                ExecuteCommand($@"
-                    {config.CreateTestDatabaseCommand}
-                    {config.CreateTestUserCommand}
-                ");
+                ExecuteCreateTestDatabaseAndTestUser();
             }
             catch (PostgresException e)
             {
                 if (e.SqlState == "42P04")
                 {
 
-                    DropTestDatabaseAndUser();
+                    ExecuteDropTestDatabaseAndTestUser();
+                    ExecuteCreateTestDatabaseAndTestUser();
                 }
                 else
                 {
@@ -54,7 +52,15 @@ namespace PostgTest.XUnit.Net
             }
         }
 
-        private void DropTestDatabaseAndUser()
+        private void ExecuteCreateTestDatabaseAndTestUser()
+        {
+            ExecuteCommand($@"
+                {config.CreateTestDatabaseCommand}
+                {config.CreateTestUserCommand}
+            ");
+        }
+
+        private void ExecuteDropTestDatabaseAndTestUser()
         {
             ExecuteCommand($@"
                 {config.DropTestDatabaseCommand}

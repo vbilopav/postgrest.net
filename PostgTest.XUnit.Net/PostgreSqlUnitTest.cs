@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using System.Threading.Tasks;
 using Npgsql;
 using Xunit;
 
@@ -30,15 +31,82 @@ namespace PostgTest.XUnit.Net
             Connection.Dispose();
         }
 
-        protected void ExecuteCommand(string command)
+        protected void Execute(string command)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                if (Connection.State != ConnectionState.Open)
-                {
-                    Connection.Open();
-                }
+                EnsureConnectionIsOpen();
                 cmd.ExecuteNonQuery();
+            }
+        }
+
+        protected async Task ExecuteAsync(string command)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                await EnsureConnectionIsOpenAsync();
+                await cmd.ExecuteNonQueryAsync();
+            }
+        }
+
+        protected void Read(string command, Action<NpgsqlDataReader> read)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                EnsureConnectionIsOpen();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        read(reader);
+                    }
+                }
+            }
+        }
+
+        protected async Task ReadAsync(string command, Action<NpgsqlDataReader> read)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                EnsureConnectionIsOpen();
+                using (var reader = await cmd.ExecuteReaderAsync() as NpgsqlDataReader)
+                {
+                    while (reader.Read())
+                    {
+                        read(reader);
+                    }
+                }
+            }
+        }
+
+        protected async Task ReadAsync(string command, Func<NpgsqlDataReader, Task> read)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                EnsureConnectionIsOpen();
+                using (var reader = await cmd.ExecuteReaderAsync() as NpgsqlDataReader)
+                {
+                    while (reader.Read())
+                    {
+                        await read(reader);
+                    }
+                }
+            }
+        }
+
+        private void EnsureConnectionIsOpen()
+        {
+            if (Connection.State != ConnectionState.Open)
+            {
+                Connection.Open();
+            }
+        }
+
+        private async Task EnsureConnectionIsOpenAsync()
+        {
+            if (Connection.State != ConnectionState.Open)
+            {
+                await Connection.OpenAsync();
             }
         }
     }

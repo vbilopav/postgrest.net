@@ -31,7 +31,7 @@ namespace PostgRest.Net.DataServices
         public async Task<string> GetStringAsync(string command, Action<NpgsqlParameterCollection> parameters, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
-            await EnsureConnectionIsOpen();
+            await EnsureConnectionIsOpenAsync();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 parameters?.Invoke(cmd.Parameters);
@@ -42,7 +42,7 @@ namespace PostgRest.Net.DataServices
         public async Task<string> GetStringAsync(string command, Func<NpgsqlParameterCollection, Task> parameters, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
-            await EnsureConnectionIsOpen();
+            await EnsureConnectionIsOpenAsync();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 if (parameters != null)
@@ -56,14 +56,14 @@ namespace PostgRest.Net.DataServices
         public async Task<string> GetStringAsync(string command, bool fromRecordSet = false)
         {
             connection.Notice += loggingService.CreateNoticeEventHandler(command);
-            await EnsureConnectionIsOpen();
+            await EnsureConnectionIsOpenAsync();
             using (var cmd = new NpgsqlCommand(command, connection))
             {
                 return await GetStringContentFromCommand(cmd, fromRecordSet);
             }
         }
 
-        private async Task EnsureConnectionIsOpen()
+        private async Task EnsureConnectionIsOpenAsync()
         {
             if (connection.State == System.Data.ConnectionState.Closed)
             {
