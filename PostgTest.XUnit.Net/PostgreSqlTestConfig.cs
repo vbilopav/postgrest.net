@@ -17,7 +17,7 @@ namespace PostgTest.XUnit.Net
         public virtual string DefaultUserPassword { get; set; } = "postgres";
         public virtual string TestDatabase { get; set; } = "postg_test_db";
         public virtual string TestUser { get; set; } = "postg_test_user";
-        public virtual string CreateTestDatabase
+        public virtual string CreateTestDatabaseCommand
         {
             get
             {
@@ -36,7 +36,7 @@ namespace PostgTest.XUnit.Net
             }
             set => createTestDatabase = value;
         }
-        public virtual string CreateTestUser
+        public virtual string CreateTestUserCommand
         {
             get
             {
@@ -58,7 +58,7 @@ namespace PostgTest.XUnit.Net
             }
             set => createTestUser = value;
         }
-        public virtual string DropTestDatabase
+        public virtual string DropTestDatabaseCommand
         {
             get
             {
@@ -83,7 +83,7 @@ namespace PostgTest.XUnit.Net
             }
             set => dropTestDatabase = value;
         }
-        public virtual string DropTestUser
+        public virtual string DropTestUserCommand
         {
             get
             {

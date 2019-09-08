@@ -8,6 +8,7 @@ namespace ValuesControllerTests
     public class MyConfig : PostgreSqlTestConfig
     {
         public override string TestUser { get; set; } = "my_user";
+        public override string CreateTestDatabaseCommand => null;
     }
 
     public class UnitTest1
@@ -22,8 +23,8 @@ namespace ValuesControllerTests
         [Fact]
         public void Test1()
         {
-            var config = Config<MyConfig>.Value;
-            output.WriteLine("CreateTestUser = {0}", config.CreateTestUser);
+            var config = Config.Value;
+            output.WriteLine("CreateTestUser = {0}", config.CreateTestDatabaseCommand);
         }
     }
 }
