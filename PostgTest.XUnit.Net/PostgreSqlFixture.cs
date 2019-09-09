@@ -6,9 +6,6 @@ using Xunit;
 
 namespace PostgTest.XUnit.Net
 {
-    [CollectionDefinition("PostgreSqlTestDatabase")]
-    public class PostgreSqlFixtureCollection : ICollectionFixture<PostgreSqlFixture> { }
-
     public class PostgreSqlFixture
     {
         private readonly NpgsqlConnection connection;
@@ -39,15 +36,20 @@ namespace PostgTest.XUnit.Net
             }
             catch (PostgresException e)
             {
-                if (e.SqlState == "42P04")
+                switch (e.SqlState)
                 {
-
-                    ExecuteDropTestDatabaseAndTestUser();
-                    ExecuteCreateTestDatabaseAndTestUser();
-                }
-                else
-                {
-                    throw;
+                    // duplicate_database (see https://www.postgresql.org/docs/8.2/errcodes-appendix.html)
+                    case "42P04":
+                        ExecuteDropTestDatabaseAndTestUser();
+                        ExecuteCreateTestDatabaseAndTestUser();
+                        break;
+                    // duplicate_object  (see https://www.postgresql.org/docs/8.2/errcodes-appendix.html)
+                    case "42710":
+                        ExecuteCommand(config.DropTestUserCommand);
+                        ExecuteCreateTestDatabaseAndTestUser();
+                        break;
+                    default:
+                        throw;
                 }
             }
         }

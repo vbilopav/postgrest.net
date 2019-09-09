@@ -9,11 +9,13 @@ namespace PostgTest.XUnit.Net
         int Port { get; set; }
         string DefaultDatabase { get; set; }
         string DefaultUser { get; set; }
+        string DefaultUserPassword { get; set; }
         string TestDatabase { get; set; }
         string TestUser { get; set; }
+        string TestUserPassword { get; set; }
         bool CreateTestDatabase { get; set; }
         string CreateTestDatabaseCommand { get; set; }
-        string DefaultUserPassword { get; set; }
+        
         string CreateTestUserCommand { get; set; }
         string DropTestDatabaseCommand { get; set; }
         string DropTestUserCommand { get; set; }
@@ -27,7 +29,7 @@ namespace PostgTest.XUnit.Net
         public static string GetTestConnectionString(this IPostgreSqlTestConfig config) =>
             string.IsNullOrEmpty(config.TestUser) ?
                 config.GetDefaultConnectionString() :
-                $"Server={config.Server};Database={config.TestDatabase};Port={config.Port};User Id={config.TestUser};Password={config.DefaultUserPassword};";
+                $"Server={config.Server};Database={config.TestDatabase};Port={config.Port};User Id={config.TestUser};Password={config.TestUserPassword};";
     }
 
     public class PostgreSqlTestConfig : IPostgreSqlTestConfig
@@ -44,6 +46,7 @@ namespace PostgTest.XUnit.Net
         public virtual string DefaultUserPassword { get; set; } = "postgres";
         public virtual string TestDatabase { get; set; } = "postg_test_db";
         public virtual string TestUser { get; set; } = "postg_test_user";
+        public virtual string TestUserPassword { get; set; } = "postg_test_user";
         public virtual bool CreateTestDatabase { get; set; } = true;
         public virtual string CreateTestDatabaseCommand
         {
@@ -77,15 +80,15 @@ namespace PostgTest.XUnit.Net
                     return createTestUserCmd;
                 }
                 return string.IsNullOrEmpty(this.TestUser) ? null : $@"
-                    create role testing with
-                        {this.TestUser}
+                    create role {this.TestUser} with
+                        login
                         nosuperuser
                         nocreatedb
                         nocreaterole
                         noinherit
                         noreplication
                         connection limit -1
-                        password '{this.TestUser}';
+                        password '{this.TestUserPassword}';
                 ";
             }
             set => createTestUserCmd = value;

@@ -6,7 +6,7 @@ using Xunit;
 
 namespace PostgTest.XUnit.Net
 {
-    [CollectionDefinition("PostgreSqlTestDatabase")]
+    [Collection("PostgreSqlTestDatabase")]
     public abstract class PostgreSqlUnitTest : IDisposable
     {
         protected readonly NpgsqlConnection Connection;
@@ -17,6 +17,7 @@ namespace PostgTest.XUnit.Net
         {
             Config = Net.Config.Value;
             Connection = new NpgsqlConnection(Config.GetTestConnectionString());
+            EnsureConnectionIsOpen();
             Transaction = Connection.BeginTransaction();
         }
 
