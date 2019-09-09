@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
 using Xunit;
@@ -50,7 +52,7 @@ namespace PostgTest.XUnit.Net
             }
         }
 
-        protected void Read(string command, Action<NpgsqlDataReader> read)
+        protected IEnumerable<IDictionary<string, object>> Read(string command)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -59,37 +61,7 @@ namespace PostgTest.XUnit.Net
                 {
                     while (reader.Read())
                     {
-                        read(reader);
-                    }
-                }
-            }
-        }
-
-        protected async Task ReadAsync(string command, Action<NpgsqlDataReader> read)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                EnsureConnectionIsOpen();
-                using (var reader = await cmd.ExecuteReaderAsync() as NpgsqlDataReader)
-                {
-                    while (reader.Read())
-                    {
-                        read(reader);
-                    }
-                }
-            }
-        }
-
-        protected async Task ReadAsync(string command, Func<NpgsqlDataReader, Task> read)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                EnsureConnectionIsOpen();
-                using (var reader = await cmd.ExecuteReaderAsync() as NpgsqlDataReader)
-                {
-                    while (reader.Read())
-                    {
-                        await read(reader);
+                        yield return Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
                     }
                 }
             }
