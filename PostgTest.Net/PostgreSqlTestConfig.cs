@@ -1,7 +1,7 @@
 ﻿using System;
+using Npgsql;
 
-
-namespace PostgTest.XUnit.Net
+namespace PostgTest.Net
 {
     public interface IPostgreSqlTestConfig
     {
@@ -40,7 +40,7 @@ namespace PostgTest.XUnit.Net
         private string dropTestUserCmd = null;
 
         public virtual string Server { get; set; } = "localhost";
-        public virtual int Port { get; set; } = 5432;
+        public virtual int Port { get; set; } = NpgsqlConnection.DefaultPort;
         public virtual string DefaultDatabase { get; set; } = "postgres";
         public virtual string DefaultUser { get; set; } = "postgres";
         public virtual string DefaultUserPassword { get; set; } = "postgres";

@@ -1,16 +1,15 @@
-using System;
 using System.Linq;
-using System.Threading.Tasks;
 using Xunit;
 using Xunit.Abstractions;
 
-namespace PostgTest.XUnit.Net.Tests
+namespace PostgTest.Net.XUnit.Tests
 {
+    [Collection("PostgreSqlTestDatabase")]
     public class PostgreSqlConfigurationTests : PostgreSqlUnitTest
     {
         private readonly ITestOutputHelper output;
 
-        public PostgreSqlConfigurationTests(ITestOutputHelper output)
+        public PostgreSqlConfigurationTests(ITestOutputHelper output, PostgreSqlFixture fixture) : base(fixture)
         {
             this.output = output;
         }

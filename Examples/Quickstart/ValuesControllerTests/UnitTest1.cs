@@ -1,5 +1,5 @@
 using System;
-using PostgTest.XUnit.Net;
+using PostgTest.Net;
 using Xunit;
 using Xunit.Abstractions;
 

@@ -1,31 +1,31 @@
 ﻿using System;
 using System.Data;
 using Npgsql;
-using Xunit;
 
-
-namespace PostgTest.XUnit.Net
+namespace PostgTest.Net
 {
-    public class PostgreSqlFixture
+    public interface IPostgreSqlFixture
     {
-        private readonly NpgsqlConnection connection;
+        NpgsqlConnection Connection { get; }
+    }
+
+    public class PostgreSqlFixture : IPostgreSqlFixture, IDisposable
+    {
         private readonly IPostgreSqlTestConfig config;
 
         public PostgreSqlFixture()
         {
             config = Config.Value;
-            connection = new NpgsqlConnection(config.GetDefaultConnectionString());
+            Connection = new NpgsqlConnection(config.GetTestConnectionString());
             CreateTestDatabaseAndTestUser();
         }
+
+        public NpgsqlConnection Connection { get; }
 
         public void Dispose()
         {
             ExecuteDropTestDatabaseAndTestUser();
-            if (connection.State == ConnectionState.Open)
-            {
-                connection.Close();
-            }
-            connection.Dispose();
+            Connection.Dispose();
         }
 
         private void CreateTestDatabaseAndTestUser()
@@ -72,13 +72,14 @@ namespace PostgTest.XUnit.Net
 
         private void ExecuteCommand(string command)
         {
-            using (var cmd = new NpgsqlCommand(command, connection))
+            using (var conn = new NpgsqlConnection(config.GetDefaultConnectionString()))
             {
-                if (connection.State != ConnectionState.Open)
+                using (var cmd = new NpgsqlCommand(command, conn))
                 {
-                    connection.Open();
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
                 }
-                cmd.ExecuteNonQuery();
             }
         }
     }

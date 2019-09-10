@@ -4,34 +4,32 @@ using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using Npgsql;
-using Xunit;
 
-namespace PostgTest.XUnit.Net
+namespace PostgTest.Net
 {
-    [Collection("PostgreSqlTestDatabase")]
     public abstract class PostgreSqlUnitTest : IDisposable
     {
-        protected readonly NpgsqlConnection Connection;
+        private readonly IPostgreSqlFixture fixture;
         protected readonly IPostgreSqlTestConfig Config;
         protected readonly NpgsqlTransaction Transaction;
 
-        protected PostgreSqlUnitTest()
+        protected PostgreSqlUnitTest(IPostgreSqlFixture fixture)
         {
+            this.fixture = fixture;
             Config = Net.Config.Value;
-            Connection = new NpgsqlConnection(Config.GetTestConnectionString());
             EnsureConnectionIsOpen();
             Transaction = Connection.BeginTransaction();
         }
 
+        protected NpgsqlConnection Connection => fixture.Connection;
+
         public void Dispose()
         {
-            Transaction.Rollback();
-            Transaction.Dispose();
-            if (Connection.State == ConnectionState.Open)
+            if (!Transaction.IsCompleted)
             {
-                Connection.Close();
+                Transaction.Rollback();
             }
-            Connection.Dispose();
+            Transaction.Dispose();
         }
 
         protected void Execute(string command)

@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Xunit;
+﻿using Xunit;
 
-namespace PostgTest.XUnit.Net.Tests
+namespace PostgTest.Net.XUnit.Tests
 {
     public class Config : PostgreSqlTestConfig
     {
