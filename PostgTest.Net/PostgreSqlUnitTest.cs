@@ -9,14 +9,22 @@ namespace PostgTest.Net
 {
     public abstract class PostgreSqlUnitTest : IDisposable
     {
-        private readonly IPostgreSqlFixture fixture;
+        private IPostgreSqlFixture fixture;
+        protected NpgsqlTransaction Transaction;
         protected readonly IPostgreSqlTestConfig Config;
-        protected readonly NpgsqlTransaction Transaction;
 
         protected PostgreSqlUnitTest(IPostgreSqlFixture fixture)
         {
-            this.fixture = fixture;
             Config = Net.Config.Value;
+            if (fixture != null)
+            {
+                Initialize(fixture);
+            }
+        }
+
+        protected void Initialize(IPostgreSqlFixture fixture)
+        {
+            this.fixture = fixture;
             EnsureConnectionIsOpen();
             Transaction = Connection.BeginTransaction();
         }

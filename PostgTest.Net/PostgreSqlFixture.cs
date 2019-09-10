@@ -4,12 +4,12 @@ using Npgsql;
 
 namespace PostgTest.Net
 {
-    public interface IPostgreSqlFixture
+    public interface IPostgreSqlFixture : IDisposable
     {
         NpgsqlConnection Connection { get; }
     }
 
-    public class PostgreSqlFixture : IPostgreSqlFixture, IDisposable
+    public class PostgreSqlFixture : IPostgreSqlFixture
     {
         private readonly IPostgreSqlTestConfig config;
 
