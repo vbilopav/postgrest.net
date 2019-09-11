@@ -11,7 +11,7 @@ namespace PostgTest.Net
     {
         private IPostgreSqlFixture fixture;
         protected NpgsqlTransaction Transaction;
-        protected readonly IPostgreSqlTestConfig Config;
+        protected readonly IPostgTestConfig Config;
 
         protected PostgreSqlUnitTest(IPostgreSqlFixture fixture)
         {

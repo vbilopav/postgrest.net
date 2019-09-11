@@ -2,7 +2,7 @@
 
 namespace PostgTest.Net.XUnit.Tests
 {
-    public class Config : PostgreSqlTestConfig
+    public class Config : PostgTestConfig
     {
         public override int Port => 5433;
     }

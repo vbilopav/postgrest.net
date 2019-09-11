@@ -10,7 +10,7 @@ namespace PostgTest.Net
 
         static Config()
         {
-            IPostgreSqlTestConfig instance = null;
+            IPostgTestConfig instance = null;
 
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, false)
@@ -25,17 +25,17 @@ namespace PostgTest.Net
                 var type = Type.GetType(configTypeName);
                 if (type != null)
                 {
-                    instance = Activator.CreateInstance(type) as IPostgreSqlTestConfig;
+                    instance = Activator.CreateInstance(type) as IPostgTestConfig;
                 }
             }
             if (instance == null)
             {
-                instance = new PostgreSqlTestConfig();
+                instance = new PostgTestConfig();
             }
             config?.Bind(ConfigSection, instance);
             Value = instance;
         }
 
-        public static IPostgreSqlTestConfig Value { get; }
+        public static IPostgTestConfig Value { get; }
     }
 }

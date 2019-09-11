@@ -3,18 +3,7 @@ using Npgsql;
 
 namespace PostgTest.Net
 {
-    public static class PostgreSqlTestConfigExtensions
-    {
-        public static string GetDefaultConnectionString(this IPostgreSqlTestConfig config) =>
-            $"Server={config.Server};Database={config.DefaultDatabase};Port={config.Port};User Id={config.DefaultUser};Password={config.DefaultUserPassword};";
-
-        public static string GetTestConnectionString(this IPostgreSqlTestConfig config) =>
-            string.IsNullOrEmpty(config.TestUser) ?
-                config.GetDefaultConnectionString() :
-                $"Server={config.Server};Database={config.TestDatabase};Port={config.Port};User Id={config.TestUser};Password={config.TestUserPassword};";
-    }
-
-    public class PostgreSqlTestConfig : IPostgreSqlTestConfig
+    public class PostgTestConfig : IPostgTestConfig
     {
         private string createTestDatabaseCmd = null;
         private string createTestUserCmd = null;

@@ -11,7 +11,7 @@ namespace PostgTest.Net
 
     public class PostgreSqlFixture : IPostgreSqlFixture
     {
-        private readonly IPostgreSqlTestConfig config;
+        private readonly IPostgTestConfig config;
 
         public PostgreSqlFixture()
         {
