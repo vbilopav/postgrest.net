@@ -8,7 +8,9 @@ namespace PostgTest.Net.MSTest
         public static IPostgreSqlFixture Fixture;
 
         [AssemblyInitialize]
+#pragma warning disable IDE0060 // Remove unused parameter
         public static void AssemblyInitialize(TestContext ctx)
+#pragma warning restore IDE0060 // Remove unused parameter
         {
             Fixture = new Net.PostgreSqlFixture();
         }

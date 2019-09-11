@@ -27,7 +27,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PostgTest.Net\PostgTest.Net.csproj" />
+    <ProjectReference Include="..\..\PostgTest.Net\PostgTest.Net\PostgTest.Net.csproj" />
   </ItemGroup>
 
 </Project>
