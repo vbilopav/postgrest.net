@@ -22,10 +22,18 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.MSTest.Tests", "Tests\PostgTest.Net.MSTest.Tests\PostgTest.Net.MSTest.Tests.csproj", "{572F4F6F-BF96-45D3-91BC-EDA92527AF11}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgTest.Net", "PostgTest.Net", "{52840A1B-131E-48AC-BA55-DA2640437A1D}"
+	ProjectSection(SolutionItems) = preProject
+		PostgTest.Net\README.md = PostgTest.Net\README.md
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net", "PostgTest.Net\PostgTest.Net\PostgTest.Net.csproj", "{60544D78-463F-40DB-872E-684FE97C2EB0}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.MSTest", "PostgTest.Net\PostgTest.Net.MSTest\PostgTest.Net.MSTest.csproj", "{10F5644A-1742-4EC0-891A-F41906C05CA7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgRest.Net", "PostgRest.Net", "{9C79A235-D8A6-4E0A-913B-AC3F8C0FF16D}"
+	ProjectSection(SolutionItems) = preProject
+		README.md = README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -70,6 +78,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{69E4B0B4-FD3B-4377-B63D-D38A27DF1579} = {9C79A235-D8A6-4E0A-913B-AC3F8C0FF16D}
 		{2F37A211-7D51-4E45-93B8-D0FFEDC9161C} = {36811115-6868-4359-A568-8D3318D4676C}
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
 		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
