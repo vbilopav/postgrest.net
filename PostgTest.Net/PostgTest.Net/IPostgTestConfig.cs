@@ -96,6 +96,7 @@
         /// ```
         /// </summary>
         string DropTestDatabaseCommand { get; set; }
+
         /// <summary>
         /// Command that will be executed when dropping test role 
         /// Default value is `drop role {this.TestUser};`
