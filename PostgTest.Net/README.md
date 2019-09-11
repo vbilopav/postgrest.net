@@ -88,7 +88,7 @@ or
     public class MyPostgreSqlTests : PostgreSqlUnitTest
     {
 		// your tests here
-	}
+    }
 ```
 (collection name is same name from `CollectionDefinition` attribute)
 
@@ -98,7 +98,7 @@ or
     public class MyPostgreSqlTests : PostgreSqlUnitTest
     {
 		// your tests here
-	}
+    }
 ```
 
 ## Configuration
