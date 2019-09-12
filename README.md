@@ -144,19 +144,18 @@ Here are full instruction on how to leverage PostgreSQL to protect your system f
 
 ### Testing helper NuGet Library
 
-- And I don't want to hear "you can't test that" any more ...
+... and I don't want to hear "you can't test that" any more ...
 
-### Attributes system
+### Improvements to **`postgrest.net`**
 
 - Simplify options interface with decoupled classes with custom attributes.
+- Add option to easily configure .NET Core Authorization/Authentication system
+- Add option to integrate Authorization/Authentication from PostgreSQL
+- Integrate with TimescaleDB and hyper-tables if it is feasible
 
 ### Migration tools / Diff tool / PostgreSQL database project
 
 - See Microsoft Database project for SQL Server. The way to keep changes, migrations under version-control system.
-
-### Integration of PostgreSQL role-based security system with .NET Core security system
-
-- PostgreSQL like all other modern databases has it's own security system. I wan't to see how it would be possible to use it in .NET Core.
 
 ## Licence
 
