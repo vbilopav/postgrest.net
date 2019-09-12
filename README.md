@@ -149,6 +149,7 @@ Here are full instruction on how to leverage PostgreSQL to protect your system f
 ### Improvements to **`postgrest.net`**
 
 - Simplify options interface with decoupled classes with custom attributes.
+- Upgrade to .NET Core to implement ultra-fast async streams.
 - Add option to easily configure .NET Core Authorization/Authentication system
 - Add option to integrate Authorization/Authentication from PostgreSQL
 - Integrate with TimescaleDB and hyper-tables if it is feasible
