@@ -27,13 +27,13 @@ namespace PostgExecute.Net
         IEnumerable<IDictionary<string, object>> Read(string command);
         IEnumerable<IDictionary<string, object>> Read(string command, params object[] parameters);
         IEnumerable<IDictionary<string, object>> Read(string command, Action<NpgsqlParameterCollection> parameters);
-        Task ReadAsync(string command, Action<IDictionary<string, object>> results);
-        Task ReadAsync(string command, Action<IDictionary<string, object>> results, params object[] parameters);
-        Task ReadAsync(string command, Action<IDictionary<string, object>> results, Action<NpgsqlParameterCollection> parameters);
-        Task ReadAsync(string command, Action<IDictionary<string, object>> results, Func<NpgsqlParameterCollection, Task> parameters);
-        Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results);
-        Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, params object[] parameters);
-        Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Action<NpgsqlParameterCollection> parameters);
-        Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Func<NpgsqlParameterCollection, Task> parameters);
+        Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results);
+        Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results, params object[] parameters);
+        Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results, Action<NpgsqlParameterCollection> parameters);
+        Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results, Func<NpgsqlParameterCollection, Task> parameters);
+        Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results);
+        Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, params object[] parameters);
+        Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Action<NpgsqlParameterCollection> parameters);
+        Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Func<NpgsqlParameterCollection, Task> parameters);
     }
 }

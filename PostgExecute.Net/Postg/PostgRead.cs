@@ -55,7 +55,7 @@ namespace PostgExecute.Net
             }
         }
 
-        public async Task ReadAsync(string command, Action<IDictionary<string, object>> results)
+        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -66,11 +66,12 @@ namespace PostgExecute.Net
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Action<IDictionary<string, object>> results, params object[] parameters)
+        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results, params object[] parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -82,11 +83,12 @@ namespace PostgExecute.Net
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Action<IDictionary<string, object>> results,
+        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results,
             Action<NpgsqlParameterCollection> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
@@ -99,11 +101,13 @@ namespace PostgExecute.Net
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Action<IDictionary<string, object>> results,
+        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results,
             Func<NpgsqlParameterCollection, Task> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
@@ -116,11 +120,13 @@ namespace PostgExecute.Net
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results)
+        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -131,27 +137,13 @@ namespace PostgExecute.Net
                     {
                         await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, params object[] parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-                }
-            }
-        }
-
-        public async Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Action<NpgsqlParameterCollection> parameters)
+        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, params object[] parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -163,11 +155,31 @@ namespace PostgExecute.Net
                     {
                         await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
+                    return this;
                 }
             }
         }
 
-        public async Task ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Func<NpgsqlParameterCollection, Task> parameters)
+        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Action<NpgsqlParameterCollection> parameters)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                await EnsureConnectionIsOpenAsync();
+                AddParameters(cmd, parameters);
+                using (var reader = await cmd.ExecuteReaderAsync())
+                {
+                    while (await reader.ReadAsync())
+                    {
+                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
+                    }
+
+                    return this;
+                }
+            }
+        }
+
+        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Func<NpgsqlParameterCollection, Task> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -179,6 +191,8 @@ namespace PostgExecute.Net
                     {
                         await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
+                    return this;
                 }
             }
         }

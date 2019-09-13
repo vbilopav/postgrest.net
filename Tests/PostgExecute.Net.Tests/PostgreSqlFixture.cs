@@ -26,9 +26,10 @@ namespace PostgExecute.Net.Tests
 
         private void CreateTestDatabase()
         {
+            void DoCreate() => Execute("create database post_execute_test;");
             try
             {
-                Execute("create database post_execute_test;");
+                DoCreate();
             }
             catch (PostgresException e)
             {
@@ -37,8 +38,10 @@ namespace PostgExecute.Net.Tests
 
                     case "42P04":
                         DropTestDatabase();
-                        Execute("create database post_execute_test;");
+                        DoCreate();
                         break;
+                    default:
+                        throw;
                 }
             }
         }

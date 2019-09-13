@@ -6,7 +6,6 @@ using Xunit;
 
 namespace PostgExecute.Net.Tests
 {
-
     [Collection("post_execute_test")]
     public class SingleUnitTests
     {
@@ -68,13 +67,10 @@ namespace PostgExecute.Net.Tests
                         select 1 as first, 'foo' as bar, '1977-05-19'::date as day, null as null
                     ) as sub
                     where first = @1 and bar = @2 and day = @3
-                    ",
-                    p =>
-                    {
-                        p.AddWithValue("3", new DateTime(1977, 5, 19));
-                        p.AddWithValue("2", "foo");
-                        p.AddWithValue("1", 1);
-                    });
+                    ", p => p
+                        .Add("3", new DateTime(1977, 5, 19))
+                        .Add("2", "foo")
+                        .Add("1", 1));
 
                 Assert.Equal(1, result.Values.First());
                 Assert.Equal("foo", result["bar"]);
@@ -135,12 +131,10 @@ namespace PostgExecute.Net.Tests
                     ) as sub
                     where first = @1 and bar = @2 and day = @3
                     ",
-                    p =>
-                    {
-                        p.AddWithValue("3", new DateTime(1977, 5, 19));
-                        p.AddWithValue("2", "foo");
-                        p.AddWithValue("1", 1);
-                    });
+                    p => p
+                            .@P("1", 1)
+                            .@P("2", "foo")
+                            .@P("3", new DateTime(1977, 5, 19)));
 
                 Assert.Equal(1, result.Values.First());
                 Assert.Equal("foo", result["bar"]);
@@ -165,9 +159,7 @@ namespace PostgExecute.Net.Tests
                     async p =>
                     {
                         await Task.Delay(0);
-                        p.AddWithValue("3", new DateTime(1977, 5, 19));
-                        p.AddWithValue("2", "foo");
-                        p.AddWithValue("1", 1);
+                        p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1);
                     });
 
                 Assert.Equal(1, result.Values.First());
@@ -180,9 +172,8 @@ namespace PostgExecute.Net.Tests
         [Fact]
         public void TestStaticNoParams()
         {
-            var result = Postg.Single(fixture.ConnectionString,
-                    "select 1, 'foo' as bar, '1977-05-19'::date as day, null as null"
-                    );
+            var result = Postg.Single(fixture.ConnectionString, 
+                "select 1, 'foo' as bar, '1977-05-19'::date as day, null as null");
 
             Assert.Equal(1, result.Values.First());
             Assert.Equal("foo", result["bar"]);
@@ -221,12 +212,10 @@ namespace PostgExecute.Net.Tests
                 ) as sub
                 where first = @1 and bar = @2 and day = @3
                 ",
-                p =>
-                {
-                    p.AddWithValue("3", new DateTime(1977, 5, 19));
-                    p.AddWithValue("2", "foo");
-                    p.AddWithValue("1", 1);
-                });
+                p => p
+                    .@P("3", new DateTime(1977, 5, 19))
+                    .@P("2", "foo")
+                    .@P("1", 1));
 
             Assert.Equal(1, result.Values.First());
             Assert.Equal("foo", result["bar"]);
@@ -270,7 +259,7 @@ namespace PostgExecute.Net.Tests
         [Fact]
         public async Task TestStaticParamsCollectionAsync()
         {
-            
+
             var result = await Postg.SingleAsync(fixture.ConnectionString,
                 @"
                 select *
@@ -279,12 +268,10 @@ namespace PostgExecute.Net.Tests
                 ) as sub
                 where first = @1 and bar = @2 and day = @3
                 ",
-                p =>
-                {
-                    p.AddWithValue("3", new DateTime(1977, 5, 19));
-                    p.AddWithValue("2", "foo");
-                    p.AddWithValue("1", 1);
-                });
+                p => p
+                    .@P("3", new DateTime(1977, 5, 19))
+                    .@P("2", "foo")
+                    .@P("1", 1));
 
             Assert.Equal(1, result.Values.First());
             Assert.Equal("foo", result["bar"]);
@@ -307,9 +294,7 @@ namespace PostgExecute.Net.Tests
                 async p =>
                 {
                     await Task.Delay(0);
-                    p.AddWithValue("3", new DateTime(1977, 5, 19));
-                    p.AddWithValue("2", "foo");
-                    p.AddWithValue("1", 1);
+                    p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1);
                 });
 
             Assert.Equal(1, result.Values.First());

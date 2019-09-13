@@ -43,6 +43,8 @@ namespace PostgExecute.Net
         private static void AddParameters(NpgsqlCommand cmd, object[] parameters)
         {
             var value = "@";
+            var nonChars = new[]
+                {' ', '\n', '\r', ',', ';', ':', '-', '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '*', '\\', '.'};
             var command = cmd.CommandText;
             var paramIndex = 0;
             for (var index = 0; ; index += value.Length)
@@ -51,7 +53,7 @@ namespace PostgExecute.Net
                 if (index == -1)
                     break;
                 index++;
-                var endOf = command.IndexOfAny(new []{' ', '\n', '\r'}, index);
+                var endOf = command.IndexOfAny(nonChars, index);
                 var name = index == -1 ? command.Substring(index) : command.Substring(index, endOf - index);
                 cmd.Parameters.Add(new NpgsqlParameter(name, parameters[paramIndex++]));
                 index = endOf;

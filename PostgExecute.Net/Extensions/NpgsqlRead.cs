@@ -23,7 +23,7 @@ namespace PostgExecute.Net
             await new Postg(connection).ReadAsync(command, results);
 
         public static async Task ReadAsync(this NpgsqlConnection connection, string command, Action<IDictionary<string, object>> results, params object[] parameters) =>
-            await new Postg(connection).ReadAsync(command, results);
+            await new Postg(connection).ReadAsync(command, results, parameters);
 
         public static async Task ReadAsync(this NpgsqlConnection connection, string command, Action<IDictionary<string, object>> results, Action<NpgsqlParameterCollection> parameters) =>
             await new Postg(connection).ReadAsync(command, results, parameters);
