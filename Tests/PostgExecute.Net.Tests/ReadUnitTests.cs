@@ -123,6 +123,39 @@ namespace PostgExecute.Net.Tests
         }
 
         [Fact]
+        public async Task TestConnectionNoParamsBreakReadAsync()
+        {
+            using (var connection = new NpgsqlConnection(fixture.ConnectionString))
+            {
+                var result = new List<IDictionary<string, object>>();
+                await connection.ReadAsync(
+                    @"
+                          select * from (
+                          values 
+                            (1, 'foo1', '1977-05-19'::date),
+                            (2, 'foo2', '1978-05-19'::date),
+                            (3, 'foo3', '1979-05-19'::date)
+                          ) t(first, bar, day)",
+                    r =>
+                    {
+                        if ((int)r["first"] == 2)
+                        {
+                            return false;
+                        }
+                        result.Add(r);
+                        return true;
+                    });
+
+                var list = result.ToList();
+                Assert.Single(list);
+
+                Assert.Equal(1, list[0].Values.First());
+                Assert.Equal("foo1", list[0]["bar"]);
+                Assert.Equal(new DateTime(1977, 5, 19), list[0]["day"]);
+            }
+        }
+
+        [Fact]
         public async Task TestConnectionAsyncResultNoParamsAsync()
         {
             using (var connection = new NpgsqlConnection(fixture.ConnectionString))
@@ -143,6 +176,40 @@ namespace PostgExecute.Net.Tests
                     });
 
                 AssertResult(result);
+            }
+        }
+
+        [Fact]
+        public async Task TestConnectionAsyncResultBreakReadNoParamsAsync()
+        {
+            using (var connection = new NpgsqlConnection(fixture.ConnectionString))
+            {
+                var result = new List<IDictionary<string, object>>();
+                await connection.ReadAsync(
+                    @"
+                          select * from (
+                          values 
+                            (1, 'foo1', '1977-05-19'::date),
+                            (2, 'foo2', '1978-05-19'::date),
+                            (3, 'foo3', '1979-05-19'::date)
+                          ) t(first, bar, day)",
+                    async r =>
+                    {
+                        await Task.Delay(0);
+                        if ((int)r["first"] == 2)
+                        {
+                            return false;
+                        }
+                        result.Add(r);
+                        return true;
+                    });
+
+                var list = result.ToList();
+                Assert.Single(list);
+
+                Assert.Equal(1, list[0].Values.First());
+                Assert.Equal("foo1", list[0]["bar"]);
+                Assert.Equal(new DateTime(1977, 5, 19), list[0]["day"]);
             }
         }
 
