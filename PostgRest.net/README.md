@@ -105,24 +105,6 @@ That function returning JSON can be simply wired up with `postgrest.net.StringCo
 			parameters => parameters.AddWithValue("userId", this.User.GetId()));
 ```
 
-## Future plans
-
-### Testing helper NuGet Library
-
-- And I don't want to hear "you can't test that" any more ...
-
-### Attributes system
-
-- Simplify options interface with decoupled classes with custom attributes.
-
-### Migration tools / Diff tool / PostgreSQL database project
-
-- See Microsoft Database project for SQL Server. The way to keep changes, migrations under version-control system.
-
-### Integration of PostgreSQL role-based security system with .NET Core security system
-
-- PostgreSQL like all other modern databases has it's own security system. I wan't to see how it would be possible to use it in .NET Core.
-
 ## Licence
 
 Copyright (c) Vedran Bilopavlović.
