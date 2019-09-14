@@ -58,7 +58,7 @@ This allows you skip that step and do whatever you intended in first place and t
 
 Don't get me wrong, Dapper will still be faster for plain serialization to your `IEnumerable<T>` because lambdas aren't fast and Dapper also has internal row caching. But with this, as I said you can skip at least one results iteration.
 
-The other point of this project is that it is part of larger project intended to work closely with PostgreSQL and as such:
+The other point of this project is that it is part of larger solution intended to work closely with PostgreSQL and as such:
 
 - it works with `NpgsqlConnection`, not with `IDbConnection` interface as dapper because i wanted to make it as close to PostgreSQL as possible. And also `System.Data;` is going to be redesigned soon.
 
