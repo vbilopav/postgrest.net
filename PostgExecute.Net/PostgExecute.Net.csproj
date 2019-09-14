@@ -2,6 +2,16 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Authors>VB Software</Authors>
+    <Company>VB Software</Company>
+    <PackageProjectUrl>https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda</RepositoryUrl>
+    <PackageTags>PostgreSQL pgpsql ORM</PackageTags>
+    <Description>Lightweight wrapper around NpgsqlConnection object to facilitate simple PostgreSQL execution and data retrieval in .NET Core. 
+
+This is not ORM!
+
+It is much better...</Description>
   </PropertyGroup>
 
   <ItemGroup>
