@@ -24,7 +24,7 @@ This opens up new flexibility options. Now you can:
 
 ## Developer notes
 
-If someone whishes to build micro-ORM `Dapper` style based on this code base - he or she may freely do so as long as they give proper credits/mentions and link to this repository. And if I may suggest a name - `NoORM` would be just perfect.
+If someone wishes to build micro-ORM `Dapper` style based on this code base - he or she may freely do so as long as they give proper credits/mentions and link to this repository. And if I may suggest a name - `NoORM` would be just perfect.
 
 Current version works only with `PostgreSQL` and there are no plans for now to expand to other databases.
 
