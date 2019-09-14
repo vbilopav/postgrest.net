@@ -8,23 +8,19 @@ I repeat:
 
 **This is NOT an ORM**
 
-> There is not data conversion whatsoever, and so there is no impedance mismatch issue.
+> - **There is not data conversion whatsoever**, and so there is no impedance mismatch issue.
 
->All read operations will serialize rows directly and only to **`IDictionary<string, object>>`**
+> - All read operations will serialize rows directly and only to **`IDictionary<string, object>>`**
 
-* or, even much, much better:
+or, even much, much better:
 
-> All read operations ....
+> - All read operations version with **[lambda callback for each row](https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda)**
 
-it will provide callback function (either `sync` or `async`) so that data serialization can be further customized as needed.
+This opens up new flexibility options. Now you can:
 
+- Serialize directly to structure of your choice. No need for extra transformation step. For example dictionary of instances that has key same as your database key.
 
-
-
-
-
-
-
+- Write directly to stream, json, etc ...
 
 ## Developer notes
 
