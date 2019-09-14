@@ -216,7 +216,7 @@ Each read method has version that accepts lambda callback that is executed for e
 
 ```csharp
 var result = new List<IDictionary<string, object>>();
-await connection.ReadAsync(
+await connection.Read(
     @"select * from (
     values
         (1, 'foo1', '1977-05-19'::date),
