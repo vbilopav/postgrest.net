@@ -8,6 +8,22 @@ namespace PostgExecute.Net
 {
     public partial class Postg
     {
+        public IEnumerable<IDictionary<string, object>> Read(string command)
+        {
+            using (var cmd = new NpgsqlCommand(command, Connection))
+            {
+                EnsureConnectionIsOpen();
+                using (var reader = cmd.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        yield return Enumerable.Range(0, reader.FieldCount)
+                            .ToDictionary(reader.GetName, reader.GetValue);
+                    }
+                }
+            }
+        }
+
         public IEnumerable<IDictionary<string, object>> Read(string command, params object[] parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
@@ -18,28 +34,15 @@ namespace PostgExecute.Net
                 {
                     while (reader.Read())
                     {
-                        yield return Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
+                        yield return Enumerable.Range(0, reader.FieldCount)
+                            .ToDictionary(reader.GetName, reader.GetValue);
                     }
                 }
             }
         }
 
-        public IEnumerable<IDictionary<string, object>> Read(string command)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                EnsureConnectionIsOpen();
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        yield return Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
-                    }
-                }
-            }
-        }
-
-        public IEnumerable<IDictionary<string, object>> Read(string command, Action<NpgsqlParameterCollection> parameters)
+        public IEnumerable<IDictionary<string, object>> Read(string command,
+            Action<NpgsqlParameterCollection> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
@@ -49,20 +52,21 @@ namespace PostgExecute.Net
                 {
                     while (reader.Read())
                     {
-                        yield return Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue);
+                        yield return Enumerable.Range(0, reader.FieldCount)
+                            .ToDictionary(reader.GetName, reader.GetValue);
                     }
                 }
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results)
+        public IPostg Read(string command, Action<IDictionary<string, object>> results)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
-                using (var reader = await cmd.ExecuteReaderAsync())
+                EnsureConnectionIsOpen();
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
@@ -71,33 +75,34 @@ namespace PostgExecute.Net
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results, params object[] parameters)
+        public IPostg Read(string command, Action<IDictionary<string, object>> results, params object[] parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
+                EnsureConnectionIsOpen();
                 AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
+
                     return this;
                 }
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results,
+        public IPostg Read(string command, Action<IDictionary<string, object>> results,
             Action<NpgsqlParameterCollection> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
+                EnsureConnectionIsOpen();
                 AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
                         results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                     }
@@ -107,148 +112,14 @@ namespace PostgExecute.Net
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Action<IDictionary<string, object>> results,
-            Func<NpgsqlParameterCollection, Task> parameters)
+        public IPostg Read(string command, Func<IDictionary<string, object>, bool> results)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
-                await AddParametersAsync(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
+                EnsureConnectionIsOpen();
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
-                    {
-                        results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, params object[] parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Action<NpgsqlParameterCollection> parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task> results, Func<NpgsqlParameterCollection, Task> parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                await AddParametersAsync(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, bool> results)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var result = results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                        if (!result)
-                        {
-                            break;
-                        }
-                    }
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, bool> results, params object[] parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var result = results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                        if (!result)
-                        {
-                            break;
-                        }
-                    }
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, bool> results,
-            Action<NpgsqlParameterCollection> parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
                         var result = results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
                         if (!result)
@@ -262,61 +133,18 @@ namespace PostgExecute.Net
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, bool> results,
-            Func<NpgsqlParameterCollection, Task> parameters)
+        public IPostg Read(string command, Func<IDictionary<string, object>, bool> results, params object[] parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
-                await AddParametersAsync(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var result = results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                        if (!result)
-                        {
-                            break;
-                        }
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task<bool>> results)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var result = await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                        if (!result)
-                        {
-                            break;
-                        }
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task<bool>> results, params object[] parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
+                EnsureConnectionIsOpen();
                 AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
-                        var result = await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
+                        var result = results(Enumerable.Range(0, reader.FieldCount)
+                            .ToDictionary(reader.GetName, reader.GetValue));
                         if (!result)
                         {
                             break;
@@ -328,39 +156,19 @@ namespace PostgExecute.Net
             }
         }
 
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task<bool>> results, Action<NpgsqlParameterCollection> parameters)
+        public IPostg Read(string command, Func<IDictionary<string, object>, bool> results,
+                Action<NpgsqlParameterCollection> parameters)
         {
             using (var cmd = new NpgsqlCommand(command, Connection))
             {
-                await EnsureConnectionIsOpenAsync();
+                EnsureConnectionIsOpen();
                 AddParameters(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
+                using (var reader = cmd.ExecuteReader())
                 {
-                    while (await reader.ReadAsync())
+                    while (reader.Read())
                     {
-                        var result = await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
-                        if (!result)
-                        {
-                            break;
-                        }
-                    }
-
-                    return this;
-                }
-            }
-        }
-
-        public async Task<IPostg> ReadAsync(string command, Func<IDictionary<string, object>, Task<bool>> results, Func<NpgsqlParameterCollection, Task> parameters)
-        {
-            using (var cmd = new NpgsqlCommand(command, Connection))
-            {
-                await EnsureConnectionIsOpenAsync();
-                await AddParametersAsync(cmd, parameters);
-                using (var reader = await cmd.ExecuteReaderAsync())
-                {
-                    while (await reader.ReadAsync())
-                    {
-                        var result = await results(Enumerable.Range(0, reader.FieldCount).ToDictionary(reader.GetName, reader.GetValue));
+                        var result = results(Enumerable.Range(0, reader.FieldCount)
+                            .ToDictionary(reader.GetName, reader.GetValue));
                         if (!result)
                         {
                             break;

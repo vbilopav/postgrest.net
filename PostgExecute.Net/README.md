@@ -63,7 +63,7 @@ For full list of all overloads see interface definition in [this file](https://g
 
 ### Working with parameters
 
-> By `NpgsqlConnection` convention - parameters on query must start with letter `@`
+> By  convention, parameters on query must start with letter `@`
 
 #### Positional parameters
 
