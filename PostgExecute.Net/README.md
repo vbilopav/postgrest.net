@@ -215,7 +215,7 @@ var result = connection.Read(
 Each read method has version that accepts lambda callback that is executed for each row:
 
 ```csharp
-var result = new List<IDictionary<string, object>>();
+var results = new List<IDictionary<string, object>>();
 await connection.Read(
     @"select * from (
     values
@@ -223,7 +223,7 @@ await connection.Read(
         (2, 'foo2', '1978-05-19'::date),
         (3, 'foo3', '1979-05-19'::date)
     ) t(first, bar, day)",
-    r => result.Add(r));
+    result => results.Add(result));
 ```
 
 Each version also has lambda overload that have `bool` as return value.
@@ -231,7 +231,7 @@ Each version also has lambda overload that have `bool` as return value.
 In that case you can return `false` to break from iteration immediately and safely:
 
 ```csharp
-var result = new List<IDictionary<string, object>>();
+var results = new List<IDictionary<string, object>>();
 connection.Read(
     @"select * from (
     values
@@ -239,13 +239,13 @@ connection.Read(
         (2, 'foo2', '1978-05-19'::date),
         (3, 'foo3', '1979-05-19'::date)
     ) t(first, bar, day)",
-    r =>
+    result =>
     {
-        if ((int)r["first"] == 2)
+        if ((int)result["first"] == 2)
         {
             return false;
         }
-        result.Add(r);
+        results.Add(r);
         return true;
     });
 // breaks on second row, third is never executed, result will have only one entry
@@ -256,15 +256,15 @@ Of course, there is `async` overload for each API version:
 ```csharp
 await connection.ReadAsync(@"
         select * from (
-        values 
-        (1, 'foo1', '1977-05-19'::date),
-        (2, 'foo2', '1978-05-19'::date),
-        (3, 'foo3', '1979-05-19'::date)
+        values
+            (1, 'foo1', '1977-05-19'::date),
+            (2, 'foo2', '1978-05-19'::date),
+            (3, 'foo3', '1979-05-19'::date)
         ) t(first, bar, day)",
-async r =>
+async result =>
 {
     await Task.Delay(0); // some async operation...
-    result.Add(r);
+    results.Add(result);
 });
 ```
 
