@@ -6,14 +6,14 @@ using PostgExecute.Net;
 namespace PostgTest.Net.XUnit.Tests
 {
     [Collection("PostgreSqlTestDatabase")]
-    public class PostgreSqlConfigurationClassTests : IClassFixture<PostgreSqlUnitTest>
+    public class PostgreSqlConfigurationTests : IClassFixture<PostgreSqlTestFixture>
     {
         private readonly ITestOutputHelper output;
-        private readonly PostgreSqlUnitTest fixture;
+        private readonly PostgreSqlTestFixture fixture;
 
-        public PostgreSqlConfigurationClassTests(
+        public PostgreSqlConfigurationTests(
             ITestOutputHelper output,
-            PostgreSqlUnitTest fixture)
+            PostgreSqlTestFixture fixture)
         {
             this.fixture = fixture;
             this.output = output;

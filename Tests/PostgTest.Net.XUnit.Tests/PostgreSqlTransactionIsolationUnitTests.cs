@@ -4,8 +4,11 @@ using PostgExecute.Net;
 
 namespace PostgTest.Net.XUnit.Tests
 {
+    /// <summary>
+    /// Every test is DIFFERENT transaction
+    /// </summary>
     [Collection("PostgreSqlTestDatabase")]
-    public class PostgreSqlTransactionIsolationUnitTests : PostgreSqlUnitTest
+    public class PostgreSqlTransactionIsolationUnitTests : PostgreSqlTestFixture
     {
         private static int? _sharedTxid;
 

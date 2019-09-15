@@ -1,6 +1,6 @@
 ﻿namespace PostgTest.Net
 {
-    public interface IPostgTestConfig
+    public interface IPostgTestConfig : IScriptsMigrationFixture
     {
         /// <summary>
         /// Address of PostgreSql server where tests will be conducted.
@@ -102,5 +102,11 @@
         /// Default value is `drop role {this.TestUser};`
         /// </summary>
         string DropTestUserCommand { get; set; }
+
+        /// <summary>
+        /// If set to `false` test fixture will not start and rollback transaction for each testing session
+        /// Default if `false`
+        /// </summary>
+        bool DisableFixtureTransaction { get; set; }
     }
 }

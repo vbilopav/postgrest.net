@@ -16,6 +16,17 @@ namespace PostgTest.Net
             DefaultConnection = new NpgsqlConnection(Configuration.GetDefaultConnectionString());
             TestConnection = new NpgsqlConnection(Configuration.GetTestConnectionString());
 
+            TryCreateTestDatabaseAndTestUser();
+        }
+
+        public void Dispose()
+        {
+            DropTestDatabaseAndTestUser();
+            DefaultConnection.Dispose();
+        }
+
+        private void TryCreateTestDatabaseAndTestUser()
+        {
             try
             {
                 CreateTestDatabaseAndTestUser();
@@ -38,12 +49,6 @@ namespace PostgTest.Net
                         throw;
                 }
             }
-        }
-
-        public void Dispose()
-        {
-            DropTestDatabaseAndTestUser();
-            DefaultConnection.Dispose();
         }
 
         private void CreateTestDatabaseAndTestUser() =>

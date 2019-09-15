@@ -103,5 +103,13 @@ namespace PostgTest.Net
             }
             set => dropTestUserCmd = value;
         }
+
+        public virtual bool DisableFixtureTransaction { get; set; } = false;
+
+        public virtual string ScriptsDir { get; set; } = null;
+
+        public virtual string ScriptFile { get; set; } = null;
+
+        public virtual string Script { get; set; } = null;
     }
 }

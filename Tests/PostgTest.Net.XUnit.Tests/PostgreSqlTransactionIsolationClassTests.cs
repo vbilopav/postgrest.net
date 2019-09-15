@@ -4,13 +4,16 @@ using PostgExecute.Net;
 
 namespace PostgTest.Net.XUnit.Tests
 {
+    /// <summary>
+    /// Every test is SAME transaction
+    /// </summary>
     [Collection("PostgreSqlTestDatabase")]
-    public class PostgreSqlTransactionIsolationClassTests : IClassFixture<PostgreSqlUnitTest>
+    public class PostgreSqlTransactionIsolationClassTests : IClassFixture<PostgreSqlTestFixture>
     {
         private static int? _sharedTxid;
-        private readonly PostgreSqlUnitTest fixture;
+        private readonly PostgreSqlTestFixture fixture;
 
-        public PostgreSqlTransactionIsolationClassTests(PostgreSqlUnitTest fixture)
+        public PostgreSqlTransactionIsolationClassTests(PostgreSqlTestFixture fixture)
         {
             this.fixture = fixture;
         }
