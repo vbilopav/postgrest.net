@@ -28,6 +28,43 @@ If someone wishes to build micro-ORM `Dapper` style based on this code base - he
 
 Current version works only with `PostgreSQL` and there are no plans for now to expand to other databases.
 
+## FAQ
+
+> You can do the same stuff in dapper. With ish the same syntax. I see no point, sorry.
+
+Can you? I don't think you can.
+
+For example, execute something custom provided by lambda parameter on each row iteration ->  [https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda](https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda)
+
+Example:
+
+```csharp
+    var results = new List<IDictionary<string, object>>();
+    await connection.Read(
+        @"select * from (
+        values
+            (1, 'foo1', '1977-05-19'::date),
+            (2, 'foo2', '1978-05-19'::date),
+            (3, 'foo3', '1979-05-19'::date)
+        ) t(first, bar, day)",
+        result => results.Add(result));
+```
+
+I don't think that Dapper can do that. And that is not the point of Dapper, it is ORM, more precisely micro ORM and as such just want to serialize your results to a class instance and that's all.
+
+Later, you can do with your list of objects whatever you please, usually some transformation into something else or write to some stream or whatever.
+
+This allows you skip that step and do whatever you intended in first place and that way skip one iteration that would normally happen inside Dapper.
+
+Don't get me wrong, Dapper will still be faster for plain serialization to your `IEnumerable<T>` because lambdas aren't fast and Dapper also has internal row caching. But with this, as I said you can skip at least one results iteration.
+
+The other point of this project is that it is part of larger solution intended to work closely with PostgreSQL and as such:
+
+- it works with `NpgsqlConnection`, not with `IDbConnection` interface as dapper because i wanted to make it as close to PostgreSQL as possible. And also `System.Data;` is going to be redesigned soon.
+
+- I want to keep number of external deps as low as possible.
+
+
 ## Usage
 
 - Install `PostgExecute.Net` or clone this project repo.
