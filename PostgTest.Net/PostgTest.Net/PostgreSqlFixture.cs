@@ -1,38 +1,32 @@
 ﻿using System;
 using System.Data;
 using Npgsql;
+using PostgExecute.Net;
 
 namespace PostgTest.Net
 {
     public interface IPostgreSqlFixture : IDisposable
     {
-        NpgsqlConnection Connection { get; }
+        NpgsqlConnection DefaultConnection { get; }
+        NpgsqlConnection TestConnection { get; }
+        IPostgTestConfig Configuration { get; }
     }
 
     public class PostgreSqlFixture : IPostgreSqlFixture
     {
-        private readonly IPostgTestConfig config;
+        public NpgsqlConnection TestConnection { get; }
+        public NpgsqlConnection DefaultConnection { get; }
+        public IPostgTestConfig Configuration { get; }
 
         public PostgreSqlFixture()
         {
-            config = Config.Value;
-            Connection = new NpgsqlConnection(config.GetTestConnectionString());
-            CreateTestDatabaseAndTestUser();
-        }
+            Configuration = Config.Value;
+            DefaultConnection = new NpgsqlConnection(Configuration.GetDefaultConnectionString());
+            TestConnection = new NpgsqlConnection(Configuration.GetTestConnectionString());
 
-        public NpgsqlConnection Connection { get; }
-
-        public void Dispose()
-        {
-            ExecuteDropTestDatabaseAndTestUser();
-            Connection.Dispose();
-        }
-
-        private void CreateTestDatabaseAndTestUser()
-        {
             try
             {
-                ExecuteCreateTestDatabaseAndTestUser();
+                CreateTestDatabaseAndTestUser();
             }
             catch (PostgresException e)
             {
@@ -40,13 +34,13 @@ namespace PostgTest.Net
                 {
                     // duplicate_database (see https://www.postgresql.org/docs/8.2/errcodes-appendix.html)
                     case "42P04":
-                        ExecuteDropTestDatabaseAndTestUser();
-                        ExecuteCreateTestDatabaseAndTestUser();
+                        DropTestDatabaseAndTestUser();
+                        CreateTestDatabaseAndTestUser();
                         break;
                     // duplicate_object  (see https://www.postgresql.org/docs/8.2/errcodes-appendix.html)
                     case "42710":
-                        ExecuteCommand(config.DropTestUserCommand);
-                        ExecuteCreateTestDatabaseAndTestUser();
+                        DefaultConnection.Execute(Configuration.DropTestUserCommand);
+                        CreateTestDatabaseAndTestUser();
                         break;
                     default:
                         throw;
@@ -54,33 +48,20 @@ namespace PostgTest.Net
             }
         }
 
-        private void ExecuteCreateTestDatabaseAndTestUser()
+        public void Dispose()
         {
-            ExecuteCommand($@"
-                {config.CreateTestDatabaseCommand}
-                {config.CreateTestUserCommand}
-            ");
+            DropTestDatabaseAndTestUser();
+            DefaultConnection.Dispose();
         }
 
-        private void ExecuteDropTestDatabaseAndTestUser()
-        {
-            ExecuteCommand($@"
-                {config.DropTestDatabaseCommand}
-                {config.DropTestUserCommand}
-            ");
-        }
+        private void CreateTestDatabaseAndTestUser() =>
+            DefaultConnection
+                .Execute(Configuration.CreateTestDatabaseCommand)
+                .Execute(Configuration.CreateTestUserCommand);
 
-        private void ExecuteCommand(string command)
-        {
-            using (var conn = new NpgsqlConnection(config.GetDefaultConnectionString()))
-            {
-                using (var cmd = new NpgsqlCommand(command, conn))
-                {
-                    conn.Open();
-                    cmd.ExecuteNonQuery();
-                    conn.Close();
-                }
-            }
-        }
+        private void DropTestDatabaseAndTestUser() =>
+            DefaultConnection
+                .Execute(Configuration.DropTestDatabaseCommand)
+                .Execute(Configuration.DropTestUserCommand);
     }
 }

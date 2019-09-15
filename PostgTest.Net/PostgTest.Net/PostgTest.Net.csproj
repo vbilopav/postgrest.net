@@ -10,4 +10,8 @@
     <PackageReference Include="Npgsql" Version="4.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\..\PostgExecute.Net\PostgExecute.Net.csproj" />
+  </ItemGroup>
+
 </Project>

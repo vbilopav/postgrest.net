@@ -29,7 +29,7 @@ namespace PostgTest.Net
             Transaction = Connection.BeginTransaction();
         }
 
-        protected NpgsqlConnection Connection => fixture.Connection;
+        protected NpgsqlConnection Connection => fixture.TestConnection;
 
         public void Dispose()
         {

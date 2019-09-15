@@ -187,7 +187,7 @@ var result = connection.Single(
     ", p => p.Add("3", new DateTime(1977, 5, 19)).Add("2", "foo").Add("1", 1));
 ```
 
-There is also shorter alias named `@P`:
+There is also shorter alias named is to use underline `_`:
 
 ```csharp
 var result = connection.Single(
@@ -196,7 +196,7 @@ var result = connection.Single(
     ) as sub
     where first = @1 and bar = @2 and day = @3
 
-    ", p => p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1));
+    ", p => p._("3", new DateTime(1977, 5, 19))._("2", "foo")._("1", 1));
 ```
 
 API can also take `async` version of this lambda:
@@ -210,7 +210,7 @@ var result = connection.Single(
 
     ", async p => {
         await Task.Delay(0); // some async operation...
-        p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1);
+        p._("3", new DateTime(1977, 5, 19))._("2", "foo")._("1", 1);
     });
 ```
 
