@@ -1,6 +1,6 @@
 ﻿namespace PostgTest.Net
 {
-    public interface IPostgTestConfig : IScriptsMigrationFixture
+    public interface IPostgTestConfig
     {
         /// <summary>
         /// Address of PostgreSql server where tests will be conducted.
@@ -108,5 +108,9 @@
         /// Default if `false`
         /// </summary>
         bool DisableFixtureTransaction { get; set; }
+
+        string MigrationScriptsDir { get; set; }
+        string MigrationScriptFile { get; set; }
+        string MigrationScript { get; set; }
     }
 }

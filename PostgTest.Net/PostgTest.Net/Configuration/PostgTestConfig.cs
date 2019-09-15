@@ -106,10 +106,10 @@ namespace PostgTest.Net
 
         public virtual bool DisableFixtureTransaction { get; set; } = false;
 
-        public virtual string ScriptsDir { get; set; } = null;
+        public virtual string MigrationScriptsDir { get; set; } = null;
 
-        public virtual string ScriptFile { get; set; } = null;
+        public virtual string MigrationScriptFile { get; set; } = null;
 
-        public virtual string Script { get; set; } = null;
+        public virtual string MigrationScript { get; set; } = null;
     }
 }

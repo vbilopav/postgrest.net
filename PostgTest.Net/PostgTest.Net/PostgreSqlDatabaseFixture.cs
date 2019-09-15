@@ -4,7 +4,11 @@ using PostgExecute.Net;
 
 namespace PostgTest.Net
 {
-    public class PostgreSqlDatabaseFixture
+    public class PostgreSqlDatabaseFixture : PostgreSqlDatabaseFixture<ConfigScriptsFixture>
+    {
+    }
+
+    public class PostgreSqlDatabaseFixture<TMigration> where TMigration : ScriptsFixture, new()
     {
         public NpgsqlConnection TestConnection { get; }
         public NpgsqlConnection DefaultConnection { get; }
@@ -17,12 +21,20 @@ namespace PostgTest.Net
             TestConnection = new NpgsqlConnection(Configuration.GetTestConnectionString());
 
             TryCreateTestDatabaseAndTestUser();
+            // ReSharper disable once VirtualMemberCallInConstructor
+            RunMigrations();
         }
 
         public void Dispose()
         {
             DropTestDatabaseAndTestUser();
             DefaultConnection.Dispose();
+        }
+
+        protected virtual void RunMigrations()
+        {
+            var migration = new TMigration();
+            migration.Run(DefaultConnection);
         }
 
         private void TryCreateTestDatabaseAndTestUser()
