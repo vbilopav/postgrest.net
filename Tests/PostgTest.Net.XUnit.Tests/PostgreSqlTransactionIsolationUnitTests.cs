@@ -1,14 +1,15 @@
-using System.Linq;
+using System;
 using Xunit;
+using PostgExecute.Net;
 
 namespace PostgTest.Net.XUnit.Tests
 {
     [Collection("PostgreSqlTestDatabase")]
-    public class PostgreSqlTransactionIsolationTests : PostgreSqlUnitTest
+    public class PostgreSqlTransactionIsolationUnitTests : PostgreSqlUnitTest
     {
         private static int? _sharedTxid;
 
-        public PostgreSqlTransactionIsolationTests(PostgreSqlFixture fixture) : base(fixture)
+        public PostgreSqlTransactionIsolationUnitTests(PostgreSqlDatabaseFixture databaseFixture) : base(databaseFixture)
         {
 
         }
@@ -16,7 +17,7 @@ namespace PostgTest.Net.XUnit.Tests
         [Fact]
         public void TestTransaction1()
         {
-            var txid1 = Read("select txid_current()").ToList().First()["txid_current"] as int?;
+            var txid1 = Convert.ToInt32(Connection.Single("select txid_current()")["txid_current"]);
             if (_sharedTxid == null)
             {
                 _sharedTxid = txid1;
@@ -25,14 +26,15 @@ namespace PostgTest.Net.XUnit.Tests
             {
                 Assert.NotEqual(_sharedTxid, txid1);
             }
-            var txid2 = Read("select txid_current()").ToList().First()["txid_current"] as int?;
+
+            var txid2 = Convert.ToInt32(Connection.Single("select txid_current()")["txid_current"]);
             Assert.Equal(txid2, txid1);
         }
 
         [Fact]
         public void TestTransaction2()
         {
-            var txid1 = Read("select txid_current()").ToList().First()["txid_current"] as int?;
+            var txid1 = Convert.ToInt32(Connection.Single("select txid_current()")["txid_current"]);
             if (_sharedTxid == null)
             {
                 _sharedTxid = txid1;
@@ -41,7 +43,7 @@ namespace PostgTest.Net.XUnit.Tests
             {
                 Assert.NotEqual(_sharedTxid, txid1);
             }
-            var txid2 = Read("select txid_current()").ToList().First()["txid_current"] as int?;
+            var txid2 = Convert.ToInt32(Connection.Single("select txid_current()")["txid_current"]);
             Assert.Equal(txid2, txid1);
         }
     }

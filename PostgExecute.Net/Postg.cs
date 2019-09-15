@@ -40,20 +40,22 @@ namespace PostgExecute.Net
             }
         }
 
+        private static readonly char[] NonCharacters = 
+            {' ', '\n', '\r', ',', ';', ':', '-', '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '*', '\\', '.'};
+
+        private const string ParamPrefix = "@";
+
         private static void AddParameters(NpgsqlCommand cmd, object[] parameters)
         {
-            var value = "@";
-            var nonChars = new[]
-                {' ', '\n', '\r', ',', ';', ':', '-', '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '*', '\\', '.'};
             var command = cmd.CommandText;
             var paramIndex = 0;
-            for (var index = 0; ; index += value.Length)
+            for (var index = 0;; index += ParamPrefix.Length)
             {
-                index = command.IndexOf(value, index, StringComparison.Ordinal);
+                index = command.IndexOf(ParamPrefix, index, StringComparison.Ordinal);
                 if (index == -1)
                     break;
                 index++;
-                var endOf = command.IndexOfAny(nonChars, index);
+                var endOf = command.IndexOfAny(NonCharacters, index);
                 var name = endOf == -1 ? command.Substring(index) : command.Substring(index, endOf - index);
                 cmd.Parameters.Add(new NpgsqlParameter(name, parameters[paramIndex++]));
                 index = endOf;

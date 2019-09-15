@@ -1,24 +1,16 @@
 ﻿using System;
-using System.Data;
 using Npgsql;
 using PostgExecute.Net;
 
 namespace PostgTest.Net
 {
-    public interface IPostgreSqlFixture : IDisposable
-    {
-        NpgsqlConnection DefaultConnection { get; }
-        NpgsqlConnection TestConnection { get; }
-        IPostgTestConfig Configuration { get; }
-    }
-
-    public class PostgreSqlFixture : IPostgreSqlFixture
+    public class PostgreSqlDatabaseFixture
     {
         public NpgsqlConnection TestConnection { get; }
         public NpgsqlConnection DefaultConnection { get; }
         public IPostgTestConfig Configuration { get; }
 
-        public PostgreSqlFixture()
+        public PostgreSqlDatabaseFixture()
         {
             Configuration = Config.Value;
             DefaultConnection = new NpgsqlConnection(Configuration.GetDefaultConnectionString());

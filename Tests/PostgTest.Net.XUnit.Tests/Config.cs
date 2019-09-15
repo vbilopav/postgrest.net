@@ -8,5 +8,8 @@ namespace PostgTest.Net.XUnit.Tests
     }
 
     [CollectionDefinition("PostgreSqlTestDatabase")]
-    public class PostgreSqlFixtureCollection : ICollectionFixture<PostgreSqlFixture> { }
+    public class PostgreSqlFixtureCollection : ICollectionFixture<PostgreSqlDatabaseFixture>
+    {
+    }
+
 }
