@@ -180,15 +180,15 @@ namespace PostgExecute.Net.Tests
                                 ) t(first, bar, day)",
                     r => result.Add(r),
                     p => p
-                        .@P("1", 1)
-                        .@P("t1", "foo1")
-                        .@P("d1", new DateTime(1977, 5, 19))
-                        .@P("2", 2)
-                        .@P("t2", "foo2")
-                        .@P("d2", new DateTime(1978, 5, 19))
-                        .@P("3", 3)
-                        .@P("t3", "foo3")
-                        .@P("d3", new DateTime(1979, 5, 19)));
+                        ._("1", 1)
+                        ._("t1", "foo1")
+                        ._("d1", new DateTime(1977, 5, 19))
+                        ._("2", 2)
+                        ._("t2", "foo2")
+                        ._("d2", new DateTime(1978, 5, 19))
+                        ._("3", 3)
+                        ._("t3", "foo3")
+                        ._("d3", new DateTime(1979, 5, 19)));
 
                 AssertResult(result);
             }
@@ -218,15 +218,15 @@ namespace PostgExecute.Net.Tests
                         return true;
                     },
                     p => p
-                        .@P("1", 1)
-                        .@P("t1", "foo1")
-                        .@P("d1", new DateTime(1977, 5, 19))
-                        .@P("2", 2)
-                        .@P("t2", "foo2")
-                        .@P("d2", new DateTime(1978, 5, 19))
-                        .@P("3", 3)
-                        .@P("t3", "foo3")
-                        .@P("d3", new DateTime(1979, 5, 19)));
+                        ._("1", 1)
+                        ._("t1", "foo1")
+                        ._("d1", new DateTime(1977, 5, 19))
+                        ._("2", 2)
+                        ._("t2", "foo2")
+                        ._("d2", new DateTime(1978, 5, 19))
+                        ._("3", 3)
+                        ._("t3", "foo3")
+                        ._("d3", new DateTime(1979, 5, 19)));
 
                 var list = result.ToList();
                 Assert.Single(list);
@@ -270,16 +270,15 @@ namespace PostgExecute.Net.Tests
                             (@1, @t1, @d1),
                             (@2, @t2, @d2),
                             (@3, @t3, @d3)
-                          ) t(first, bar, day)", p => p
-                        .@P("1", 1)
-                        .@P("t1", "foo1")
-                        .@P("d1", new DateTime(1977, 5, 19))
-                        .@P("2", 2)
-                        .@P("t2", "foo2")
-                        .@P("d2", new DateTime(1978, 5, 19))
-                        .@P("3", 3)
-                        .@P("t3", "foo3")
-                        .@P("d3", new DateTime(1979, 5, 19)));
+                          ) t(first, bar, day)", p => ParamsExtensions._(p, "1", 1)
+                        ._("t1", "foo1")
+                        ._("d1", new DateTime(1977, 5, 19))
+                        ._("2", 2)
+                        ._("t2", "foo2")
+                        ._("d2", new DateTime(1978, 5, 19))
+                        ._("3", 3)
+                        ._("t3", "foo3")
+                        ._("d3", new DateTime(1979, 5, 19)));
 
                 AssertResult(result);
             }
@@ -462,15 +461,15 @@ namespace PostgExecute.Net.Tests
                           ) t(first, bar, day)",
                     r => result.Add(r),
                     p => p
-                        .@P("1", 1)
-                        .@P("t1", "foo1")
-                        .@P("d1", new DateTime(1977, 5, 19))
-                        .@P("2", 2)
-                        .@P("t2", "foo2")
-                        .@P("d2", new DateTime(1978, 5, 19))
-                        .@P("3", 3)
-                        .@P("t3", "foo3")
-                        .@P("d3", new DateTime(1979, 5, 19)));
+                        ._("1", 1)
+                        ._("t1", "foo1")
+                        ._("d1", new DateTime(1977, 5, 19))
+                        ._("2", 2)
+                        ._("t2", "foo2")
+                        ._("d2", new DateTime(1978, 5, 19))
+                        ._("3", 3)
+                        ._("t3", "foo3")
+                        ._("d3", new DateTime(1979, 5, 19)));
 
                 AssertResult(result);
             }
@@ -496,15 +495,15 @@ namespace PostgExecute.Net.Tests
                         result.Add(r);
                     },
                     p => p
-                        .@P("1", 1)
-                        .@P("t1", "foo1")
-                        .@P("d1", new DateTime(1977, 5, 19))
-                        .@P("2", 2)
-                        .@P("t2", "foo2")
-                        .@P("d2", new DateTime(1978, 5, 19))
-                        .@P("3", 3)
-                        .@P("t3", "foo3")
-                        .@P("d3", new DateTime(1979, 5, 19)));
+                        ._("1", 1)
+                        ._("t1", "foo1")
+                        ._("d1", new DateTime(1977, 5, 19))
+                        ._("2", 2)
+                        ._("t2", "foo2")
+                        ._("d2", new DateTime(1978, 5, 19))
+                        ._("3", 3)
+                        ._("t3", "foo3")
+                        ._("d3", new DateTime(1979, 5, 19)));
 
                 AssertResult(result);
             }
@@ -529,15 +528,15 @@ namespace PostgExecute.Net.Tests
                     {
                         await Task.Delay(0);
                         p
-                            .@P("1", 1)
-                            .@P("t1", "foo1")
-                            .@P("d1", new DateTime(1977, 5, 19))
-                            .@P("2", 2)
-                            .@P("t2", "foo2")
-                            .@P("d2", new DateTime(1978, 5, 19))
-                            .@P("3", 3)
-                            .@P("t3", "foo3")
-                            .@P("d3", new DateTime(1979, 5, 19));
+                            ._("1", 1)
+                            ._("t1", "foo1")
+                            ._("d1", new DateTime(1977, 5, 19))
+                            ._("2", 2)
+                            ._("t2", "foo2")
+                            ._("d2", new DateTime(1978, 5, 19))
+                            ._("3", 3)
+                            ._("t3", "foo3")
+                            ._("d3", new DateTime(1979, 5, 19));
                     });
 
                 AssertResult(result);
@@ -567,15 +566,15 @@ namespace PostgExecute.Net.Tests
                     {
                         await Task.Delay(0);
                         p
-                            .@P("1", 1)
-                            .@P("t1", "foo1")
-                            .@P("d1", new DateTime(1977, 5, 19))
-                            .@P("2", 2)
-                            .@P("t2", "foo2")
-                            .@P("d2", new DateTime(1978, 5, 19))
-                            .@P("3", 3)
-                            .@P("t3", "foo3")
-                            .@P("d3", new DateTime(1979, 5, 19));
+                            ._("1", 1)
+                            ._("t1", "foo1")
+                            ._("d1", new DateTime(1977, 5, 19))
+                            ._("2", 2)
+                            ._("t2", "foo2")
+                            ._("d2", new DateTime(1978, 5, 19))
+                            ._("3", 3)
+                            ._("t3", "foo3")
+                            ._("d3", new DateTime(1979, 5, 19));
                     });
 
                 AssertResult(result);

@@ -132,9 +132,9 @@ namespace PostgExecute.Net.Tests
                     where first = @1 and bar = @2 and day = @3
                     ",
                     p => p
-                            .@P("1", 1)
-                            .@P("2", "foo")
-                            .@P("3", new DateTime(1977, 5, 19)));
+                            ._("1", 1)
+                            ._("2", "foo")
+                            ._("3", new DateTime(1977, 5, 19)));
 
                 Assert.Equal(1, result.Values.First());
                 Assert.Equal("foo", result["bar"]);
@@ -159,7 +159,7 @@ namespace PostgExecute.Net.Tests
                     async p =>
                     {
                         await Task.Delay(0);
-                        p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1);
+                        p._("3", new DateTime(1977, 5, 19))._("2", "foo")._("1", 1);
                     });
 
                 Assert.Equal(1, result.Values.First());
@@ -213,9 +213,9 @@ namespace PostgExecute.Net.Tests
                 where first = @1 and bar = @2 and day = @3
                 ",
                 p => p
-                    .@P("3", new DateTime(1977, 5, 19))
-                    .@P("2", "foo")
-                    .@P("1", 1));
+                    ._("3", new DateTime(1977, 5, 19))
+                    ._("2", "foo")
+                    ._("1", 1));
 
             Assert.Equal(1, result.Values.First());
             Assert.Equal("foo", result["bar"]);
@@ -269,9 +269,9 @@ namespace PostgExecute.Net.Tests
                 where first = @1 and bar = @2 and day = @3
                 ",
                 p => p
-                    .@P("3", new DateTime(1977, 5, 19))
-                    .@P("2", "foo")
-                    .@P("1", 1));
+                    ._("3", new DateTime(1977, 5, 19))
+                    ._("2", "foo")
+                    ._("1", 1));
 
             Assert.Equal(1, result.Values.First());
             Assert.Equal("foo", result["bar"]);
@@ -294,7 +294,7 @@ namespace PostgExecute.Net.Tests
                 async p =>
                 {
                     await Task.Delay(0);
-                    p.@P("3", new DateTime(1977, 5, 19)).@P("2", "foo").@P("1", 1);
+                    p._("3", new DateTime(1977, 5, 19))._("2", "foo")._("1", 1);
                 });
 
             Assert.Equal(1, result.Values.First());

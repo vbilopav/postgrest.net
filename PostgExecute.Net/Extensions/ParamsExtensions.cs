@@ -10,7 +10,7 @@ namespace PostgExecute.Net
             return collection;
         }
 
-        public static NpgsqlParameterCollection @P(this NpgsqlParameterCollection collection, string parameterName,
+        public static NpgsqlParameterCollection _(this NpgsqlParameterCollection collection, string parameterName,
             object value)
             => collection.Add(parameterName, value);
     }

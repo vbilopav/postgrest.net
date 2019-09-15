@@ -82,7 +82,7 @@ namespace PostgExecute.Net.Tests
                     .Execute("begin")
                     .Execute("create table test (i int, t text, d date)")
                     .Execute("insert into test values (@i, @t, @d)", p => 
-                        p.@P("d", new DateTime(1977, 5, 19)).@P("t", "foo").@P("i", 1))
+                        p._("d", new DateTime(1977, 5, 19))._("t", "foo")._("i", 1))
                     .Single("select * from test");
 
                 Assert.Equal(1, result["i"]);
@@ -167,7 +167,7 @@ namespace PostgExecute.Net.Tests
                 await connection.ExecuteAsync("begin");
                 await connection.ExecuteAsync("create table test (i int, t text, d date)");
                 await connection.ExecuteAsync("insert into test values (@i, @t, @d)", p =>
-                    p.@P("d", new DateTime(1977, 5, 19)).@P("t", "foo").@P("i", 1));
+                    p._("d", new DateTime(1977, 5, 19))._("t", "foo")._("i", 1));
                 var result = await connection.SingleAsync("select * from test");
 
                 Assert.Equal(1, result["i"]);
