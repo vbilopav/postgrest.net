@@ -95,7 +95,7 @@ using (var connection = new NpgsqlConnection("<connection string>"))
 
     // Read into custom class
     var myResults3 = List<MyResults>();
-    connection.Read("<pgpsql read 3>", r => myResults3.Add(new MyResults{ Field1 = result["field1"] }));
+    connection.Read("<pgpsql read 3>", r => myResults3.Add(new MyResults3{ Field1 = result["field1"] }));
 
     // etc..
 }
