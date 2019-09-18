@@ -4,18 +4,26 @@ using PostgExecute.Net;
 
 namespace PostgTest.Net
 {
-    public class PostgreSqlTestFixture : IDisposable
+    public class PostgreSqlTestFixture : PostgreSqlTestFixture<NullScriptsFixture>
+    {
+        public PostgreSqlTestFixture(PostgreSqlDatabaseFixture fixture) : base(fixture)
+        {
+        }
+    }
+
+    public class PostgreSqlTestFixture<TMigration> : IDisposable where TMigration : ScriptsFixture, new()
     {
         public PostgreSqlDatabaseFixture DatabaseFixture { get; }
         public IPostgTestConfig Configuration => DatabaseFixture.Configuration;
-        public NpgsqlConnection Connection => this.DatabaseFixture.TestConnection;
+        public NpgsqlConnection TestConnection => this.DatabaseFixture.TestConnection;
+        public NpgsqlConnection DefaultConnection => this.DatabaseFixture.DefaultConnection;
 
         public PostgreSqlTestFixture(PostgreSqlDatabaseFixture fixture)
         {
             this.DatabaseFixture = fixture;
             if (!Configuration.DisableFixtureTransaction)
             {
-                this.Connection.Execute("begin");
+                this.TestConnection.Execute("begin");
             }
         }
 
@@ -23,7 +31,7 @@ namespace PostgTest.Net
         {
             if (!Configuration.DisableFixtureTransaction)
             {
-                this.Connection.Execute("rollback");
+                this.TestConnection.Execute("rollback");
             }
         }
     }

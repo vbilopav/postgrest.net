@@ -10,7 +10,7 @@ namespace PostgTest.Net
 
         static Config()
         {
-            IPostgTestConfig instance = null;
+            PostgTestConfig instance = null;
 
             var config = new ConfigurationBuilder()
                 .AddJsonFile("appsettings.json", true, false)
@@ -25,7 +25,7 @@ namespace PostgTest.Net
                 var type = Type.GetType(configTypeName);
                 if (type != null)
                 {
-                    instance = Activator.CreateInstance(type) as IPostgTestConfig;
+                    instance = Activator.CreateInstance(type) as PostgTestConfig;
                 }
             }
             if (instance == null)
@@ -36,6 +36,6 @@ namespace PostgTest.Net
             Value = instance;
         }
 
-        public static IPostgTestConfig Value { get; }
+        public static PostgTestConfig Value { get; }
     }
 }

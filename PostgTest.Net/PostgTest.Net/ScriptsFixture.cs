@@ -8,8 +8,8 @@ namespace PostgTest.Net
     public abstract class ScriptsFixture
     {
         public virtual string ScriptsDir { get; protected set; }
-        public virtual string ScriptFile { get; protected set; }
-        public virtual string Script { get; protected set; }
+        public virtual string[] ScriptFiles { get; protected set; }
+        public virtual string[] Scripts { get; protected set; }
 
         public virtual void Run(NpgsqlConnection connection)
         {
@@ -24,7 +24,7 @@ namespace PostgTest.Net
             {
                 return;
             }
-            foreach (var filename in Directory.EnumerateFiles(ScriptsDir).OrderByDescending(filename => filename))
+            foreach (var filename in Directory.EnumerateFiles(ScriptsDir).OrderBy(filename => filename))
             {
                 connection.Execute(File.ReadAllText(filename));
             }
@@ -32,35 +32,43 @@ namespace PostgTest.Net
 
         protected virtual void RunScriptFile(NpgsqlConnection connection)
         {
-            if (ScriptFile == null)
+            if (ScriptFiles == null)
             {
                 return;
             }
-            connection.Execute(File.ReadAllText(ScriptFile));
+            foreach (var filename in ScriptFiles)
+            {
+                connection.Execute(File.ReadAllText(filename));
+            }
         }
 
         protected virtual void RunScript(NpgsqlConnection connection)
         {
-            if (Script == null)
+            if (Scripts == null)
             {
                 return;
             }
-            connection.Execute(Script);
+            foreach (var script in Scripts)
+            {
+                connection.Execute(script);
+            }
         }
     }
+
+    public class NullScriptsFixture : ScriptsFixture { }
 
     public class ConfigScriptsFixture : ScriptsFixture
     {
         public sealed override string ScriptsDir { get; protected set; }
-        public sealed override string ScriptFile { get; protected set; }
-        public sealed override string Script { get; protected set; }
+        public sealed override string[] ScriptFiles { get; protected set; }
+        public sealed override string[] Scripts { get; protected set; }
 
         public ConfigScriptsFixture()
         {
             var config = Config.Value;
             ScriptsDir = config.MigrationScriptsDir;
-            ScriptFile = config.MigrationScriptFile;
-            Script = config.MigrationScript;
+            ScriptFiles = config.MigrationScriptFiles;
+            Scripts = config.MigrationScripts;
         }
     }
 }

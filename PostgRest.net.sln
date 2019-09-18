@@ -17,8 +17,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{6B78643D
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgRest.net.Tests", "Tests\PostgRest.net.Tests\PostgRest.net.Tests.csproj", "{BEC7A146-D719-4DC1-853F-183213524C4E}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.XUnit.Tests", "Tests\PostgTest.Net.XUnit.Tests\PostgTest.Net.XUnit.Tests.csproj", "{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgTest.Net", "PostgTest.Net", "{52840A1B-131E-48AC-BA55-DA2640437A1D}"
 	ProjectSection(SolutionItems) = preProject
 		PostgTest.Net\README.md = PostgTest.Net\README.md
@@ -39,6 +37,30 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgExecute.Net", "PostgExecute.Net\PostgExecute.Net.csproj", "{4AC019B8-81BC-4B65-BE42-E33A5F9DCB41}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgExecute.Net.Tests", "Tests\PostgExecute.Net.Tests\PostgExecute.Net.Tests.csproj", "{7AF201B6-DE15-4A2C-B29C-8FD6038AA4F3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgTest.Net.Tests", "PostgTest.Net.Tests", "{A095C08D-057C-46C8-8F8C-6A4573CC36D3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{B1240AF4-20AB-4E0A-B12C-1750718D67E0}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\PostgTest.Net.Tests\Scripts\create_schema.sql = Tests\PostgTest.Net.Tests\Scripts\create_schema.sql
+		Tests\PostgTest.Net.Tests\Scripts\insert_test_data.sql = Tests\PostgTest.Net.Tests\Scripts\insert_test_data.sql
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MigrationFiles", "MigrationFiles", "{7F19DBE1-BAF1-47F9-87D3-56FD2D72D812}"
+	ProjectSection(SolutionItems) = preProject
+		Tests\PostgTest.Net.Tests\Scripts\MigrationFiles\1_companies_up.sql = Tests\PostgTest.Net.Tests\Scripts\MigrationFiles\1_companies_up.sql
+		Tests\PostgTest.Net.Tests\Scripts\MigrationFiles\2_employees_up.sql = Tests\PostgTest.Net.Tests\Scripts\MigrationFiles\2_employees_up.sql
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.ClassFixturesTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.ClassFixturesTests\PostgTest.Net.ClassFixturesTests.csproj", "{10F851BF-9D87-4400-8981-10CFB7B2FF8E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.DbFixturesCodeConfigTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.DbFixturesCodeConfigTests\PostgTest.Net.DbFixturesCodeConfigTests.csproj", "{F241FC3E-2708-4EFA-B03C-681424CE053B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.DbFixturesJsonConfigTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.DbFixturesJsonConfigTests\PostgTest.Net.DbFixturesJsonConfigTests.csproj", "{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.DbFixturesScriptMigrationTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.DbFixturesScriptMigrationTests\PostgTest.Net.DbFixturesScriptMigrationTests.csproj", "{65042777-4131-4056-88DE-5546FD30F38B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.TransactionIsolationTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.TransactionIsolationTests\PostgTest.Net.TransactionIsolationTests.csproj", "{DBD45DB6-4715-434A-87E9-16518DD70D75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,10 +84,6 @@ Global
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BEC7A146-D719-4DC1-853F-183213524C4E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{60544D78-463F-40DB-872E-684FE97C2EB0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{60544D78-463F-40DB-872E-684FE97C2EB0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{60544D78-463F-40DB-872E-684FE97C2EB0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -78,6 +96,26 @@ Global
 		{7AF201B6-DE15-4A2C-B29C-8FD6038AA4F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7AF201B6-DE15-4A2C-B29C-8FD6038AA4F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7AF201B6-DE15-4A2C-B29C-8FD6038AA4F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{10F851BF-9D87-4400-8981-10CFB7B2FF8E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{10F851BF-9D87-4400-8981-10CFB7B2FF8E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{10F851BF-9D87-4400-8981-10CFB7B2FF8E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{10F851BF-9D87-4400-8981-10CFB7B2FF8E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F241FC3E-2708-4EFA-B03C-681424CE053B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F241FC3E-2708-4EFA-B03C-681424CE053B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F241FC3E-2708-4EFA-B03C-681424CE053B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F241FC3E-2708-4EFA-B03C-681424CE053B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779}.Release|Any CPU.Build.0 = Release|Any CPU
+		{65042777-4131-4056-88DE-5546FD30F38B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{65042777-4131-4056-88DE-5546FD30F38B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{65042777-4131-4056-88DE-5546FD30F38B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{65042777-4131-4056-88DE-5546FD30F38B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBD45DB6-4715-434A-87E9-16518DD70D75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBD45DB6-4715-434A-87E9-16518DD70D75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBD45DB6-4715-434A-87E9-16518DD70D75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBD45DB6-4715-434A-87E9-16518DD70D75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -88,10 +126,17 @@ Global
 		{F0697B06-E602-4942-ADBE-813D0A2EB36E} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
 		{85E0EC0A-4607-4CA4-A0AE-B0860FD6D116} = {2F37A211-7D51-4E45-93B8-D0FFEDC9161C}
 		{BEC7A146-D719-4DC1-853F-183213524C4E} = {6B78643D-2999-4282-B8E9-7FF6382A94EC}
-		{A7CC45C4-74F7-417F-8BD4-1D2810AB7ED2} = {6B78643D-2999-4282-B8E9-7FF6382A94EC}
 		{60544D78-463F-40DB-872E-684FE97C2EB0} = {52840A1B-131E-48AC-BA55-DA2640437A1D}
 		{4AC019B8-81BC-4B65-BE42-E33A5F9DCB41} = {6F8E9BCE-34D7-4517-BC7E-D9D2BFE756CC}
 		{7AF201B6-DE15-4A2C-B29C-8FD6038AA4F3} = {6B78643D-2999-4282-B8E9-7FF6382A94EC}
+		{A095C08D-057C-46C8-8F8C-6A4573CC36D3} = {6B78643D-2999-4282-B8E9-7FF6382A94EC}
+		{B1240AF4-20AB-4E0A-B12C-1750718D67E0} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{7F19DBE1-BAF1-47F9-87D3-56FD2D72D812} = {B1240AF4-20AB-4E0A-B12C-1750718D67E0}
+		{10F851BF-9D87-4400-8981-10CFB7B2FF8E} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{F241FC3E-2708-4EFA-B03C-681424CE053B} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{E67DA4BA-25F4-4D8F-86D1-A6CBE2518779} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{65042777-4131-4056-88DE-5546FD30F38B} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{DBD45DB6-4715-434A-87E9-16518DD70D75} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {146DC1B2-AB57-4008-8C55-B64C0EA89018}

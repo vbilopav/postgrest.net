@@ -109,8 +109,21 @@
         /// </summary>
         bool DisableFixtureTransaction { get; set; }
 
+        /// <summary>
+        /// Directory of migration scripts that will be executed by default connection in test database after it is created.
+        /// </summary>
         string MigrationScriptsDir { get; set; }
-        string MigrationScriptFile { get; set; }
-        string MigrationScript { get; set; }
+
+        /// <summary>
+        /// List of migration files that will be executed in test database by default connection after it is created
+        /// Files are executed AFTER all files from migration scripts directory, if any (key MigrationScriptsDir)
+        /// </summary>
+        string[] MigrationScriptFiles { get; set; }
+
+        /// <summary>
+        /// Migration script content  that will be executed by default connection in test database after it is created.
+        /// Script is executed AFTER all migration files, if any (key MigrationScriptFiles)
+        /// </summary>
+        string[] MigrationScripts { get; set; }
     }
 }

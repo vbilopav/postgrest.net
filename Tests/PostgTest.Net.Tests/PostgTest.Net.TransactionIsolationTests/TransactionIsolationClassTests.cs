@@ -1,19 +1,19 @@
 using System;
-using Xunit;
 using PostgExecute.Net;
+using Xunit;
 
-namespace PostgTest.Net.XUnit.Tests
+namespace PostgTest.Net.TransactionIsolationTests
 {
     /// <summary>
     /// Every test is SAME transaction
     /// </summary>
     [Collection("PostgreSqlTestDatabase")]
-    public class PostgreSqlTransactionIsolationClassTests : IClassFixture<PostgreSqlTestFixture>
+    public class TransactionIsolationClassTests : IClassFixture<PostgreSqlTestFixture>
     {
         private static int? _sharedTxid;
         private readonly PostgreSqlTestFixture fixture;
 
-        public PostgreSqlTransactionIsolationClassTests(PostgreSqlTestFixture fixture)
+        public TransactionIsolationClassTests(PostgreSqlTestFixture fixture)
         {
             this.fixture = fixture;
         }
@@ -21,7 +21,7 @@ namespace PostgTest.Net.XUnit.Tests
         [Fact]
         public void TestTransaction1()
         {
-            var txid1 = Convert.ToInt32(fixture.Connection.Single("select txid_current()")["txid_current"]);
+            var txid1 = Convert.ToInt32(fixture.TestConnection.Single("select txid_current()")["txid_current"]);
             if (_sharedTxid == null)
             {
                 _sharedTxid = txid1;
@@ -30,14 +30,14 @@ namespace PostgTest.Net.XUnit.Tests
             {
                 Assert.Equal(_sharedTxid, Convert.ToInt32(txid1));
             }
-            var txid2 = Convert.ToInt32(fixture.Connection.Single("select txid_current()")["txid_current"]);
+            var txid2 = Convert.ToInt32(fixture.TestConnection.Single("select txid_current()")["txid_current"]);
             Assert.Equal(txid2, txid1);
         }
 
         [Fact]
         public void TestTransaction2()
         {
-            var txid1 = Convert.ToInt32(fixture.Connection.Single("select txid_current()")["txid_current"]);
+            var txid1 = Convert.ToInt32(fixture.TestConnection.Single("select txid_current()")["txid_current"]);
             if (_sharedTxid == null)
             {
                 _sharedTxid = Convert.ToInt32(txid1);
@@ -46,7 +46,7 @@ namespace PostgTest.Net.XUnit.Tests
             {
                 Assert.Equal(_sharedTxid, Convert.ToInt32(txid1));
             }
-            var txid2 = Convert.ToInt32(fixture.Connection.Single("select txid_current()")["txid_current"]);
+            var txid2 = Convert.ToInt32(fixture.TestConnection.Single("select txid_current()")["txid_current"]);
             Assert.Equal(txid2, txid1);
         }
     }

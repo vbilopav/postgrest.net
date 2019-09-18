@@ -27,7 +27,22 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\PostgTest.Net\PostgTest.Net\PostgTest.Net.csproj" />
+    <ProjectReference Include="..\..\..\PostgTest.Net\PostgTest.Net\PostgTest.Net.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Scripts\create_schema.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\insert_test_data.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\MigrationFiles\1_companies_up.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Scripts\MigrationFiles\2_employees_up.sql">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

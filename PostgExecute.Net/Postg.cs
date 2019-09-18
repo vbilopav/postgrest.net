@@ -58,6 +58,8 @@ namespace PostgExecute.Net
                 var endOf = command.IndexOfAny(NonCharacters, index);
                 var name = endOf == -1 ? command.Substring(index) : command.Substring(index, endOf - index);
                 cmd.Parameters.Add(new NpgsqlParameter(name, parameters[paramIndex++]));
+                if (endOf == -1)
+                    break;
                 index = endOf;
             }
         }

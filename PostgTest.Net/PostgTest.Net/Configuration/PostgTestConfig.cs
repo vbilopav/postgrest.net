@@ -108,8 +108,10 @@ namespace PostgTest.Net
 
         public virtual string MigrationScriptsDir { get; set; } = null;
 
-        public virtual string MigrationScriptFile { get; set; } = null;
+        public virtual string[] MigrationScriptFiles { get; set; } = null;
 
-        public virtual string MigrationScript { get; set; } = null;
+        public virtual string[] MigrationScripts { get; set; } = null;
+
+        public virtual ScriptsFixture MigrationScriptsFixture => null;//new ConfigScriptsFixture();
     }
 }
