@@ -1,7 +1,6 @@
-﻿using System.IO;
-using Xunit;
+﻿using Xunit;
 
-namespace PostgTest.Net.DbFixturesJsonConfigTests
+namespace PostgTest.Net.DbMigrationJsonConfigTests
 {
     public class Config : PostgTestConfig
     {

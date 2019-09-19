@@ -112,6 +112,6 @@ namespace PostgTest.Net
 
         public virtual string[] MigrationScripts { get; set; } = null;
 
-        public virtual ScriptsFixture MigrationScriptsFixture => null;//new ConfigScriptsFixture();
+        public virtual MigrationBase MigrationScriptsFixture => null;
     }
 }

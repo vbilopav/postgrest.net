@@ -1,15 +1,14 @@
-﻿using System.IO;
-using Xunit;
+﻿using Xunit;
 
-namespace PostgTest.Net.DbFixturesScriptMigrationTests
+namespace PostgTest.Net.DbMigrationCodeClassTests
 {
     public class Config : PostgTestConfig
     {
         public override int Port => 5433;
-        public override ScriptsFixture MigrationScriptsFixture => new TestScriptsFixture();
+        public override MigrationBase MigrationScriptsFixture => new DatabaseMigration();
     }
 
-    public class TestScriptsFixture : ScriptsFixture
+    public class DatabaseMigration : MigrationBase
     {
         public override string ScriptsDir => "../../../../Scripts/MigrationFiles";
         public override string[] ScriptFiles => new[] { "../../../../Scripts/insert_test_data.sql" };

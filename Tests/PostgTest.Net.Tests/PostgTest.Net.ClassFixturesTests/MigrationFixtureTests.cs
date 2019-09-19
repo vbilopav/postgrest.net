@@ -1,17 +1,22 @@
 ﻿using System.Linq;
-using Npgsql;
 using PostgExecute.Net;
 using Xunit;
 
-namespace PostgTest.Net.DbFixturesJsonConfigTests
-{
-    [Collection("PostgreSqlTestDatabase")]
-    public class DatabaseMigrationTests : IClassFixture<PostgreSqlTestFixture>
-    {
-        private readonly PostgreSqlTestFixture fixture;
-        private NpgsqlConnection Connection => fixture.DefaultConnection;
 
-        public DatabaseMigrationTests(PostgreSqlTestFixture fixture)
+namespace PostgTest.Net.ClassFixturesTests
+{
+    public class TestMigration : MigrationBase
+    {
+        public override string ScriptsDir => "../../../../Scripts/MigrationFiles";
+        public override string[] ScriptFiles => new[] { "../../../../Scripts/insert_test_data.sql" };
+    }
+
+    [Collection("PostgreSqlTestDatabase")]
+    public class TestScriptFixtureData : IClassFixture<PostgreSqlTestFixture<TestMigration>>
+    {
+        private readonly PostgreSqlTestFixture<TestMigration> fixture;
+
+        public TestScriptFixtureData(PostgreSqlTestFixture<TestMigration> fixture)
         {
             this.fixture = fixture;
         }
@@ -19,7 +24,7 @@ namespace PostgTest.Net.DbFixturesJsonConfigTests
         [Fact]
         public void TestCompaniesTable()
         {
-            var read = Connection.Read("select * from companies").ToList();
+            var read = fixture.TestConnection.Read("select * from companies").ToList();
             Assert.Single(read);
             Assert.Equal("vb-software", read.First()["name"]);
         }
@@ -27,7 +32,7 @@ namespace PostgTest.Net.DbFixturesJsonConfigTests
         [Fact]
         public void TestEmployeesTable()
         {
-            var read = Connection.Read("select * from employees where company_id = (select id from companies limit 1)").ToList();
+            var read = fixture.TestConnection.Read("select * from employees where company_id = (select id from companies limit 1)").ToList();
             Assert.Equal(2, read.Count);
 
             Assert.Equal("Vedran", read[0]["first_name"]);

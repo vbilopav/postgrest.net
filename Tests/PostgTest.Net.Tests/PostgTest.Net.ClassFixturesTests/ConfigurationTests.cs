@@ -1,4 +1,5 @@
 using System.Linq;
+using Npgsql;
 using PostgExecute.Net;
 using Xunit;
 using Xunit.Abstractions;
@@ -41,6 +42,14 @@ namespace PostgTest.Net.ClassFixturesTests
             var read = fixture.TestConnection.Read("select current_user").ToList();
             Assert.Single(read);
             Assert.Equal(fixture.Configuration.TestUser, read.First()["current_user"]);
+        }
+
+        [Fact]
+        public void TestCompaniesTableNotExists()
+        {
+            var read = fixture.DefaultConnection.Read(
+                "select table_name from information_schema.tables where table_name = 'companies'");
+            Assert.Empty(read);
         }
 
         [Fact]

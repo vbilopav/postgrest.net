@@ -3,7 +3,7 @@ using Npgsql;
 using PostgExecute.Net;
 using Xunit;
 
-namespace PostgTest.Net.DbFixturesScriptMigrationTests
+namespace PostgTest.Net.DbMigrationJsonConfigTests
 {
     [Collection("PostgreSqlTestDatabase")]
     public class DatabaseMigrationTests : IClassFixture<PostgreSqlTestFixture>

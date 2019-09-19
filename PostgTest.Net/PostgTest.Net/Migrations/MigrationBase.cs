@@ -5,14 +5,17 @@ using PostgExecute.Net;
 
 namespace PostgTest.Net
 {
-    public abstract class ScriptsFixture
+    public abstract class MigrationBase
     {
         public virtual string ScriptsDir { get; protected set; }
         public virtual string[] ScriptFiles { get; protected set; }
         public virtual string[] Scripts { get; protected set; }
 
-        public virtual void Run(NpgsqlConnection connection)
+        public IFixture Fixture { get; protected set; }
+
+        public virtual void Run(NpgsqlConnection connection, IFixture fixture)
         {
+            Fixture = fixture;
             RunScriptsDir(connection);
             RunScriptFile(connection);
             RunScript(connection);
@@ -52,23 +55,6 @@ namespace PostgTest.Net
             {
                 connection.Execute(script);
             }
-        }
-    }
-
-    public class NullScriptsFixture : ScriptsFixture { }
-
-    public class ConfigScriptsFixture : ScriptsFixture
-    {
-        public sealed override string ScriptsDir { get; protected set; }
-        public sealed override string[] ScriptFiles { get; protected set; }
-        public sealed override string[] Scripts { get; protected set; }
-
-        public ConfigScriptsFixture()
-        {
-            var config = Config.Value;
-            ScriptsDir = config.MigrationScriptsDir;
-            ScriptFiles = config.MigrationScriptFiles;
-            Scripts = config.MigrationScripts;
         }
     }
 }
