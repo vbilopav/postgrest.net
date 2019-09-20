@@ -98,7 +98,7 @@ namespace PostgTest.Net
                     return dropTestUserCmd;
                 }
                 return string.IsNullOrEmpty(this.TestUser) ? null : $@"
-                    drop role {this.TestUser};
+                    drop role if exists {this.TestUser};
                 ";
             }
             set => dropTestUserCmd = value;

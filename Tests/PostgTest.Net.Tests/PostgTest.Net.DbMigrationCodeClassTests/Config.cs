@@ -5,6 +5,8 @@ namespace PostgTest.Net.DbMigrationCodeClassTests
     public class Config : PostgTestConfig
     {
         public override int Port => 5433;
+        public override string TestDatabase => "db_migration_code_class_tests";
+        public override string TestUser => "db_migration_code_class_tests_user";
         public override MigrationBase MigrationScriptsFixture => new DatabaseMigration();
     }
 

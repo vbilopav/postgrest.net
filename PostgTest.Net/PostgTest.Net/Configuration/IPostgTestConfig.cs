@@ -99,7 +99,7 @@
 
         /// <summary>
         /// Command that will be executed when dropping test role 
-        /// Default value is `drop role {this.TestUser};`
+        /// Default value is `drop role if exists {this.TestUser};`
         /// </summary>
         string DropTestUserCommand { get; set; }
 

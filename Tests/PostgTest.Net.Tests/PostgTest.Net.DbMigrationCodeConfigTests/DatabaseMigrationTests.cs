@@ -1,9 +1,9 @@
-﻿using PostgExecute.Net;
-using System.Linq;
+﻿using System.Linq;
 using Npgsql;
+using PostgExecute.Net;
 using Xunit;
 
-namespace PostgTest.Net.DbFixturesCodeConfigTests
+namespace PostgTest.Net.DbMigrationCodeConfigTests
 {
     [Collection("PostgreSqlTestDatabase")]
     public class DatabaseMigrationTests : IClassFixture<PostgreSqlTestFixture>
