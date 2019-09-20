@@ -42,7 +42,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PostgTest.Net.Tests", "Post
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{B1240AF4-20AB-4E0A-B12C-1750718D67E0}"
 	ProjectSection(SolutionItems) = preProject
-		Tests\PostgTest.Net.Tests\Scripts\create_schema.sql = Tests\PostgTest.Net.Tests\Scripts\create_schema.sql
 		Tests\PostgTest.Net.Tests\Scripts\insert_test_data.sql = Tests\PostgTest.Net.Tests\Scripts\insert_test_data.sql
 	EndProjectSection
 EndProject
@@ -61,6 +60,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.DbMigrationCodeConfigTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.DbMigrationCodeConfigTests\PostgTest.Net.DbMigrationCodeConfigTests.csproj", "{27877706-A078-44A0-A182-1CB6B4E96584}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.DbMigrationJsonConfigTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.DbMigrationJsonConfigTests\PostgTest.Net.DbMigrationJsonConfigTests.csproj", "{F3C74003-31EA-47BB-BE54-010E0E0D5CED}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PostgTest.Net.MixedTests", "Tests\PostgTest.Net.Tests\PostgTest.Net.MixedTests\PostgTest.Net.MixedTests.csproj", "{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -116,6 +117,10 @@ Global
 		{F3C74003-31EA-47BB-BE54-010E0E0D5CED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3C74003-31EA-47BB-BE54-010E0E0D5CED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3C74003-31EA-47BB-BE54-010E0E0D5CED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -137,6 +142,7 @@ Global
 		{C9368D63-C72E-4193-A52C-CA74176BBE24} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
 		{27877706-A078-44A0-A182-1CB6B4E96584} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
 		{F3C74003-31EA-47BB-BE54-010E0E0D5CED} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
+		{CEBE6F27-BC3D-411B-B0F8-D4AEBC6C9889} = {A095C08D-057C-46C8-8F8C-6A4573CC36D3}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {146DC1B2-AB57-4008-8C55-B64C0EA89018}
