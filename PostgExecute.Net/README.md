@@ -8,11 +8,13 @@ I repeat:
 
 **This is NOT an ORM**
 
-> - **There is not data conversion whatsoever**, and so there is no impedance mismatch issue.
+> - **There is not data conversion whatsoever**. Not even `DBNull.Value` to regular `null`. 
 
-> - All read operations will serialize rows directly and only to **`IDictionary<string, object>>`**
+> - Subseqently: **there is no impedance mismatch issue**.
 
-or, even much, much better:
+> - All read operations will serialize rows directly and only to **`IDictionary<string, object>>`** or proved function callback for each row (see bellow)
+
+* or, even much, much better:
 
 > - All read operations version with **[lambda callback for each row](https://github.com/vbilopav/postgrest.net/tree/master/PostgExecute.Net#read-callback-lambda)**
 
@@ -69,11 +71,11 @@ The other point of this project is that it is part of larger solution intended t
 
 - Install `PostgExecute.Net` or clone this project repo.
 
-- Two ways to use this API:
+- Create your `NpgsqlConnection` object anyway you see fit and use extensions
 
-### 1. `PostgreSQL` connection extensions
+### `PostgreSQL` connection extensions
 
-Extensions on `NpgsqlConnection` object (like `Dapper`).
+Extensions on `NpgsqlConnection` object (`Dapper`-like).
 
 For example:
 
@@ -101,28 +103,9 @@ using (var connection = new NpgsqlConnection("<connection string>"))
 }
 ```
 
-### 2. Static methods
-
-Each extension have same exact version as static method which takes first parameter connection string.
-
-For example:
-
-```csharp
-Postg.Execute("<connection string>", "pgpsql command 1");
-Postg.Execute("<connection string>", "pgpsql command 2");
-// ...
-```
-
-**Notes:**
-> No chaining available because connection is used once and disposed immediatel.
-
-> **When using static methods `PostgreSQL` new connection will be created and disposed.**
-
-> `NpgsqlConnection` will recycle connection made from same thread (they'll have same PID), but, any pending transaction will be lost and rolled back.
-
 ### API
 
-Full list of entire available API's and their overloads can be found on [this interface definition](https://github.com/vbilopav/postgrest.net/blob/master/PostgExecute.Net/IPostg.cs).
+Full list of entire available API's and their overloads can be found on [following interface definitions](https://github.com/vbilopav/postgrest.net/blob/master/PostgExecute.Net/IPostg.cs).
 
 They fall in following three categories:
 
@@ -160,7 +143,19 @@ var result = connection.Single(
 
 Unlike positional parameters, when using named parameters - position is irrelevant and every parameter **must have unique name.**
 
-To accept named parameters interface exposes parameters collection (type [`NpgsqlParameterCollection`](https://github.com/npgsql/npgsql/blob/dev/src/Npgsql/NpgsqlParameterCollection.cs)) - as lambda parameter:
+Example:
+
+```csharp
+var result = connection.Single(
+    @"select * from (
+        select 1 as first, 'foo' as bar, '1977-05-19'::date as day, null as null
+    ) as sub
+    where first = @1 and bar = @2 and day = @3
+    ", ("3", new DateTime(1977, 5, 19)), ("2", "foo"), ("1", 1));
+    });
+```
+
+To work efficiently with parameters, parameters interface is exposed trough lambda with parameter (type [`NpgsqlParameterCollection`](https://github.com/npgsql/npgsql/blob/dev/src/Npgsql/NpgsqlParameterCollection.cs)) - as lambda parameter:
 
 ```csharp
 var result = connection.Single(
