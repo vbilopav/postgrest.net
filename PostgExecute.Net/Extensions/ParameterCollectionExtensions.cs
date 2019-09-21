@@ -2,7 +2,7 @@
 
 namespace PostgExecute.Net
 {
-    public static class ParamsExtensions
+    public static class ParameterCollectionExtensions
     {
         public static NpgsqlParameterCollection Add(this NpgsqlParameterCollection collection, string parameterName, object value)
         {

@@ -81,7 +81,36 @@ namespace PostgExecute.Net.Tests
                 var result = connection
                     .Execute("begin")
                     .Execute("create table test (i int, t text, d date)")
-                    .Execute("insert into test values (@i, @t, @d)", p => 
+                    .Execute("insert into test values (@i, @t, @d)", ("d", new DateTime(1977, 5, 19)), ("t", "foo"), ("i", 1))
+                    .Single("select * from test");
+
+                Assert.Equal(1, result["i"]);
+                Assert.Equal("foo", result["t"]);
+                Assert.Equal(new DateTime(1977, 5, 19), result["d"]);
+
+                connection.Execute("rollback");
+                var tableMissing = false;
+                try
+                {
+                    connection.Single("select * from test");
+                }
+                catch (PostgresException)
+                {
+                    tableMissing = true;
+                }
+                Assert.True(tableMissing);
+            }
+        }
+
+        [Fact]
+        public void TestConnectionParamsCollectionFunc()
+        {
+            using (var connection = new NpgsqlConnection(fixture.ConnectionString))
+            {
+                var result = connection
+                    .Execute("begin")
+                    .Execute("create table test (i int, t text, d date)")
+                    .Execute("insert into test values (@i, @t, @d)", p =>
                         p._("d", new DateTime(1977, 5, 19))._("t", "foo")._("i", 1))
                     .Single("select * from test");
 

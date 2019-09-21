@@ -1,4 +1,5 @@
 ﻿using System.Linq;
+using Npgsql;
 using PostgExecute.Net;
 using Xunit;
 
@@ -8,6 +9,11 @@ namespace PostgTest.Net.MixedTests
     public class TestMigration : MigrationBase
     {
         public override string[] ScriptFiles => new[] { "../../../../Scripts/insert_test_data.sql" };
+
+        public override void OnMigrationEnd()
+        {
+            this.Fixture.TestConnection.Execute("");
+        }
     }
 
     [Collection("PostgreSqlTestDatabase")]

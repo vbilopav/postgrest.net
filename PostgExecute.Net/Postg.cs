@@ -39,40 +39,5 @@ namespace PostgExecute.Net
                 await Connection.OpenAsync();
             }
         }
-
-        private static readonly char[] NonCharacters = 
-            {' ', '\n', '\r', ',', ';', ':', '-', '!', '"', '#', '$', '%', '&', '/', '(', ')', '=', '?', '*', '\\', '.'};
-
-        private const string ParamPrefix = "@";
-
-        private static void AddParameters(NpgsqlCommand cmd, object[] parameters)
-        {
-            var command = cmd.CommandText;
-            var paramIndex = 0;
-            for (var index = 0;; index += ParamPrefix.Length)
-            {
-                index = command.IndexOf(ParamPrefix, index, StringComparison.Ordinal);
-                if (index == -1)
-                    break;
-                index++;
-                var endOf = command.IndexOfAny(NonCharacters, index);
-                var name = endOf == -1 ? command.Substring(index) : command.Substring(index, endOf - index);
-                cmd.Parameters.Add(new NpgsqlParameter(name, parameters[paramIndex++]));
-                if (endOf == -1)
-                    break;
-                index = endOf;
-            }
-        }
-
-        private static void AddParameters(NpgsqlCommand cmd, Action<NpgsqlParameterCollection> parameters) =>
-            parameters?.Invoke(cmd.Parameters);
-
-        private static async Task AddParametersAsync(NpgsqlCommand cmd, Func<NpgsqlParameterCollection, Task> parameters)
-        {
-            if (parameters != null)
-            {
-                await parameters.Invoke(cmd.Parameters);
-            }
-        }
     }
 }

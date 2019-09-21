@@ -16,9 +16,19 @@ namespace PostgTest.Net
         public virtual void Run(NpgsqlConnection connection, IFixture fixture)
         {
             Fixture = fixture;
+            OnMigrationStart();
             RunScriptsDir(connection);
             RunScriptFile(connection);
             RunScript(connection);
+            OnMigrationEnd();
+        }
+
+        public virtual void OnMigrationStart()
+        {
+        }
+
+        public virtual void OnMigrationEnd()
+        {
         }
 
         protected virtual void RunScriptsDir(NpgsqlConnection connection)
