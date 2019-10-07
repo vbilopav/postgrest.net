@@ -1,4 +1,5 @@
-﻿using Xunit;
+﻿using PostgTest.Net.Configuration;
+using Xunit;
 
 namespace PostgTest.Net.DbMigrationJsonConfigTests
 {

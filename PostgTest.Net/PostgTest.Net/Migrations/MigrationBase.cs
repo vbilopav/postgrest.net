@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using System.Linq;
+using Norm.Extensions;
 using Npgsql;
-using PostgExecute.Net;
 
-namespace PostgTest.Net
+namespace PostgTest.Net.Migrations
 {
     public abstract class MigrationBase
     {

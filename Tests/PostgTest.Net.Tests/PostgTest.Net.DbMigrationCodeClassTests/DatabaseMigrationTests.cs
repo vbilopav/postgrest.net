@@ -1,6 +1,6 @@
 ﻿using System.Linq;
 using Npgsql;
-using PostgExecute.Net;
+using Norm.Extensions;
 using Xunit;
 
 namespace PostgTest.Net.DbMigrationCodeClassTests
@@ -19,7 +19,8 @@ namespace PostgTest.Net.DbMigrationCodeClassTests
         [Fact]
         public void TestCompaniesTable()
         {
-            var read = Connection.Read("select * from companies").ToList();
+            var read = Connection.Read("select * from companies").SelectDictionaries().ToList();
+
             Assert.Single(read);
             Assert.Equal("vb-software", read.First()["name"]);
         }
@@ -27,16 +28,19 @@ namespace PostgTest.Net.DbMigrationCodeClassTests
         [Fact]
         public void TestEmployeesTable()
         {
-            var read = Connection.Read("select * from employees where company_id = (select id from companies limit 1)").ToList();
-            Assert.Equal(2, read.Count);
+            var list = Connection
+                .Read("select * from employees where company_id = (select id from companies limit 1)")
+                .SelectDictionaries()
+                .ToList();
 
-            Assert.Equal("Vedran", read[0]["first_name"]);
-            Assert.Equal("Bilopavlović", read[0]["last_name"]);
-            Assert.Equal("vbilopav@gmail.com", read[0]["email"]);
+            Assert.Equal(2, list.Count);
+            Assert.Equal("Vedran", list[0]["first_name"]);
+            Assert.Equal("Bilopavlović", list[0]["last_name"]);
+            Assert.Equal("vbilopav@gmail.com", list[0]["email"]);
 
-            Assert.Equal("Floki", read[1]["first_name"]);
-            Assert.Equal("The Dog", read[1]["last_name"]);
-            Assert.Equal("vbilopav+floki@gmail.com", read[1]["email"]);
+            Assert.Equal("Floki", list[1]["first_name"]);
+            Assert.Equal("The Dog", list[1]["last_name"]);
+            Assert.Equal("vbilopav+floki@gmail.com", list[1]["email"]);
         }
     }
 }

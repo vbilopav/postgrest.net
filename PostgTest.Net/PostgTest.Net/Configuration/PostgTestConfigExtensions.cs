@@ -1,4 +1,4 @@
-﻿namespace PostgTest.Net
+﻿namespace PostgTest.Net.Configuration
 {
     public static class PostgTestConfigExtensions
     {

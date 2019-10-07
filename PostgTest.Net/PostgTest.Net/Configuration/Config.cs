@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.Extensions.Configuration;
 
-namespace PostgTest.Net
+namespace PostgTest.Net.Configuration
 {
     public static class Config
     {

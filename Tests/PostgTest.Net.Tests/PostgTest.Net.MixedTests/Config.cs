@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using PostgTest.Net.Configuration;
 using Xunit;
 
 namespace PostgTest.Net.MixedTests

@@ -1,4 +1,6 @@
-﻿namespace PostgTest.Net
+﻿using PostgTest.Net.Configuration;
+
+namespace PostgTest.Net.Migrations
 {
     public class ConfigMigration : MigrationBase
     {

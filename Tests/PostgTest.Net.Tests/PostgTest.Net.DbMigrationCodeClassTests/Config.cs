@@ -1,4 +1,6 @@
-﻿using Xunit;
+﻿using PostgTest.Net.Configuration;
+using PostgTest.Net.Migrations;
+using Xunit;
 
 namespace PostgTest.Net.DbMigrationCodeClassTests
 {

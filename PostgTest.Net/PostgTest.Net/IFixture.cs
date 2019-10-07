@@ -1,4 +1,6 @@
 ﻿using Npgsql;
+using PostgTest.Net.Configuration;
+using PostgTest.Net.Migrations;
 
 namespace PostgTest.Net
 {

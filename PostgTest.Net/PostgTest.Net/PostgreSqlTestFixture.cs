@@ -1,6 +1,9 @@
 ﻿using System;
+using Norm.Extensions;
 using Npgsql;
-using PostgExecute.Net;
+using PostgTest.Net.Configuration;
+using PostgTest.Net.Migrations;
+
 
 namespace PostgTest.Net
 {

@@ -1,6 +1,6 @@
 using System.Linq;
 using Npgsql;
-using PostgExecute.Net;
+using Norm.Extensions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -23,25 +23,19 @@ namespace PostgTest.Net.ClassFixturesTests
         [Fact]
         public void TestDatabaseName()
         {
-            var read = fixture.TestConnection.Read("select current_database()").ToList();
-            Assert.Single(read);
-            Assert.Equal(fixture.Configuration.TestDatabase, read.First()["current_database"]);
+            Assert.Equal(fixture.Configuration.TestDatabase, fixture.TestConnection.Single<string>("select current_database()"));
         }
 
         [Fact]
         public void TestSessionUserName()
         {
-            var read = fixture.TestConnection.Read("select session_user").ToList();
-            Assert.Single(read);
-            Assert.Equal(fixture.Configuration.TestUser, read.First()["session_user"]);
+            Assert.Equal(fixture.Configuration.TestUser, fixture.TestConnection.Single<string>("select session_user"));
         }
 
         [Fact]
         public void TestCurrentUserName()
         {
-            var read = fixture.TestConnection.Read("select current_user").ToList();
-            Assert.Single(read);
-            Assert.Equal(fixture.Configuration.TestUser, read.First()["current_user"]);
+            Assert.Equal(fixture.Configuration.TestUser, fixture.TestConnection.Single<string>("select current_user"));
         }
 
         [Fact]
@@ -55,9 +49,7 @@ namespace PostgTest.Net.ClassFixturesTests
         [Fact]
         public void DumpBackendPid()
         {
-            var read = fixture.TestConnection.Read("select pg_backend_pid()").ToList();
-            Assert.Single(read);
-            output.WriteLine($"pg_backend_pid = {read.First()["pg_backend_pid"]}");
+            output.WriteLine($"pg_backend_pid = {fixture.TestConnection.Single<int>("select pg_backend_pid()")}");
         }
     }
 }

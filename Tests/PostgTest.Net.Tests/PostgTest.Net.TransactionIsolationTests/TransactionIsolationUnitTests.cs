@@ -1,5 +1,5 @@
 using System;
-using PostgExecute.Net;
+using Norm.Extensions;
 using Xunit;
 
 namespace PostgTest.Net.TransactionIsolationTests
@@ -20,7 +20,7 @@ namespace PostgTest.Net.TransactionIsolationTests
         [Fact]
         public void TestTransaction1()
         {
-            var txid1 = Convert.ToInt32(TestConnection.Single("select txid_current()")["txid_current"]);
+            var txid1 = TestConnection.Single<int>("select txid_current()");
             if (_sharedTxid == null)
             {
                 _sharedTxid = txid1;
@@ -30,14 +30,14 @@ namespace PostgTest.Net.TransactionIsolationTests
                 Assert.NotEqual(_sharedTxid, txid1);
             }
 
-            var txid2 = Convert.ToInt32(TestConnection.Single("select txid_current()")["txid_current"]);
+            var txid2 = TestConnection.Single<int>("select txid_current()");
             Assert.Equal(txid2, txid1);
         }
 
         [Fact]
         public void TestTransaction2()
         {
-            var txid1 = Convert.ToInt32(TestConnection.Single("select txid_current()")["txid_current"]);
+            var txid1 = TestConnection.Single<int>("select txid_current()");
             if (_sharedTxid == null)
             {
                 _sharedTxid = txid1;
@@ -46,7 +46,7 @@ namespace PostgTest.Net.TransactionIsolationTests
             {
                 Assert.NotEqual(_sharedTxid, txid1);
             }
-            var txid2 = Convert.ToInt32(TestConnection.Single("select txid_current()")["txid_current"]);
+            var txid2 = TestConnection.Single<int>("select txid_current()");
             Assert.Equal(txid2, txid1);
         }
     }

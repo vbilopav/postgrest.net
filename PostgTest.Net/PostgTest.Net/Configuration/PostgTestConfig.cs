@@ -1,7 +1,8 @@
 ﻿using System;
 using Npgsql;
+using PostgTest.Net.Migrations;
 
-namespace PostgTest.Net
+namespace PostgTest.Net.Configuration
 {
     public class PostgTestConfig : IPostgTestConfig
     {
